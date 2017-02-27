@@ -171,6 +171,10 @@
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="EntityPlayer.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="World.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="World.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Entity.h" />
