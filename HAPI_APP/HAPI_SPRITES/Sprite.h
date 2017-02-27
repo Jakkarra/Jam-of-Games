@@ -35,7 +35,6 @@ namespace HAPISPACE {
 			unsigned int thisFrameNumber, unsigned int otherFrameNumber,float thisAngle, float otherAngle) const;
 		const Frame& GetFrameFast(unsigned int frameNum) const { return m_frames.data()[frameNum]; } //14.6
 	public:
-		
 		// Allows creation from an equally spaced set of frames vertically or horizontally
 		Sprite(std::shared_ptr<Surface> surface, unsigned int numFrames = 1, bool layoutHorizontal = true);
 
