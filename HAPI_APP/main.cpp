@@ -19,7 +19,7 @@
 
 // Include the HAPI Sprites header to get access to all of the HAPI Sprites interface
 #include <HAPISprites_lib.h>
-
+#include "EntityPlayer.h"
 // HAPI Sprites itself is wrapped in the HAPISPACE namespace
 using namespace HAPISPACE;
 
@@ -53,9 +53,11 @@ void HAPI_Sprites_Main()
 	if (!logoTexture->HasData())
 		return;
 
-	auto stickyThingTexture = HAPI_Sprites.MakeSurface("Data\\thing.png");
-	if (!stickyThingTexture->HasData())
-		return;
+	//auto stickyThingTexture = HAPI_Sprites.MakeSurface("Data\\thing.png");
+	//if (!stickyThingTexture->HasData())
+	//	return;
+
+	CEntityPlayer player("Data\\thing.png");
 
 	// Uncomment to show recolouring (from red to white)
 	//thingTexture->Recolour(HAPI_TColour(255, 0, 0), HAPI_TColour(255),20);
@@ -64,7 +66,7 @@ void HAPI_Sprites_Main()
 	Sprite logoSprite(logoTexture);
 
 	// Create another sprite for the sticky thing
-	Sprite stickyThingSprite(stickyThingTexture);
+	
 
 	// Rotation angle in radians
 	float logoRotationAngle{ 0.0f };
@@ -100,7 +102,7 @@ void HAPI_Sprites_Main()
 			for (auto &p : m_things)
 			{
 				p.pos += p.speed;
-				if (stickyThingSprite.CheckCollision(p.pos, logoSprite, logoPosition, 0, p.rotation, 0, logoRotationAngle))
+				if (player.getSprite()->CheckCollision(p.pos, logoSprite, logoPosition, 0, p.rotation, 0, logoRotationAngle))
 				{
 					// If collided set back to where it was
 					p.pos -= p.speed;
@@ -124,10 +126,10 @@ void HAPI_Sprites_Main()
 
 		// Draw the logo sprite to the centre of the screen with 'logoRotationAngle' rotation
 		logoSprite.RenderRotated(SCREEN_SURFACE, logoPosition, logoRotationAngle);
+		player.render(logoPosition, logoRotationAngle);
 
 		// Draw all the sticky things
-		for (auto &p : m_things)
-			stickyThingSprite.RenderRotated(SCREEN_SURFACE, p.pos, p.rotation);
+			player.getSprite()->RenderRotated(SCREEN_SURFACE, 0,5.0f );
 
 		// Get the current keyboard state
 		const HAPI_TKeyboardData &keyData = HAPI_Sprites.GetKeyboardData();
@@ -137,7 +139,7 @@ void HAPI_Sprites_Main()
 			logoRotationAngle -= 0.001f;
 
 		// Uncomment to control sprite rotation manually
-		//	if (keyData.scanCode[HK_RIGHT])			
+			if (keyData.scanCode[HK_RIGHT])			
 			logoRotationAngle += 0.001f;
 	}
 }
