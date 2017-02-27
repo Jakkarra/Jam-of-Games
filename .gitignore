@@ -49,3 +49,8 @@ Temporary Items
 #Others
 .log
 .tlog
+.pdb
+.lib
+.ilk
+.exp
+.VC.db
