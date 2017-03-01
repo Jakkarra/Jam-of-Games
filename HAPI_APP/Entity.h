@@ -9,17 +9,20 @@ using namespace HAPISPACE;
 class CEntity
 {
 public:
-	CEntity();
-	~CEntity();
+	CEntity(std::string textureLocation);
+	virtual ~CEntity();
 	virtual void render();
+	void CEntity::initialise();
+	void setPosition(Point pos) { _pos = pos; }
+	void setAngle(float angle) { _angle = angle; }
 	Sprite* getSprite() { return _sprite; }
 
 protected:
 	virtual void update() = 0;
 	Sprite* _sprite;
-	Point pos = { 5,5 };
-	unsigned int frameNum = 0;
-	float angle = 0.0f;
+	Point _pos = { 5,5 };
+	unsigned int _frameNum = 0;
+	float _angle = 0.0f;
 
 private:
 

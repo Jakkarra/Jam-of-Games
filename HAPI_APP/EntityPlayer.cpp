@@ -2,11 +2,10 @@
 
 
 
-CEntityPlayer::CEntityPlayer(std::string textureLocation)
+CEntityPlayer::CEntityPlayer(std::string textureLocation) :CEntity(textureLocation)
 {
 
-	auto surface = HAPI_Sprites.MakeSurface(textureLocation);
-	_sprite = new Sprite(surface);
+
 
 }
 
