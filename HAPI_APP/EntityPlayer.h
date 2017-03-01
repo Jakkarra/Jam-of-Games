@@ -13,8 +13,7 @@ public:
 	CEntityPlayer(std::string textureLocation);
 	~CEntityPlayer();
 	void update();
-	void render();
-
+	
 private:
 	
 

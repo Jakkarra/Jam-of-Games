@@ -21,7 +21,3 @@ void CEntityPlayer::update()
 
 }
 
-void CEntityPlayer::render()
-{
-	_sprite->Render(SCREEN_SURFACE, pos);
-}

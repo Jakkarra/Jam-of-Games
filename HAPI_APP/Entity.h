@@ -11,6 +11,7 @@ class CEntity
 public:
 	CEntity();
 	~CEntity();
+	virtual void render();
 	Sprite* getSprite() { return _sprite; }
 
 protected:

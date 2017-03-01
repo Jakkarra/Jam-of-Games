@@ -2,9 +2,33 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="EntityPlayer.cpp" />
+    <ClCompile Include="EntityPlayer.cpp">
+      <Filter>Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="World.cpp">
+      <Filter>worldModel</Filter>
+    </ClCompile>
+    <ClCompile Include="Entity.cpp">
+      <Filter>worldModel</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="EntityPlayer.h" />
+    <ClInclude Include="EntityPlayer.h">
+      <Filter>Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="World.h">
+      <Filter>worldModel</Filter>
+    </ClInclude>
+    <ClInclude Include="Entity.h">
+      <Filter>worldModel</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="worldModel">
+      <UniqueIdentifier>{7f443730-b6b4-403b-bb59-49f5eab58f70}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Entities">
+      <UniqueIdentifier>{5281ee7a-24b0-4956-8541-c11fa3731f4b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>
