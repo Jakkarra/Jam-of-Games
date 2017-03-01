@@ -45,5 +45,12 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
-/HAPI_APP.VC.VC.opendb
-/HAPI_APP.VC.db
+
+#Others
+.log
+.tlog
+.pdb
+.lib
+.ilk
+.exp
+.VC.db
