@@ -1,8 +1,4 @@
-﻿  World.cpp
-  main.cpp
-main.cpp(22): fatal error C1083: Cannot open include file: 'EntityPlayer.h': No such file or directory
-  EntityPlayer.cpp
-c1xx : fatal error C1083: Cannot open source file: 'EntityPlayer.cpp': No such file or directory
-  Entity.cpp
-c1xx : fatal error C1083: Cannot open source file: 'Entity.cpp': No such file or directory
-  Generating Code...
+﻿  EntityPlayer.cpp
+     Creating library F:\Game Jam\x64\Debug\HAPI_APP.lib and object F:\Game Jam\x64\Debug\HAPI_APP.exp
+  HAPI_APP.vcxproj -> F:\Game Jam\x64\Debug\HAPI_APP.exe
+  HAPI_APP.vcxproj -> F:\Game Jam\x64\Debug\HAPI_APP.pdb (Full PDB)

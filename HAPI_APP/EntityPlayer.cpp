@@ -6,14 +6,14 @@ CEntityPlayer::CEntityPlayer(std::string textureLocation)
 {
 
 	auto surface = HAPI_Sprites.MakeSurface(textureLocation);
-	Sprite sprite(surface);
-	_sprite = &sprite;
+	_sprite = new Sprite(surface);
 
 }
 
 
 CEntityPlayer::~CEntityPlayer()
 {
+	delete _sprite;
 }
 
 void CEntityPlayer::update()
@@ -21,7 +21,7 @@ void CEntityPlayer::update()
 
 }
 
-void CEntityPlayer::render(Point pos, float angle)
+void CEntityPlayer::render()
 {
-	//sprite.RenderRotated(SCREEN_SURFACE, pos, angle);
+	_sprite->Render(SCREEN_SURFACE, pos);
 }
