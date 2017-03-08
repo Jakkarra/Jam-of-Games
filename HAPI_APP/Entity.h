@@ -13,17 +13,20 @@ public:
 	virtual ~CEntity();
 	virtual void render();
 	void CEntity::initialise();
-	void setPosition(Point pos) { _pos = pos; }
-	void setAngle(float angle) { _angle = angle; }
-	Sprite* getSprite() { return _sprite; }
+	void setPosition(Point pos) { pos_ = pos; }
+	void setAngle(float angle) { angle_ = angle; }
+	Sprite* getSprite() { return sprite_; }
 
 protected:
 	virtual void update() = 0;
-	Sprite* _sprite;
-	Point _pos = { 5,5 };
+	Sprite* sprite_;
+	Point pos_ = { 5,5 };
 	unsigned int _frameNum = 0;
-	float _angle = 0.0f;
+	float angle_ = 0.0f;
 
+	int health_;
+	int speed_;
+	int attack_;
 private:
 
 	

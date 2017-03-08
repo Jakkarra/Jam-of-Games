@@ -10,12 +10,22 @@ class CEntityPlayer :
 	public CEntity
 {
 public:
+
 	CEntityPlayer(std::string textureLocation);
 	~CEntityPlayer();
 	void update();
-	
+	void render(Point pos, float angle);
+
 private:
-	
+
+
+	int deadzone_left_ = HK_GAMEPAD_LEFT_THUMB_DEADZONE;
+	const HAPI_TControllerData &conData = HAPI_Sprites.GetControllerData();
+	Sprite* sprite_; //sprite needs to be created with one of the 4 constructors, needs a surface initally
+
+protected:
+
+
 
 };
 

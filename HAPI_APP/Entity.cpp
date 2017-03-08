@@ -22,7 +22,7 @@ void CEntity::initialise()
 
 void CEntity::render()
 {
-	_sprite->Render(SCREEN_SURFACE, _pos);
+	sprite_->Render(SCREEN_SURFACE, pos_);
 }
 
 
