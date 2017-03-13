@@ -21,6 +21,9 @@ namespace HAPISPACE {
 
 		// Construct from rectangle and name
 		Frame(std::string nameIn, Rectangle rectIn) : name{ std::move(nameIn) }, rect{ std::move(rectIn) } {}
+
+		// Name empty, rectangle invalid
+		Frame() = default;
 	};
 
 	// A sprite class that handles all blitting and frames
@@ -65,22 +68,27 @@ namespace HAPISPACE {
 		void ModifyFrames(const std::vector<Frame>& newFrames);
 
 		// Render sprite's surface with pos top left on passed surface with frame number frameNum (0 based)
-		void Render(Surface& surface, Point pos, unsigned int frameNum = 0, EBlendMode blendMode=EBlendMode::eAlphaBlend) const;
+		void Render(Surface& surface, Point pos, unsigned int frameNum = 0, 
+			EBlendMode blendMode=EBlendMode::eAlphaBlend, HAPI_TColour *modulate = nullptr) const;
 
 		// Render sprite's surface with pos top left on passed surface with frame number frameNum (0 based)
 		// Uses a provided lambda to handle blending
-		void Render(Surface& surface, Point pos, const std::function<void(HAPI_TColour&, const HAPI_TColour&)> &blendLambda, unsigned int frameNum = 0) const;
+		void Render(Surface& surface, Point pos,
+			const std::function<void(const Point &p, HAPI_TColour&, const HAPI_TColour&)> &blendLambda, unsigned int frameNum = 0) const;
 
 		// Render sprite's surface with pos top left on passed surface with frame number frameNum (0 based)
 		// Uses a provided lambda to handle blending by scanline
-		void Render(Surface& surface, Point pos, const std::function<void(HAPI_TColour*, const HAPI_TColour*, int)> &scanlineLambda, unsigned int frameNum = 0) const;
+		void Render(Surface& surface, Point pos, 
+			const std::function<void(const Point &p,HAPI_TColour*, const HAPI_TColour*, int)> &scanlineLambda, unsigned int frameNum = 0) const;
 
 		// Render sprite's surface rotated around its centre on passed surface with frame number frameNum (0 based)
-		void RenderRotated(Surface& surface, Point pos, float radians,unsigned int frameNum = 0, EBlendMode blendMode = EBlendMode::eAlphaBlend) const;
+		void RenderRotated(Surface& surface, Point pos, float radians,unsigned int frameNum = 0,
+			EBlendMode blendMode = EBlendMode::eAlphaBlend, HAPI_TColour *modulate = nullptr) const;
 
 		// Render sprite's surface rotated around its centre on passed surface with frame number frameNum (0 based)
 		// Uses a provided lambda to handle blending
-		void RenderRotated(Surface& surface, Point pos, float radians, const std::function<void(HAPI_TColour&, const HAPI_TColour&)> &blendLambda, unsigned int frameNum = 0) const;
+		void RenderRotated(Surface& surface, Point pos, float radians, 
+			const std::function<void(const Point &p, HAPI_TColour&, const HAPI_TColour&)> &blendLambda, unsigned int frameNum = 0) const;
 
 		// min alpha defaults to 255 meaning collisions occur only when alpha is 255
 		// This function allows you to lower that amount
