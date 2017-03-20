@@ -1,4 +1,6 @@
 #pragma once
+#include "HAPISprites_lib.h"
+
 class World
 {
 public:
@@ -7,12 +9,16 @@ public:
 
 	enum menuStates
 	{
-		mainMenu, playState, gameOver, paused, creation
+		eMainMenu, ePlayState, eGameOver, ePaused, eCreation, eWin
 	};
 
 	void Run();
+	void Initialise();
+	void Playing();
+	void mainMenu();
+
 
 private:
-	menuStates currentState = mainMenu;
+	menuStates currentState = eMainMenu;
 };
 
