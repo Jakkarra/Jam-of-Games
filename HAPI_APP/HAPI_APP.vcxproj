@@ -169,6 +169,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Entity.cpp" />
+    <ClCompile Include="EntityBullet.cpp" />
     <ClCompile Include="EntityEnemy.cpp" />
     <ClCompile Include="EntityMenu.cpp" />
     <ClCompile Include="EntityPlayer.cpp" />
@@ -176,6 +177,7 @@
     <ClCompile Include="World.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="EntityBullet.h" />
     <ClInclude Include="EntityEnemy.h" />
     <ClInclude Include="EntityMenu.h" />
     <ClInclude Include="World.h" />

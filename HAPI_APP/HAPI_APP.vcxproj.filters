@@ -17,6 +17,9 @@
     <ClCompile Include="EntityEnemy.cpp">
       <Filter>Entities</Filter>
     </ClCompile>
+    <ClCompile Include="EntityBullet.cpp">
+      <Filter>Entities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EntityPlayer.h">
@@ -32,6 +35,9 @@
       <Filter>Entities</Filter>
     </ClInclude>
     <ClInclude Include="EntityEnemy.h">
+      <Filter>Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="EntityBullet.h">
       <Filter>Entities</Filter>
     </ClInclude>
   </ItemGroup>

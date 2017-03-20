@@ -2,10 +2,9 @@
 
 
 
-CEntity::CEntity(std::string textureLocation)
+CEntity::CEntity()
 {
-	auto surface = HAPI_Sprites.MakeSurface(textureLocation);
-	_sprite = new Sprite(surface);
+	
 }
 
 
@@ -14,7 +13,7 @@ CEntity::~CEntity()
 }
 
 
-void CEntity::initialise()
+void CEntity::initialiseValues()
 {
 
 
@@ -24,5 +23,6 @@ void CEntity::render()
 {
 	sprite_->Render(SCREEN_SURFACE, pos_);
 }
+
 
 

@@ -2,56 +2,68 @@
 
 
 
-CEntityPlayer::CEntityPlayer(std::string textureLocation)
+CEntityPlayer::CEntityPlayer(std::string textureLocation)//:CEntity(textureLocation)
 {
 
-	auto surface = HAPI_Sprites.MakeSurface(textureLocation);
-	Sprite sprite(surface);
-	sprite_ = &sprite;
+	sprite_ =  new Sprite(HAPI_Sprites.MakeSurface(textureLocation));
+
+	initialiseValues();
+}
+
+CEntityPlayer::~CEntityPlayer()
+{
+}
+//delete sprite
+
+void CEntityPlayer::initialiseValues() //feel like sprite data going to be deleted once ou
+{
+	pos_ = Point{ 50,50 };
 	health_ = 3;
 	speed_ = 1;
 	attack_ = 10;
 }
 
 
-CEntityPlayer::~CEntityPlayer()
-{
-}
-//delete sprite
 void CEntityPlayer::update()
 {
-	if (conData.digitalButtons[HK_ANALOGUE_LEFT_THUMB_Y] < -deadzone_left_)
+	const HAPI_TControllerData &conData = HAPI_Sprites.GetControllerData(0);
+
+
+	if (conData.analogueButtons[HK_ANALOGUE_LEFT_THUMB_Y] < -deadzone_left_)
 	{
-		pos_.y - speed_;
+		pos_.y += speed_;
 
 	}
 
-	if (conData.digitalButtons[HK_ANALOGUE_LEFT_THUMB_Y]> deadzone_left_)
+	if (conData.analogueButtons[HK_ANALOGUE_LEFT_THUMB_Y]> deadzone_left_)
 	{
 
-		pos_.y + speed_;
+		pos_.y -= speed_;
 
 	}
 
-	if (conData.digitalButtons[HK_ANALOGUE_LEFT_THUMB_X] < -deadzone_left_)
+	if (conData.analogueButtons[HK_ANALOGUE_LEFT_THUMB_X] < -deadzone_left_)
 	{
 
-		pos_.x - speed_;
+		pos_.x -= speed_;
 
 	}
 
-	if (conData.digitalButtons[HK_ANALOGUE_LEFT_THUMB_X]> deadzone_left_)
+	if (conData.analogueButtons[HK_ANALOGUE_LEFT_THUMB_X]> deadzone_left_)
 	{
 
-		pos_.x + speed_;
+		pos_.x += speed_;
 
 	}
 }
 
-void CEntityPlayer::render(Point pos, float angle)
-{
-	sprite_->RenderRotated(SCREEN_SURFACE, pos, angle);
-}
+//void CEntityPlayer::render()
+//{
+//	sprite_->Render(SCREEN_SURFACE, pos_);
+//	/*Sprite newSprite = *sprite_;
+//	newSprite.Render(SCREEN_SURFACE, pos_);*/
+//}
+
 
 
 

@@ -2,9 +2,11 @@
 
 
 
-CEntityMenu::CEntityMenu(std::string textureLocation) :CEntity(textureLocation)
+CEntityMenu::CEntityMenu(std::string textureLocation)//:CEntity(textureLocation)
 {
+	sprite_ = new Sprite(HAPI_Sprites.MakeSurface(textureLocation));
 
+	initialiseValues();
 }
 
 
