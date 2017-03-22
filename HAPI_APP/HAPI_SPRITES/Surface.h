@@ -94,22 +94,27 @@ namespace HAPISPACE {
 
 		// Blit onto this surface from other surface at top left = posX, posY and use 'area' of other. 
 		// Blending is determined by blendMode
-		void Blit(const Surface &other, Point pos, Rectangle area, EBlendMode blendMode=EBlendMode::eAlphaBlend);
+		void Blit(const Surface &other, Point pos, Rectangle area, 
+			EBlendMode blendMode=EBlendMode::eAlphaBlend, HAPI_TColour *modulate=nullptr);
 
 		// Blit onto this surface from other surface at top left = posX, posY and use 'area' of other.
 		// Uses provided lambda to handle blending a texel at a time
-		void Blit(Surface& other, Point pos, Rectangle area, const std::function<void(HAPI_TColour&, const HAPI_TColour&)> &blendLambda);
+		void Blit(Surface& other, Point pos, Rectangle area,
+			const std::function<void(const Point &p, HAPI_TColour&, const HAPI_TColour&)> &blendLambda);
 
 		// Special blit function which uses a provided lambda to handle blending one scanline at a time for speed
-		void Blit(Surface& other, Point pos, Rectangle area, const std::function<void(HAPI_TColour*, const HAPI_TColour*, int)> &blendLambda);
+		void Blit(Surface& other, Point pos, Rectangle area, 
+			const std::function<void(const Point &p, HAPI_TColour*, const HAPI_TColour*, int)> &blendLambda);
 
 		// Blit onto this surface from other surface and rotate around its centre (middle of area rectangle) 
 		// Blending is determined by blendMode
-		void BlitRotated(const Surface &other, Point pos, Rectangle area, float radians, EBlendMode blendMode = EBlendMode::eAlphaBlend);
+		void BlitRotated(const Surface &other, Point pos, Rectangle area, float radians,
+			EBlendMode blendMode = EBlendMode::eAlphaBlend, HAPI_TColour *modulate = nullptr);
 
 		// Blit onto this surface from other surface and rotate around its centre (middle of area rectangle) 
 		// Blending is determined by provided lambda
-		void BlitRotated(const Surface &other, Point pos, Rectangle area, float radians, const std::function<void(HAPI_TColour&, const HAPI_TColour&)> &blendLambda);
+		void BlitRotated(const Surface &other, Point pos, Rectangle area, float radians, 
+			const std::function<void(const Point &p, HAPI_TColour&, const HAPI_TColour&)> &blendLambda);
 
 		// Set a pixel to a colour, ignores if not on surface, blending based on colour alpha channel
 		void SetPixel(Point pos, HAPI_TColour colour);

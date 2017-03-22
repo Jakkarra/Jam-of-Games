@@ -6,7 +6,24 @@ All the includes required to use the HAPI Sprites library.
 For full details on using the library please see the online documentation (CTRL-Click to open)
 https://scm-intranet.tees.ac.uk/users/u0018197/Happier/reference.html
 
-Last modified by Keith Ditchburn: 5th February 2017
+Last modified by Keith Ditchburn: 26th February 2017
+
+Still TODO
+- Update documentation for all lambda calls and blit
+
+Version 0.55 - 26/02/2017
+- Added a default constructor for Frame
+- Changed blitting lambdas to also pass the current source position
+- Minor adjustment to MakeAlphaChannelFromColourKey so exact matches pass
+- Added new optional param to Blit and BlitRotated to allow colour modulatation 
+	- And to sprite render calls
+- Creating scaled sprites now stops if width or height are 0
+- SetPixel now sets alpha so scaling sprites does as well
+HAPI Core Changes (2.22)
+- Added a * operator for HAPI_TColour to allow modulation of one colour by another
+- added XML GetByteStream and a byte stream constructor
+- Fixed some logging output that was splitting lines incorrectly
+- New function: GetExecutableDirectory - does what it says!
 
 Version 0.50 - 05/02/2017
 - Surface functions added:
@@ -263,6 +280,9 @@ namespace HAPISPACE {
 
 		// Allows the icon shown in the window and task bar to be changed from the default HAPI logo
 		virtual bool SetIcon(const Surface& surface, unsigned int width, unsigned int height) const = 0;
+
+		// Retrieve the directory the exe is running from
+		virtual std::string GetExecutableDirectory() const = 0;
 	};
 }
 
@@ -277,7 +297,7 @@ HAPISPACE::IHapiSprites& GetHAPI_Sprites();
 
 // Useful macros
 #define DEGREES_TO_RADIANS(x) (x * 0.0174533f)
-#define RAIDANS_TO_DEGREES(x) (x * 57.2958f)
+#define RADIANS_TO_DEGREES(x) (x * 57.2958f)
 
 
 

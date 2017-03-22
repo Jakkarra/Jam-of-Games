@@ -6,7 +6,14 @@ All the includes required to use the Hardware API (HAPI).
 For full details on using the library please see the online documentation (CTRL-Click to open):
 https://scm-intranet.tees.ac.uk/users/u0018197/HAPI/HAPI-Reference/hapi-reference.html
 
-Last modified by Keith Ditchburn: 5th February 2017
+Last modified by Keith Ditchburn: 26th February 2017
+
+Version 2.22 - 26/02/2017
+- Added a * operator for HAPI_TColour to allow modulation of one colour by another
+- added XML GetByteStream and a byte stream constructor
+- Fixed some logging output that was splitting lines incorrectly
+- New function: GetExecutableDirectory - does what it says!
+	TODO: update documentation
 
 Version 2.20 - 05/02/2017
 - New functions added:
@@ -209,6 +216,9 @@ namespace HAPISPACE {
 
 		// Allows the icon shown in the window and task bar to be changed from the default HAPI logo
 		virtual bool SetIcon(BYTE *rawImageData, unsigned int width, unsigned int height) const = 0;
+
+		// Retrieve the directory the exe is running from
+		virtual std::string GetExecutableDirectory() const = 0;
 	};
 }
 

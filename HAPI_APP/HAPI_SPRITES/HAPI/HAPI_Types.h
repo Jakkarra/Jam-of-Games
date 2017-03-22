@@ -207,6 +207,17 @@ namespace HAPISPACE {
 		return HAPI_TColour((BYTE)r, (BYTE)g, (BYTE)b, (BYTE)a);
 	}
 
+	// Modulate one colour by another
+	inline HAPI_TColour operator* (const HAPI_TColour& lhs, const HAPI_TColour &rhs)
+	{
+		HAPI_TColour sourceMod{ lhs };
+		sourceMod.red = (lhs.red * rhs.red) >> 8;
+		sourceMod.green = (lhs.green * rhs.green) >> 8;
+		sourceMod.blue = (lhs.blue * rhs.blue) >> 8;
+		sourceMod.alpha = (lhs.alpha * rhs.alpha) >> 8;
+		return sourceMod;
+	}
+
 
 	/**
 	 * <summary>
@@ -397,6 +408,8 @@ namespace HAPISPACE {
 		CHapiXML(const std::string &filename);
 		// Constructor that creates an XML tree
 		CHapiXML(CHapiXMLNode *rootNode);
+		// Construct from an XML byte stream (UTF-8)
+		CHapiXML(const std::vector<BYTE>& byteStream);
 		~CHapiXML();
 
 		// Used to determine if we have loaded ok
@@ -418,5 +431,8 @@ namespace HAPISPACE {
 		
 		// Returns the root of the tree
 		CHapiXMLNode* GetRootNode() const;
+
+		// Converts to byte stream
+		std::vector<BYTE> GetByteStream() const;
 	};
 }
