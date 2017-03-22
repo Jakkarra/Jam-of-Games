@@ -11,6 +11,9 @@
     <ClCompile Include="Entity.cpp">
       <Filter>worldModel</Filter>
     </ClCompile>
+    <ClCompile Include="Room.cpp">
+      <Filter>worldModel</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EntityPlayer.h">
@@ -20,6 +23,9 @@
       <Filter>worldModel</Filter>
     </ClInclude>
     <ClInclude Include="Entity.h">
+      <Filter>worldModel</Filter>
+    </ClInclude>
+    <ClInclude Include="Room.h">
       <Filter>worldModel</Filter>
     </ClInclude>
   </ItemGroup>
