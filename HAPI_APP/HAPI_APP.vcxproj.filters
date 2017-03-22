@@ -6,10 +6,19 @@
       <Filter>Entities</Filter>
     </ClCompile>
     <ClCompile Include="World.cpp">
-      <Filter>worldModel</Filter>
+      <Filter>WorldModel</Filter>
     </ClCompile>
     <ClCompile Include="Entity.cpp">
-      <Filter>worldModel</Filter>
+      <Filter>WorldModel</Filter>
+    </ClCompile>
+    <ClCompile Include="EntityMenu.cpp">
+      <Filter>Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="EntityEnemy.cpp">
+      <Filter>Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="EntityBullet.cpp">
+      <Filter>Entities</Filter>
     </ClCompile>
     <ClCompile Include="Room.cpp">
       <Filter>worldModel</Filter>
@@ -20,21 +29,30 @@
       <Filter>Entities</Filter>
     </ClInclude>
     <ClInclude Include="World.h">
-      <Filter>worldModel</Filter>
+      <Filter>WorldModel</Filter>
     </ClInclude>
     <ClInclude Include="Entity.h">
-      <Filter>worldModel</Filter>
+      <Filter>WorldModel</Filter>
+    </ClInclude>
+    <ClInclude Include="EntityMenu.h">
+      <Filter>Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="EntityEnemy.h">
+      <Filter>Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="EntityBullet.h">
+      <Filter>Entities</Filter>
     </ClInclude>
     <ClInclude Include="Room.h">
       <Filter>worldModel</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="worldModel">
-      <UniqueIdentifier>{7f443730-b6b4-403b-bb59-49f5eab58f70}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Entities">
       <UniqueIdentifier>{5281ee7a-24b0-4956-8541-c11fa3731f4b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="WorldModel">
+      <UniqueIdentifier>{7f443730-b6b4-403b-bb59-49f5eab58f70}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

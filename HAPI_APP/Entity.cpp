@@ -12,9 +12,17 @@ CEntity::~CEntity()
 {
 }
 
+
+void CEntity::initialiseValues()
+{
+
+
+}
+
 void CEntity::render()
 {
-	_sprite->Render(SCREEN_SURFACE, pos);
+	sprite_->Render(SCREEN_SURFACE, pos_);
 }
+
 
 

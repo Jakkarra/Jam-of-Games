@@ -10,12 +10,21 @@ class CEntityPlayer :
 	public CEntity
 {
 public:
+
 	CEntityPlayer(std::string textureLocation);
 	~CEntityPlayer();
+	void initialiseValues();
 	void update();
 	
+
 private:
+
+
+	int deadzone_left_ = HK_GAMEPAD_LEFT_THUMB_DEADZONE;
 	
+protected:
+
+
 
 };
 
