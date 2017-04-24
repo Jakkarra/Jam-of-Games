@@ -1,6 +1,7 @@
 #include "World.h"
 #include "EntityPlayer.h"
 #include "Entity.h"
+#include "EntityEnemy.h"
 
 using namespace HAPISPACE;
 World::World()
@@ -48,6 +49,9 @@ void World::Run()
 
 void World::Playing()
 {
+	if (player.isAlive() == false) {
+		currentState = eGameOver;
+	}
 
 }
 

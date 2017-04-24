@@ -28,32 +28,39 @@ void CEntityPlayer::update()
 {
 	const HAPI_TControllerData &conData = HAPI_Sprites.GetControllerData(0);
 
-
-	if (conData.analogueButtons[HK_ANALOGUE_LEFT_THUMB_Y] < -deadzone_left_)
-	{
-		pos_.y += speed_;
-
+	if (health_ >= 0) {
+		alive_ = false;
 	}
 
-	if (conData.analogueButtons[HK_ANALOGUE_LEFT_THUMB_Y]> deadzone_left_)
-	{
+	if (alive_ == true) {
 
-		pos_.y -= speed_;
 
-	}
+		if (conData.analogueButtons[HK_ANALOGUE_LEFT_THUMB_Y] < -deadzone_left_)
+		{
+			pos_.y += speed_;
 
-	if (conData.analogueButtons[HK_ANALOGUE_LEFT_THUMB_X] < -deadzone_left_)
-	{
+		}
 
-		pos_.x -= speed_;
+		if (conData.analogueButtons[HK_ANALOGUE_LEFT_THUMB_Y] > deadzone_left_)
+		{
 
-	}
+			pos_.y -= speed_;
 
-	if (conData.analogueButtons[HK_ANALOGUE_LEFT_THUMB_X]> deadzone_left_)
-	{
+		}
 
-		pos_.x += speed_;
+		if (conData.analogueButtons[HK_ANALOGUE_LEFT_THUMB_X] < -deadzone_left_)
+		{
 
+			pos_.x -= speed_;
+
+		}
+
+		if (conData.analogueButtons[HK_ANALOGUE_LEFT_THUMB_X] > deadzone_left_)
+		{
+
+			pos_.x += speed_;
+
+		}
 	}
 }
 

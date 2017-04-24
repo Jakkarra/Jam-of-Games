@@ -20,5 +20,8 @@ public:
 
 private:
 	menuStates currentState = eMainMenu;
+
+	CEntityPlayer player;
+
 };
 

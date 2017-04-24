@@ -15,6 +15,7 @@ public:
 	~CEntityPlayer();
 	void initialiseValues();
 	void update();
+	bool isAlive() { return alive_; }
 	
 
 private:

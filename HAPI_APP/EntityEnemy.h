@@ -15,9 +15,10 @@ public:
 	void initialiseValues();
 	void update();
 	void render(Point pos, float angle);
+	void getplayerpos(Point playerpos);
 
 private:
-
-
+	Point playerpos_;
+	Point mypos_;
 };
 
