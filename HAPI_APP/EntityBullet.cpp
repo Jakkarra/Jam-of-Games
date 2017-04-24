@@ -2,9 +2,9 @@
 
 
 
-CEntityBullet::CEntityBullet(std::string textureLocation)//:CEntity(textureLocation)
+CEntityBullet::CEntityBullet()//CEntity(textureLocation)
 {
-	sprite_ = new Sprite(HAPI_Sprites.MakeSurface(textureLocation));
+	sprite_ = new Sprite(HAPI_Sprites.MakeSurface("Data\\fireBall.png"));
 	initialiseValues();
 	
 }
@@ -20,10 +20,10 @@ void CEntityBullet::initialiseValues()
 	health_ = 3;
 	speed_ = 1;
 	attack_ = 10;
-	//sides = side::player; enum for what team theyre on
+
 
 }
-void CEntityBullet::update()
+void CEntityBullet::update(World& world)
 {//list hre where bullet starts on different positions
 	
 	//movement(speed); Function for moving
@@ -33,22 +33,16 @@ void CEntityBullet::update()
 	
 }
 
-void CEntityBullet::setValues(std::string bulletType, std::string facing, Point gunPos, int side) //when gun is fired, give bullet stats
-{																										
-	
-	Point gunLocation{ 0,0 };
+void CEntityBullet::setValues(HAPI_TColour colour, float angle, Point gunPos, sides team) //when gun is fired, give bullet stats
+{						
+	//need to get the angle and with that use it to make the bullet move in the wanted direction
+
+
 	alive_ = true;
-
-	/*if (side == 0)
-		sides = side::player; //check which team bullet is on
-	else
-		sides = side::enemy;*/
-	
-
-	//We will need to render diffeeently based on stats so we can have different coloured magic balls
-	/*if (!HAPI.PlaySound("Audio\\" + bulletType + "Shoot.wav"))
-		HAPI.DebugText("Error");*///play audio
+	side = team;
 	pos_ = gunPos;
+	angle_ = angle;
+	//seperate render function so we can set the colour, maybe if statements in player and if damage is x high, add red colour. speed add yellow etc.
 }
 
 void CEntityBullet::resetValues()

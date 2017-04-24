@@ -4,7 +4,7 @@
 
 CEntity::CEntity()
 {
-	
+
 }
 
 
@@ -21,7 +21,11 @@ void CEntity::initialiseValues()
 
 void CEntity::render()
 {
-	sprite_->Render(SCREEN_SURFACE, pos_);
+	if (alive_ == true)
+	{
+		sprite_->Render(SCREEN_SURFACE, pos_);
+	}
+	
 }
 
 
