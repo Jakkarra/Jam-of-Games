@@ -1,5 +1,7 @@
 #pragma once
 #include "Entity.h"
+#include "EntityBullet.h"
+
 // Include the HAPI Sprites header to get access to all of the HAPI Sprites interface
 #include <HAPISprites_lib.h>
 
@@ -11,17 +13,19 @@ class CEntityPlayer :
 {
 public:
 
-	CEntityPlayer(std::string textureLocation);
+	CEntityPlayer();
 	~CEntityPlayer();
 	void initialiseValues();
-	void update();
-	bool isAlive() { return alive_; }
+	void update(World& world);
+	void shoot(CEntityBullet* bullet);
 	
 
 private:
 
 
 	int deadzone_left_ = HK_GAMEPAD_LEFT_THUMB_DEADZONE;
+	int reloadTime = 0;
+	int bulletNum= 0;
 	
 protected:
 

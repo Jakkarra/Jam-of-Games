@@ -10,11 +10,11 @@ class CEntityBullet :
 	public CEntity
 {
 public:
-	CEntityBullet(std::string textureLocation);
+	CEntityBullet();
 	~CEntityBullet();
 	void initialiseValues();
-	void update();
-	void setValues(std::string bulletType, std::string facing, Point startPos, int side);
+	void update(World& world);
+	void setValues(HAPI_TColour colour, float angle, Point startPos, sides team);
 	void resetValues();
 
 private:

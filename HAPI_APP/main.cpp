@@ -27,20 +27,19 @@ using namespace HAPISPACE;
 // GLM is included in the distributable and can be included if requeried
 #include <glm/glm.hpp>
 
-constexpr DWORD kUpdateTime{ 10 };
 
-World *world_ = new World;
+
 
 // Every HAPISprites program must have a HAPI_Sprites_Main as an entry point
 // When this function exits the program will close down
 void HAPI_Sprites_Main()
 {
-
+	
 	unsigned int screenWidth{ 1920 };
 	unsigned int screenHeight{ 1080 };
 
 	HAPI_Sprites.Initialise(screenWidth, screenHeight, "DIY:Dungeon It Yourself");
-
+	World* world_ = new World;
 	world_->Run();
 }
 
