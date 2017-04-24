@@ -15,7 +15,6 @@ World::~World()
 	for (auto p : bulletVector)
 		delete p;
 
-	delete player_;
 }
 
 void World::Run()

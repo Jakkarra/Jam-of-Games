@@ -24,6 +24,7 @@ void EntityEnemy::update()
 
 void EntityEnemy::render(Point pos, float angle)
 {
-	sprite_->RenderRotated(SCREEN_SURFACE, pos, angle);
+	if(alive_ == true)
+		sprite_->RenderRotated(SCREEN_SURFACE, pos, angle);
 }
 
