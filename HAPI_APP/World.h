@@ -1,6 +1,8 @@
 #pragma once
 #include "HAPISprites_lib.h"
 
+class Room;
+
 class World
 {
 public:
@@ -20,5 +22,8 @@ public:
 
 private:
 	menuStates currentState = eMainMenu;
+
+	Room *First_Room;
+	Room *Second_Room;
 };
 
