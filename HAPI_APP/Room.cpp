@@ -4,16 +4,34 @@ Room::Room()
 {
 }
 
-void Room::Initialise(HAPISPACE::Surface& Floor_Sprite_, Point Position_To_Spawn, std::string file_name, int texture_size)
+Room::Room(std::string sprite_floor_name, Point Position_To_Spawn, std::string sheet_name, int texture_size)
 {
 	Floor_Position = Position_To_Spawn;
 	Texture_Size = texture_size;
 
-	Floor_Sprite = Floor_Sprite_.MakeCopy();
-	FloorRect = Rectangle(Floor_Sprite_.Width(), Floor_Sprite_.Height());
+	Floor_Sprite = HAPI_Sprites.MakeSurface("Data\\" + sprite_floor_name);
 
-	Sheet_Name = file_name;
-	
+	if (!Floor_Sprite->HasData())
+	{
+		return;
+	}
+
+	FloorRect = Rectangle(Floor_Sprite->Width(), Floor_Sprite->Height());
+
+	Sheet_Name = sheet_name;
+
+	Save_Sprite_Sheet_XML();
+
+}
+
+void Room::Create_Invidividual_Room()
+{
+	Create_Walls();
+}
+
+void Room::Create_Complex_Room(std::shared_ptr<Surface> other_surface)
+{
+	Create_Joined_Room(other_surface);
 }
 
 void Room::Save_Sprite_Sheet_XML()
@@ -128,7 +146,7 @@ void Room::Create_Walls()
 
 	}
 
-	for (int y = 0; y < FloorRect.Height() / 32; y++)
+	for (int y = 0; y < FloorRect.Height() / Texture_Size; y++)
 	{
 		// Left Wall
 		Walls_And_Corners.push_back(
@@ -140,37 +158,103 @@ void Room::Create_Walls()
 									Wall_Or_Corner{ 4 , Point{ Floor_Position + Point{ FloorRect.Width() , y * Texture_Size } } }
 								    );
 	}
+
+}
+
+void Room::Create_Joined_Room(std::shared_ptr<Surface> other_surface)
+{
+	int Other_Surface_Width = other_surface->Width();
+	int Other_Surface_Height = other_surface->Height();
+
+	Floor_Sprite = Floor_Sprite->Combine(other_surface, false);	
 	
 	
-	
-	/*
-	
-	//Top_left
-	spriteSheet.Render(SCREEN_SURFACE, Floor_Position + Point{-Texture_Size, -Texture_Size }, 0);
+	//Top_Left_Corner
 
-	//Top_right
-	spriteSheet.Render(SCREEN_SURFACE, Floor_Position + Point{ FloorRect.Width() , -Texture_Size }, 1);
+	Walls_And_Corners.push_back(
+		Wall_Or_Corner{ 0 , Floor_Position + Point{ -Texture_Size, -Texture_Size } }
+	);
 
-	//Bottom right
-	spriteSheet.Render(SCREEN_SURFACE, Floor_Position + Point{ FloorRect.Width(), FloorRect.Height()}, 3);
+	//Top_Right_Corner
 
-	//Bottom left
-	spriteSheet.Render(SCREEN_SURFACE, Floor_Position + Point{ -Texture_Size, FloorRect.Height()}, 2);
+	Walls_And_Corners.push_back(
+		Wall_Or_Corner{ 1 , Floor_Position + Point{ FloorRect.Width() , -Texture_Size } }
+	);
 
-	for (int x = 0; x < FloorRect.Width()/32 ; x++)
+	//Bottom_Right_Corner_Initial_Rectangle
+
+	Walls_And_Corners.push_back(
+		Wall_Or_Corner{ 3 , Floor_Position + Point{ FloorRect.Width(), FloorRect.Height() } }
+	);
+
+	//Middle_"Corner"
+
+	Walls_And_Corners.push_back(
+		Wall_Or_Corner{ 0 , Floor_Position + Point{ Other_Surface_Width, FloorRect.Height() } }
+	);
+
+	//Bottom_Left_Corner_Other_Rectangle
+
+	Walls_And_Corners.push_back(
+		Wall_Or_Corner{ 2 , Floor_Position + Point{ -Texture_Size, FloorRect.Height() + Other_Surface_Height } }
+	);
+
+	//Bottom_Right_Corner_Other_Rectangle
+
+	Walls_And_Corners.push_back(
+		Wall_Or_Corner{ 3 , Floor_Position + Point{ Other_Surface_Width, FloorRect.Height() + Other_Surface_Height } }
+	);
+
+
+	for (int x = 0; x < FloorRect.Width() / Texture_Size; x++)
 	{
-		spriteSheet.Render(SCREEN_SURFACE, Floor_Position + Point{x * Texture_Size , -Texture_Size }, 5);
-		spriteSheet.Render(SCREEN_SURFACE, Floor_Position + Point{x * Texture_Size ,  FloorRect.Height() }, 5);
+		// Top Wall
+		Walls_And_Corners.push_back(
+			Wall_Or_Corner{ 5 , Point{ Floor_Position + Point{ x * Texture_Size , -Texture_Size } } }
+		);
 
 	}
 
-	for (int y = 0; y < FloorRect.Height() / 32 ; y++)
+	for (int x = (Other_Surface_Width + Texture_Size) / Texture_Size; x < FloorRect.Width() / Texture_Size; x++)
 	{
-		spriteSheet.Render(SCREEN_SURFACE, Floor_Position + Point{ -Texture_Size , y * Texture_Size }, 4);
-		spriteSheet.Render(SCREEN_SURFACE, Floor_Position + Point{ FloorRect.Width() , y * Texture_Size }, 4);
 
+		// Middle Wall
+		Walls_And_Corners.push_back(
+			Wall_Or_Corner{ 5 , Point{ Floor_Position + Point{ x * Texture_Size ,  FloorRect.Height() } } }
+		);
 	}
-	*/
+
+	for (int x = 0; x < Other_Surface_Width / Texture_Size; x++)
+	{
+		// Bottom Wall
+		Walls_And_Corners.push_back(
+			Wall_Or_Corner{ 5 , Point{ Floor_Position + Point{ x * Texture_Size ,  FloorRect.Height() + Other_Surface_Height } } }
+		);
+	}
+
+	for (int y = 0; y < FloorRect.Height() / Texture_Size; y++)
+	{
+		// Right Wall Initial Rectangle
+		Walls_And_Corners.push_back(
+			Wall_Or_Corner{ 4 , Point{ Floor_Position + Point{ FloorRect.Width() , y * Texture_Size } } }
+		);
+	}
+
+	for (int y = (FloorRect.Height() + Texture_Size) / Texture_Size; y < (FloorRect.Height() + Other_Surface_Height) / Texture_Size; y++)
+	{
+		// Right Wall Other Rectangle
+		Walls_And_Corners.push_back(
+			Wall_Or_Corner{ 4 , Point{ Floor_Position + Point{ Other_Surface_Width , y * Texture_Size } } }
+		);
+	}
+
+	for (int y = 0; y < (FloorRect.Height() + Other_Surface_Height) / Texture_Size; y++)
+	{
+		// Left Wall
+		Walls_And_Corners.push_back(
+			Wall_Or_Corner{ 4 , Point{ Floor_Position + Point{ -Texture_Size , y * Texture_Size } } }
+		);
+	}
 }
 
 void Room::Render_Floor()
