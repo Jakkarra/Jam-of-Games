@@ -1,7 +1,10 @@
 #pragma once
 #include "HAPISprites_lib.h"
+#include "EntityBullet.h"
+#include "EntityPlayer.h"
+#include "EntityMenu.h"
 
-class Room;
+class CEntity;
 
 class World
 {
@@ -18,12 +21,13 @@ public:
 	void Initialise();
 	void Playing();
 	void mainMenu();
-
-
+	std::vector<CEntityBullet*> getBullets() { return bulletVector; }
+	
 private:
 	menuStates currentState = eMainMenu;
 
-	Room *First_Room;
-	Room *Second_Room;
+	std::vector<CEntity*> entityVector;
+	std::vector<CEntityBullet*> bulletVector;
+	CEntityPlayer* player_ = new CEntityPlayer;
 };
 

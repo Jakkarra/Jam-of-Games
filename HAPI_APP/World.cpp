@@ -1,43 +1,30 @@
 #include "World.h"
-#include "EntityPlayer.h"
-#include "Entity.h"
-#include "Room.h"
+
 
 using namespace HAPISPACE;
-
 World::World()
 {
-	Point Position_To_Spawn{ 250,250 };
-
-	Point Position_To_Spawn_second{ 450,450 };
-
-	First_Room = new Room("Room_Floor_1.png", Position_To_Spawn, "Corners_And_Walls_Room_1.png", 32);
-
-	First_Room->Create_Invidividual_Room();
-
-	Second_Room = new Room("Room_Floor_1_.png", Position_To_Spawn_second, "Corners_And_Walls_Room_1.png", 32);
-
-	auto test_texture = HAPI_Sprites.MakeSurface("Data\\Room_Floor_1.png");
-
-	Second_Room->Create_Complex_Room(test_texture);
-
 }
 
 
 World::~World()
 {
+	for (auto p : entityVector)
+		delete p;
+
+	for (auto p : bulletVector)
+		delete p;
+
+	delete player_;
 }
 
 void World::Run()
 {
+	Initialise();
+
 
 	while (HAPI_Sprites.Update())
 	{
-
-
-
-
-
 		//
 		HAPI_TMouseData mouse = HAPI_Sprites.GetMouseData();
 		SCREEN_SURFACE.Clear();
@@ -65,20 +52,40 @@ void World::Run()
 				HAPI_Sprites.Close();
 			}
 		}
-
-		First_Room->Render_Floor();
-		Second_Room->Render_Floor();
 	}
+}
+
+void World::Initialise()
+{
+
+	for (int i = 0; i < 500; i++)
+	{
+		CEntityBullet *bullet = new CEntityBullet;
+		bulletVector.push_back(bullet);
+		//max of 500 bullets
+	}
+
+	entityVector.push_back(player_);
+	//here we would add enemies to enemy vector to set a max number of enemies, all initally dead. then set however many we want to alive as you enter a room
 }
 
 void World::Playing()
 {
+	
 
 }
 
 void World::mainMenu()
 {
-	//CEntityPlayer menuB("Data\\mainMenuBackground.png");
-	//menuB.render();
+	for (auto p : entityVector)
+		p->update(*this);
 
+	for (auto p : bulletVector) //seperate bullet vector so i can pass them through,
+		p->update(*this);
+
+	for (auto p : entityVector) //might be better to have a single vector instead of two and have the offset for where the bullets start
+		p->render();
+
+	for (auto p : bulletVector) //also the render is seperate to the update as update is every tick, render may be slowed down
+		p->render();
 }
