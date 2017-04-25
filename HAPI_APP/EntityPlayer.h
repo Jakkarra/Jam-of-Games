@@ -18,7 +18,7 @@ public:
 	void initialiseValues();
 	void update(World& world);
 	void shoot(CEntityBullet* bullet);
-	
+	void hasCollided(CEntity* other);
 
 private:
 

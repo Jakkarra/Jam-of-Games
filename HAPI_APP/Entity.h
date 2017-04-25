@@ -13,17 +13,25 @@ public:
 	CEntity(); 
 	virtual ~CEntity();
 	virtual void render();
+
+	enum sides { player, enemy, neutral, };
+
 	void setPosition(Point pos) { pos_ = pos; }
 	void setAngle(float angle) { angle_ = angle; }
-	Sprite* getSprite() { return sprite_; }
-	void movement() { pos_ += Point{ speed_,speed_ };}
-	virtual void initialiseValues() = 0;
-	bool isAlive() { return alive_; }
-	virtual void update(World& world) = 0;
 	
+	Sprite* getPntrToSprite() { return sprite_; }
+	Sprite getSprite() { return *sprite_; }
+	Point getPos() { return pos_; }
+	void movement() { pos_ += Point{ speed_,speed_ };}
+	bool isAlive() { return alive_; }
+	sides getSide() { return side; }
+	virtual void update(World& world) = 0;
+
+	virtual void hasCollided(CEntity* other);
+	virtual void initialiseValues() = 0;
 protected:
 
-	enum sides { player, enemy, neutral,};
+	
 	
 	
 	Sprite* sprite_{ nullptr };

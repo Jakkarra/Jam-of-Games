@@ -8,9 +8,9 @@ CEntityPlayer::CEntityPlayer()//:CEntity(textureLocation)
 	sprite_ = new Sprite(HAPI_Sprites.MakeSurface("Data\\thing.png"));// we could make it so you pass in a value for the texture but we should know what textures are going to be used
 	pos_ = Point{ 50,50 };
 	health_ = 3;
-	speed_ = 1;
+	speed_ = 4;
 	attack_ = 10;
-	side = sides::player;
+	side = player;
 	alive_ = true;
 
 
@@ -33,6 +33,8 @@ void CEntityPlayer::update(World& world)
 {
 	const HAPI_TControllerData &conData = HAPI_Sprites.GetControllerData(0);
 
+	if (health_ <= 0)
+		alive_ = false;
 
 	if (conData.analogueButtons[HK_ANALOGUE_LEFT_THUMB_Y] < -deadzone_left_)
 	{
@@ -81,6 +83,12 @@ void CEntityPlayer::shoot(CEntityBullet* bullet)
 
 }
 
+void CEntityPlayer::hasCollided(CEntity* other)
+{
+	if (other->getSide() == enemy)
+		health_ -= 1;
+
+}
 
 
 

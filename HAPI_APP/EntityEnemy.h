@@ -13,12 +13,10 @@ public:
 	EntityEnemy(std::string textureLocation);
 	~EntityEnemy();
 	void initialiseValues();
-	void update();
-	void render(Point pos, float angle);
-	void getplayerpos(Point playerpos);
+	void update(World& world);
 
 private:
 	Point playerpos_;
-	Point mypos_;
+	
 };
 

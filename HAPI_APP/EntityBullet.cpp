@@ -4,7 +4,7 @@
 
 CEntityBullet::CEntityBullet()//CEntity(textureLocation)
 {
-	sprite_ = new Sprite(HAPI_Sprites.MakeSurface("Data\\fireBall.png"));
+	sprite_ = new Sprite(HAPI_Sprites.MakeSurface("Data\\rocketUp.png"));
 	initialiseValues();
 	
 }
@@ -18,7 +18,7 @@ CEntityBullet::~CEntityBullet()
 void CEntityBullet::initialiseValues()
 {
 	health_ = 3;
-	speed_ = 1;
+	speed_ = 6;
 	attack_ = 10;
 
 

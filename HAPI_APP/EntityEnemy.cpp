@@ -1,4 +1,6 @@
 #include "EntityEnemy.h"
+#include "World.h"
+
 
 
 
@@ -13,52 +15,58 @@ EntityEnemy::EntityEnemy(std::string textureLocation)//:CEntity (textureLocation
 EntityEnemy::~EntityEnemy()
 {
 }
+
+
 void EntityEnemy::initialiseValues()
 {
 	health_ = 1;
+	pos_ = { (rand()%800) + 200,(rand()%800) + 200 };
 	alive_ = true;
+	speed_ = 3;
+	side = enemy;
 }
-void EntityEnemy::update()
-{	
 
-	if (health_ >= 0) {
+
+void EntityEnemy::update(World& world)
+{	
+	playerpos_ =  world.getPlayerPos();
+
+	if (health_ <= 0) {
 		alive_ = false;
 	}
 
 	if (alive_ == true) {
 
-		if (playerpos_.x > mypos_.x) {
+		if (playerpos_.x > pos_.x) {
 			//distance.x = playerpos_.x - pos_.x;
 
-			mypos_.x += speed_;
+			pos_.x += speed_;
 
 
 		}
-		else if (playerpos_.x < mypos_.x) {
+		else  {
 			//	distance.x = mypos_.x - playerpos_.x;
 
 			//if (distance.x > 0) {
-			mypos_.x -= speed_;
+			pos_.x -= speed_;
 			//}
 
 
 		}
 
-		if (playerpos_.y > mypos_.y) {
+		if (playerpos_.y > pos_.y) {
 			//distance.y = playerpos_.y - pos_.y;
 
 			//if (distance.y > 0) {
-			mypos_.y += speed_;
+			pos_.y += speed_;
 			//}
 
 
 		}
-		else if (playerpos_.y < mypos_.y) {
+		else  {
 			//	distance.y = mypos_.y - playerpos_.y;
-
-
 			//	if (distance.y > 0) {
-			mypos_.y -= speed_;
+			pos_.y -= speed_;
 			//	}
 
 
@@ -66,15 +74,6 @@ void EntityEnemy::update()
 	}
 }
 
-void EntityEnemy::render(Point pos, float angle)
-{
 
-	if (alive_ = true) {
-	sprite_->RenderRotated(SCREEN_SURFACE, pos, angle);
-	}
-}
 
-void EntityEnemy::getplayerpos(Point playerpos)
-{
-	playerpos_ = playerpos;
-}
+
