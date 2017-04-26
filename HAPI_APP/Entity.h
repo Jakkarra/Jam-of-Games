@@ -24,6 +24,9 @@ public:
 	Point getPos() { return pos_; }
 	void movement() { pos_ += Point{ speed_,speed_ };}
 	bool isAlive() { return alive_; }
+	bool isInvunerable() { return invunerable_; }
+	int getAttack() { return attack_; }
+	float getAngle() { return angle_; }
 	sides getSide() { return side; }
 	virtual void update(World& world) = 0;
 
@@ -43,6 +46,7 @@ protected:
 	int speed_ = 0;
 	int attack_ = 0;
 	bool alive_ = false;
+	bool invunerable_ = false;
 private:
 
 	

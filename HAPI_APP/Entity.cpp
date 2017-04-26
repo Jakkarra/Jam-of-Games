@@ -29,7 +29,7 @@ void CEntity::render()
 {
 	if (alive_ == true)
 	{
-		sprite_->Render(SCREEN_SURFACE, pos_, angle_);
+		sprite_->RenderRotated(SCREEN_SURFACE, pos_, angle_);
 	}
 	
 }
