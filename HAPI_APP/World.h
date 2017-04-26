@@ -16,7 +16,7 @@ public:
 
 	enum menuStates
 	{
-		eMainMenu, ePlayState, eGameOver, ePaused, eCreation, eWin
+		eMainMenu, ePlay, eGameOver, ePaused, eCreation, eWin,eControls
 	};
 
 	void Run();
@@ -29,6 +29,7 @@ public:
 private:
 	menuStates currentState = eMainMenu;
 
+	int deadzoneLeft = HK_GAMEPAD_LEFT_THUMB_DEADZONE;
 	std::vector<CEntity*> entityVector;
 	std::vector<CEntityBullet*> bulletVector;
 	CEntityPlayer* player_ = new CEntityPlayer;
@@ -36,6 +37,7 @@ private:
 	float updateTime = 0;
 	Room* First_Room = new Room;
 	Room* Second_Room = new Room;
+	int optionSelected = 0;
 
 	Point Position_To_Spawn{ 250,250 };
 

@@ -33,11 +33,11 @@ void World::Run()
 			
 			if (mouse.rightButtonDown)
 			{
-				currentState = ePlayState;
+				currentState = ePlay;
 			}
 		}
 
-		if (currentState == ePlayState)
+		if (currentState == ePlay)
 		{
 			Playing();
 			//do playing function
@@ -56,7 +56,7 @@ void World::Run()
 				for (auto p : entityVector)
 					p->initialiseValues();
 
-				currentState = ePlayState;
+				currentState = ePlay;
 			}
 		}
 	}
@@ -160,7 +160,61 @@ void World::Playing()
 
 void World::mainMenu()
 {
+	const HAPI_TControllerData &conData = HAPI_Sprites.GetControllerData(0);
+	static int trans1 = 255;
+	static int trans2 = 70;
+	static float timelimit = 0;
+	
+	menuStates selectedState = ePlay;
 
-	HAPI_Sprites.RenderText(960, 540, HAPI_TColour(255, 0, 0), "Menu State");
+	CEntityMenu sp("Data//XboxRTLogo.png");
 
+	sp.setPosition(Point{ 1725,980 });
+	HAPI_Sprites.RenderText(1650, 990, HAPI_TColour(255, 255, 255, 255), "Press		 to select", 24);
+
+		HAPI_Sprites.RenderText(0, 750, HAPI_TColour(255, 255, 255, trans1), "Play", 84);
+		HAPI_Sprites.RenderText(0, 870, HAPI_TColour(255, 255, 255, trans2), "Controls", 84);
+		sp.render();
+		if (conData.analogueButtons[HK_ANALOGUE_RIGHT_TRIGGER]) //selection
+		{
+			currentState = selectedState;
+		}
+		if (conData.analogueButtons[HK_ANALOGUE_LEFT_THUMB_Y] < -deadzoneLeft && HAPI_Sprites.GetTime() > timelimit) //changing selection
+		{
+			timelimit = HAPI_Sprites.GetTime() + 200;
+			optionSelected += 1;
+			if (optionSelected >= 2)
+				optionSelected = 0;
+
+			if (optionSelected == 0)
+			{
+				trans1 = 255;
+				trans2 = 70;
+				selectedState = ePlay;
+
+			}
+			else
+			{
+				trans1 = 70;
+				trans2 = 255;
+				selectedState = eControls;
+
+			}
+		}
 }
+	//if (currentMState == eMControls)
+	//{
+	//	HAPI_Sprites.RenderText(0, 750, HAPI_TColour(255, 255, 255, 70), "Play", 84);
+	//	HAPI_Sprites.RenderText(0, 870, HAPI_TColour(255, 255, 255, 255), "Controls", 84);
+	//	sp.render();
+	//	if (conData.analogueButtons[HK_ANALOGUE_RIGHT_TRIGGER]) //selection
+	//	{
+	//		currentState = eControls;
+	//	}
+	//	if (conData.analogueButtons[HK_ANALOGUE_LEFT_THUMB_Y] > deadzoneLeft) //changing selection
+	//	{
+	//		currentMState = eMPlay;
+	//	}
+	//}
+
+

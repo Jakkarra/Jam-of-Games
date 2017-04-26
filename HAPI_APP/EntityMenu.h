@@ -6,7 +6,9 @@ class CEntityMenu :
 public:
 	CEntityMenu(std::string textureLocation);
 	~CEntityMenu();
-	void update();
+	void update(World &world);
+
+	void initialiseValues();
 	
 private:
 
