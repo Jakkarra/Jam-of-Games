@@ -4,6 +4,7 @@
 #include "EntityPlayer.h"
 #include "EntityMenu.h"
 #include "EntityEnemy.h"
+#include "Room.h"
 
 class CEntity;
 
@@ -33,5 +34,12 @@ private:
 	CEntityPlayer* player_ = new CEntityPlayer;
 	float currTime = 0;
 	float updateTime = 0;
+	Room* First_Room = new Room;
+	Room* Second_Room = new Room;
+
+	Point Position_To_Spawn{ 250,250 };
+
+
+	Point Position_To_Spawn_second{ 450,450 };
 };
 

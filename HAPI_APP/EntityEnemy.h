@@ -14,6 +14,8 @@ public:
 	~EntityEnemy();
 	void initialiseValues();
 	void update(World& world);
+	void hasCollided(CEntity* other);
+
 
 private:
 	Point playerpos_;

@@ -18,15 +18,15 @@ public:
 	void initialiseValues();
 	void update(World& world);
 	void shoot(CEntityBullet* bullet);
-	void hasCollided(CEntity* other);
+	void hasCollided(CEntity &other);
 
 private:
 
 
 	int deadzone_left_ = HK_GAMEPAD_LEFT_THUMB_DEADZONE;
-	int reloadTime = 0;
-	int bulletNum= 0;
-	
+	unsigned int reloadTime = 0;
+	unsigned int bulletNum= 0;
+	float invunerableTime = 0;
 protected:
 
 

@@ -16,4 +16,5 @@ CEntityMenu::~CEntityMenu()
 
 void CEntityMenu::update()
 {
+	invunerable_ = true;
 }

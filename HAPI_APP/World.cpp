@@ -30,13 +30,18 @@ void World::Run()
 		if (currentState == eMainMenu) //Main Menu goes here
 		{
 			mainMenu();
+			
+			if (mouse.rightButtonDown)
+			{
+				currentState = ePlayState;
+			}
 		}
 
 		if (currentState == ePlayState)
 		{
-			HAPI_Sprites.RenderText(960, 540, HAPI_TColour(255, 0, 0), "Game State");
+			Playing();
 			//do playing function
-			if (mouse.rightButtonDown)
+			if (mouse.leftButtonDown)
 			{
 				currentState = eGameOver;
 			}
@@ -44,11 +49,14 @@ void World::Run()
 
 		if (currentState == eGameOver)
 		{
-			HAPI_Sprites.RenderText(960, 540, HAPI_TColour(255, 0, 0), "Game Over State");
+			HAPI_Sprites.RenderText(660, 540, HAPI_TColour(255, 255, 0), "Game Over State", 70);
 			//do gameover function
 			if (mouse.middleButtonDown)
 			{
-				HAPI_Sprites.Close();
+				for (auto p : entityVector)
+					p->initialiseValues();
+
+				currentState = ePlayState;
 			}
 		}
 	}
@@ -71,24 +79,43 @@ void World::Initialise()
 		entityVector.push_back(enemy_);
 	}
 	//here we would add enemies to enemy vector to set a max number of enemies, all initally dead. then set however many we want to alive as you enter a room
+
+
+
+	
+
+
+	First_Room = new Room("Room_Floor_1.png", Position_To_Spawn, "Corners_And_Walls_Room_1.png", 32);
+
+
+	First_Room->Create_Invidividual_Room();
+
+
+	Second_Room = new Room("Room_Floor_1_.png", Position_To_Spawn_second, "Corners_And_Walls_Room_1.png", 32);
+
+
+	auto test_texture = HAPI_Sprites.MakeSurface("Data\\Room_Floor_1.png");
+
+	Second_Room->Create_Complex_Room(test_texture);
+
+
+
+
 }
 
 void World::Playing()
 {
-	
+	if (player_->isAlive() == false)
+		currentState = eGameOver;
 
-}
-
-void World::mainMenu()
-{
 	currTime = HAPI_Sprites.GetTime();
-	//add a time to limit the update so it updates at 30 or 60 fps.
+
 	if (currTime >= updateTime)
 	{
 		for (auto p : entityVector)
 			p->update(*this);
 
-		for (auto p : bulletVector) //seperate bullet vector so i can pass them through,
+		for (auto p : bulletVector) //seperate bullet vector so i can pass them through
 			p->update(*this);
 
 
@@ -96,7 +123,7 @@ void World::mainMenu()
 		for (auto p : entityVector)
 			for (auto r : entityVector)
 			{
-				if (p->isAlive() == true && r->isAlive() == true && p->getSide() != r->getSide())
+				if (p->isAlive() == true && r->isAlive() == true && p->getSide() != r->getSide() && p->isInvunerable() == false && r->isInvunerable() == false)
 					if (p->getPntrToSprite()->CheckCollision(p->getPos(), r->getSprite(), r->getPos()) == true)
 					{
 						p->hasCollided(r);
@@ -107,7 +134,7 @@ void World::mainMenu()
 		for (auto p : entityVector)
 			for (auto r : bulletVector)
 			{
-				if (p->isAlive() == true && r->isAlive() == true && p->getSide() != r->getSide())
+				if (p->isAlive() == true && r->isAlive() == true && p->getSide() != r->getSide() && p->isInvunerable() == false)
 					if (p->getPntrToSprite()->CheckCollision(p->getPos(), r->getSprite(), r->getPos()) == true)
 					{
 						p->hasCollided(r);
@@ -117,10 +144,23 @@ void World::mainMenu()
 		updateTime = HAPI_Sprites.GetTime() + 20.0f;
 	}
 
+	First_Room->Render_Floor();
+
+	Second_Room->Render_Floor();
+
+
 	for (auto p : entityVector) //might be better to have a single vector instead of two and have the offset for where the bullets start
 		p->render();
 
 	for (auto p : bulletVector) //also the render is seperate to the update as update is every tick, render may be slowed down
 		p->render();
+
+
+}
+
+void World::mainMenu()
+{
+
+	HAPI_Sprites.RenderText(960, 540, HAPI_TColour(255, 0, 0), "Menu State");
 
 }

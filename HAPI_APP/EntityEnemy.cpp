@@ -74,6 +74,15 @@ void EntityEnemy::update(World& world)
 	}
 }
 
+void EntityEnemy::hasCollided(CEntity* other)
+{
+	if (other->getSide() == player)
+	{		
+		health_ -= other->getAttack();
+	}
+
+}
+
 
 
 
