@@ -55,3 +55,15 @@ Temporary Items
 .exp
 .VC.db
 .suo
+HAPI_APP/HAPI_Log.html
+HAPI_APP.VC.VC.opendb
+*.obj
+*.exe
+*.log
+*.tlog
+*.db
+*.idb
+*.pdb
+*.exp
+*.ilk
+*.lib
