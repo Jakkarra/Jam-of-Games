@@ -173,6 +173,7 @@
     <ClCompile Include="EntityEnemy.cpp" />
     <ClCompile Include="EntityMenu.cpp" />
     <ClCompile Include="EntityPlayer.cpp" />
+    <ClCompile Include="EntityHealth.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Room.cpp" />
     <ClCompile Include="World.cpp" />
@@ -181,6 +182,7 @@
     <ClInclude Include="EntityBullet.h" />
     <ClInclude Include="EntityEnemy.h" />
     <ClInclude Include="EntityMenu.h" />
+    <ClInclude Include="EntityHealth.h" />
     <ClInclude Include="Room.h" />
     <ClInclude Include="World.h" />
   </ItemGroup>

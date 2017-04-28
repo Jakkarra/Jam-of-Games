@@ -26,11 +26,12 @@ public:
 	bool isAlive() { return alive_; }
 	bool isInvunerable() { return invunerable_; }
 	int getAttack() { return attack_; }
+	int gethealth() { return health_; }
 	float getAngle() { return angle_; }
 	sides getSide() { return side; }
 	virtual void update(World& world) = 0;
 
-	virtual void hasCollided(CEntity* other);
+	virtual void hasCollided(CEntity &other);
 	virtual void initialiseValues() = 0;
 protected:
 

@@ -14,7 +14,7 @@ public:
 	~EntityEnemy();
 	void initialiseValues();
 	void update(World& world);
-	void hasCollided(CEntity* other);
+	void hasCollided(CEntity &other);
 
 
 private:

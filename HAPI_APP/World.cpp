@@ -59,11 +59,18 @@ void World::Run()
 				currentState = ePlay;
 			}
 		}
+
+		if (currentState == eCharacter)
+		{
+			charCreation();
+		}
 	}
 }
 
 void World::Initialise()
 {
+	//healthVector.push_back()
+
 	entityVector.push_back(player_);
 
 	for (int i = 0; i < 500; i++)
@@ -79,8 +86,8 @@ void World::Initialise()
 		entityVector.push_back(enemy_);
 	}
 	//here we would add enemies to enemy vector to set a max number of enemies, all initally dead. then set however many we want to alive as you enter a room
-
-
+	EntityHealth* health = new EntityHealth();
+	entityVector.push_back(health);
 
 	
 
@@ -123,11 +130,11 @@ void World::Playing()
 		for (auto p : entityVector)
 			for (auto r : entityVector)
 			{
-				if (p->isAlive() == true && r->isAlive() == true && p->getSide() != r->getSide() && p->isInvunerable() == false && r->isInvunerable() == false)
+				if (p->isAlive() && r->isAlive() && p->getSide() != r->getSide() && p->isInvunerable() == false && r->isInvunerable() == false)
 					if (p->getPntrToSprite()->CheckCollision(p->getPos(), r->getSprite(), r->getPos()) == true)
 					{
-						p->hasCollided(r);
-						r->hasCollided(p);
+						p->hasCollided(*r);
+						r->hasCollided(*p);
 					}
 			}
 
@@ -137,8 +144,8 @@ void World::Playing()
 				if (p->isAlive() == true && r->isAlive() == true && p->getSide() != r->getSide() && p->isInvunerable() == false)
 					if (p->getPntrToSprite()->CheckCollision(p->getPos(), r->getSprite(), r->getPos()) == true)
 					{
-						p->hasCollided(r);
-						r->hasCollided(p);
+						p->hasCollided(*r);
+						r->hasCollided(*p);
 					}
 			}
 		updateTime = HAPI_Sprites.GetTime() + 20.0f;
@@ -165,7 +172,7 @@ void World::mainMenu()
 	static int trans2 = 70;
 	static float timelimit = 0;
 	
-	menuStates selectedState = ePlay;
+	menuStates selectedState = eCharacter;
 
 	CEntityMenu sp("Data//XboxRTLogo.png");
 
@@ -190,7 +197,7 @@ void World::mainMenu()
 			{
 				trans1 = 255;
 				trans2 = 70;
-				selectedState = ePlay;
+				selectedState = eCharacter;
 
 			}
 			else
@@ -201,6 +208,50 @@ void World::mainMenu()
 
 			}
 		}
+		else if (conData.analogueButtons[HK_ANALOGUE_LEFT_THUMB_Y] > deadzoneLeft && HAPI_Sprites.GetTime() > timelimit) //changing selection
+		{
+			timelimit = HAPI_Sprites.GetTime() + 200;
+			optionSelected += 1;
+			if (optionSelected >= 2)
+				optionSelected = 0;
+
+			if (optionSelected == 0)
+			{
+				trans1 = 255;
+				trans2 = 70;
+				selectedState = eCharacter;
+
+			}
+			else
+			{
+				trans1 = 70;
+				trans2 = 255;
+				selectedState = eControls;
+
+			}
+		}
+}
+void World::charCreation()
+{
+	//Menu
+	totalStats = healthPoints + speedPoints + ratePoints + damagePoints;
+	totalPoints - totalStats;
+
+	HAPI_Sprites.RenderText(650, 200, HAPI_TColour(255, 255, 255, 255), 0, 0, "Choose Your Stats!", 60);
+	HAPI_Sprites.RenderText(500, 350, HAPI_TColour(255, 255, 255, 255), 0, 0, "Health:", 34);
+	HAPI_Sprites.RenderText(500, 450, HAPI_TColour(255, 255, 255, 255), 0, 0, "Speed:", 34);
+	HAPI_Sprites.RenderText(500, 550, HAPI_TColour(255, 255, 255, 255), 0, 0, "Fire Rate:", 34);
+	HAPI_Sprites.RenderText(500, 650, HAPI_TColour(255, 255, 255, 255), 0, 0, "Damage:", 34);
+
+	HAPI_Sprites.RenderText(900, 350, HAPI_TColour(255, 255, 255, 255), 0, 0, std::to_string(healthPoints), 34);
+	HAPI_Sprites.RenderText(900, 450, HAPI_TColour(255, 255, 255, 255), 0, 0, std::to_string(speedPoints), 34);
+	HAPI_Sprites.RenderText(900, 550, HAPI_TColour(255, 255, 255, 255), 0, 0, std::to_string(ratePoints), 34);
+	HAPI_Sprites.RenderText(900, 650, HAPI_TColour(255, 255, 255, 255), 0, 0, std::to_string(damagePoints), 34);
+
+	HAPI_Sprites.RenderText(1000, 270, HAPI_TColour(255, 255, 255, 255), 0, 0, "Total Points:", 34);
+	HAPI_Sprites.RenderText(1200, 272, HAPI_TColour(255, 255, 255, 255), 0, 0, std::to_string(totalPoints), 34);
+
+
 }
 	//if (currentMState == eMControls)
 	//{

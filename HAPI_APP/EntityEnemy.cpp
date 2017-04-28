@@ -24,6 +24,8 @@ void EntityEnemy::initialiseValues()
 	alive_ = true;
 	speed_ = 3;
 	side = enemy;
+	attack_ = 1;
+
 }
 
 
@@ -74,11 +76,11 @@ void EntityEnemy::update(World& world)
 	}
 }
 
-void EntityEnemy::hasCollided(CEntity* other)
+void EntityEnemy::hasCollided(CEntity &other)
 {
-	if (other->getSide() == player)
+	if (other.getSide() == player)
 	{		
-		health_ -= other->getAttack();
+		health_ -= other.getAttack();
 	}
 
 }

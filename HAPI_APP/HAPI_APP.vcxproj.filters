@@ -23,6 +23,9 @@
     <ClCompile Include="Room.cpp">
       <Filter>Entities</Filter>
     </ClCompile>
+    <ClCompile Include="EntityHealth.cpp">
+      <Filter>Entities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EntityPlayer.h">
@@ -44,6 +47,9 @@
       <Filter>Entities</Filter>
     </ClInclude>
     <ClInclude Include="Room.h">
+      <Filter>Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="EntityHealth.h">
       <Filter>Entities</Filter>
     </ClInclude>
   </ItemGroup>
