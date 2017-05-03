@@ -37,24 +37,32 @@ void CEntityPlayer::update(World& world)
 	if (health_ <= 0)
 		alive_ = false;
 
+	invunerable_ = true; //testing/////////////////////////////////////////////////////
+
+	float xRight = conData.analogueButtons[HK_ANALOGUE_RIGHT_THUMB_X];
+	float yRight = conData.analogueButtons[HK_ANALOGUE_RIGHT_THUMB_Y];
+
+	if (xRight != 0.0f || yRight != 0.0f) {
+		angle_ = atan2(-yRight, xRight);
+		
+	}
+
+	
 	if (conData.analogueButtons[HK_ANALOGUE_LEFT_THUMB_Y] < -deadzone_left_ )
 	{
 		pos_.y += speed_;
-
+		//directionToMove += speed;
+		//more of these then use final speed value to calculate the rendering
+		//can use to check if 
 	}
-
-	if (conData.analogueButtons[HK_ANALOGUE_RIGHT_THUMB_Y] < -deadzone_left_)
-	{
-		angle_ += 0.1;// just test code, i think we should go with 8 directional shooting and also limit enemy to that
-
-	}
-
+	
 	if (conData.analogueButtons[HK_ANALOGUE_LEFT_THUMB_Y]> deadzone_left_)
 	{
 
 		pos_.y -= speed_;
 
 	}
+
 	if (conData.analogueButtons[HK_ANALOGUE_LEFT_THUMB_X] < -deadzone_left_)
 	{	
 
@@ -84,14 +92,16 @@ void CEntityPlayer::update(World& world)
 		angle_ -= 6.28;
 	}
 	
+	oldPos = pos_;
+	interpValue = 0;
 }
 
 void CEntityPlayer::shoot(CEntityBullet* bullet)
 {
-	if (HAPI_Sprites.GetTime() > reloadTime)
+	if (HAPI_Sprites.GetTime() > timeToShoot)
 	{
 		bullet->setValues(*this); //need to make the player rotate so i can try shooting at different angles. I need to calc bullet direction from player angle
-		reloadTime = HAPI_Sprites.GetTime() + 1500;
+		timeToShoot = HAPI_Sprites.GetTime() + reloadTime;
 	}
 
 }
@@ -100,7 +110,7 @@ void CEntityPlayer::hasCollided(CEntity &other)
 {
 	if (other.getSide() == enemy)
 	{
-		health_ -= 1;
+		health_ -= other.getAttack();
 		invunerable_ = true;
 		invunerableTime = HAPI_Sprites.GetTime() + 200;
 	}

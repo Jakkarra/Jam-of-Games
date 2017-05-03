@@ -47,6 +47,10 @@ protected:
 	int attack_ = 0;
 	bool alive_ = false;
 	bool invunerable_ = false;
+	Point oldPos = { 0,0 };
+	float xVector = 0;
+	float yVector = 0;
+	float interpValue = 0.f;
 private:
 
 	

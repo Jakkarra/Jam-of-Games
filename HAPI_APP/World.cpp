@@ -141,7 +141,7 @@ void World::Playing()
 						r->hasCollided(p);
 					}
 			}
-		updateTime = HAPI_Sprites.GetTime() + 20.0f;
+		updateTime = HAPI_Sprites.GetTime() + 30.0f;
 	}
 
 	First_Room->Render_Floor();
