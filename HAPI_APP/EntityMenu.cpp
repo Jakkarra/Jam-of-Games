@@ -14,7 +14,14 @@ CEntityMenu::~CEntityMenu()
 {
 }
 
-void CEntityMenu::update()
+void CEntityMenu::update(World &world)
 {
 	invunerable_ = true;
+
 }
+
+void CEntityMenu::initialiseValues()
+{
+	alive_ = true;
+}
+

@@ -10,12 +10,14 @@ CEntity::CEntity()
 
 CEntity::~CEntity()
 {
+	delete sprite_;
+
 }
 
 
 
 
-void CEntity::hasCollided(CEntity* other)
+void CEntity::hasCollided(CEntity &other)
 {
 }
 

@@ -20,7 +20,7 @@ void CEntityPlayer::initialiseValues() //feel like sprite data going to be delet
 {
 	
 	pos_ = Point{ 50,50 };
-	health_ = 3;
+	health_ = 9;
 	speed_ = 4;
 	attack_ = 10;
 	side = player;
