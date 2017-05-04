@@ -31,27 +31,6 @@ void EntityHealth::update(World& world)
 	//Have checks to see how many full hearts are needed?
 	playerHealth = world.getPlayerHealth();
 
-	if (playerHealth >= 4)
-	{
-		//load 2 full hearts
-		//is2 = true
-	}
-	if (playerHealth >= 2 && playerHealth < 4)
-	{
-		//1 full heart
-		//is2 = false, is1 = true
-	}
-	if (playerHealth < 2)
-	{
-		//0 full hearts
-		//is0 = true
-	}
-
-	if (is2 == true && playerHealth == 5)
-	{
-		//load third heart as half
-	}
-
 }
 
 void EntityHealth::render()
