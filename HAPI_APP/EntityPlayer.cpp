@@ -27,6 +27,7 @@ void CEntityPlayer::initialiseValues() //feel like sprite data going to be delet
 	alive_ = true;
 	angle_ = 0;
 	
+	
 }
 
 
@@ -108,11 +109,20 @@ void CEntityPlayer::shoot(CEntityBullet* bullet)
 
 void CEntityPlayer::hasCollided(CEntity &other)
 {
-	if (other.getSide() == enemy)
+	if (other.getSide() == enemy && invunerable_ == false)
 	{
 		health_ -= other.getAttack();
 		invunerable_ = true;
 		invunerableTime = HAPI_Sprites.GetTime() + 200;
+	}
+	else if(other.getSide() == pickup)
+	{
+		maxHealth_ += other.getHealth();
+		health_ += other.getHealth();
+		speed_ += other.getSpeed();
+		rof_ -= other.getROF();
+		reloadTime = 500 / (rof_+1);
+		attack_ += other.getAttack();
 	}
 
 }

@@ -30,6 +30,7 @@ void EntityHealth::update(World& world)
 {
 	//Have checks to see how many full hearts are needed?
 	playerHealth = world.getPlayerHealth();
+	maxHealth = world.getPlayerMaxHealth();
 
 }
 

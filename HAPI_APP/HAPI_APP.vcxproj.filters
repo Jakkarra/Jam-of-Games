@@ -26,6 +26,9 @@
     <ClCompile Include="EntityHealth.cpp">
       <Filter>Entities</Filter>
     </ClCompile>
+    <ClCompile Include="EntityPickup.cpp">
+      <Filter>Entities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EntityPlayer.h">
@@ -52,6 +55,10 @@
     <ClInclude Include="EntityHealth.h">
       <Filter>Entities</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="EntityPickup.h">
+      <Filter>Entities</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Entities">
@@ -60,5 +67,8 @@
     <Filter Include="WorldModel">
       <UniqueIdentifier>{7f443730-b6b4-403b-bb59-49f5eab58f70}</UniqueIdentifier>
     </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="HAPI_APP.rc" />
   </ItemGroup>
 </Project>

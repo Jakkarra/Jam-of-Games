@@ -19,15 +19,16 @@ public:
 	void update(World& world);
 	void shoot(CEntityBullet* bullet);
 	void hasCollided(CEntity &other);
-
+	int getMaxHealth() { return maxHealth_; }
 private:
 
 
 	int deadzone_left_ = HK_GAMEPAD_LEFT_THUMB_DEADZONE; //numberofKeys
-	unsigned int timeToShoot = 0;
-	unsigned int reloadTime = 500;
+	int timeToShoot = 0.f;
+	unsigned int reloadTime = 500.f;
 	unsigned int bulletNum= 0;
 	float invunerableTime = 0;
+	int maxHealth_ = 8;
 protected:
 
 
