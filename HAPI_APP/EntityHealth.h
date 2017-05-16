@@ -14,7 +14,7 @@ public:
 	void render();
 
 private:
-	const int maxHealth = 10;
+	int maxHealth = 8;
 	int playerHealth = 0;
 	bool is2 = true;
 	bool is1 = false;

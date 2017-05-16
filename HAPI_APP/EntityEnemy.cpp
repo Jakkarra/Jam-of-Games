@@ -74,6 +74,9 @@ void EntityEnemy::update(World& world)
 
 		}
 	}
+
+	oldPos = pos_;
+	interpValue = 0;
 }
 
 void EntityEnemy::hasCollided(CEntity &other)
@@ -82,7 +85,7 @@ void EntityEnemy::hasCollided(CEntity &other)
 	{		
 		health_ -= other.getAttack();
 	}
-
+	
 }
 
 

@@ -14,7 +14,7 @@ public:
 	virtual ~CEntity();
 	virtual void render();
 
-	enum sides { player, enemy, neutral, };
+	enum sides { player, enemy, neutral, pickup };
 
 	void setPosition(Point pos) { pos_ = pos; }
 	void setAngle(float angle) { angle_ = angle; }
@@ -26,7 +26,9 @@ public:
 	bool isAlive() { return alive_; }
 	bool isInvunerable() { return invunerable_; }
 	int getAttack() { return attack_; }
-	int gethealth() { return health_; }
+	int getHealth() { return health_; }
+	int getSpeed() { return speed_; }
+	int getROF() { return rof_; }
 	float getAngle() { return angle_; }
 	sides getSide() { return side; }
 	virtual void update(World& world) = 0;
@@ -46,8 +48,13 @@ protected:
 	int health_ = 0;
 	int speed_ = 0;
 	int attack_ = 0;
+	int rof_ = 0;
 	bool alive_ = false;
 	bool invunerable_ = false;
+	Point oldPos = { 0,0 };
+	float xVector = 0;
+	float yVector = 0;
+	float interpValue = 0.f;
 private:
 
 	

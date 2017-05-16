@@ -172,6 +172,7 @@
     <ClCompile Include="EntityBullet.cpp" />
     <ClCompile Include="EntityEnemy.cpp" />
     <ClCompile Include="EntityMenu.cpp" />
+    <ClCompile Include="EntityPickup.cpp" />
     <ClCompile Include="EntityPlayer.cpp" />
     <ClCompile Include="EntityHealth.cpp" />
     <ClCompile Include="main.cpp" />
@@ -183,12 +184,17 @@
     <ClInclude Include="EntityEnemy.h" />
     <ClInclude Include="EntityMenu.h" />
     <ClInclude Include="EntityHealth.h" />
+    <ClInclude Include="EntityPickup.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="Room.h" />
     <ClInclude Include="World.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Entity.h" />
     <ClInclude Include="EntityPlayer.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="HAPI_APP.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

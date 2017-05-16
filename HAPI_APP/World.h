@@ -5,6 +5,7 @@
 #include "EntityMenu.h"
 #include "EntityEnemy.h"
 #include "EntityHealth.h"
+#include "EntityPickup.h"
 #include "Room.h"
 
 class CEntity;
@@ -27,7 +28,8 @@ public:
 	void charCreation();
 	std::vector<CEntityBullet*> getBullets() { return bulletVector; }
 	Point getPlayerPos() { return player_->getPos(); }
-	int getPlayerHealth() { return player_->gethealth(); }
+	int getPlayerHealth() { return player_->getHealth(); }
+	int getPlayerMaxHealth() { return player_->getMaxHealth(); }
 	
 private:
 	menuStates currentState = eMainMenu;
