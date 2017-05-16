@@ -55,11 +55,18 @@ private:
 	Point Position_To_Spawn_second{ 450,450 };
 
 	//Character Creation Variables
-	int totalPoints = 8;
-	int healthPoints = 1;
-	int speedPoints = 1;
-	int ratePoints = 1;
-	int damagePoints = 1;
-	int totalStats;
+	unsigned int totalPoints = 8;
+	unsigned int healthPoints = 1;
+	unsigned int speedPoints = 1;
+	unsigned int ratePoints = 1;
+	unsigned int damagePoints = 1;
+	unsigned int totalStats;
+	bool isHealth = false;
+	bool isSpeed = false;
+	bool isRate = false;
+	bool isDamage = false;
+
+	CEntityMenu *bg = new CEntityMenu("Data//Background.jpg");
+	CEntityMenu *sp = new CEntityMenu("Data//XboxRTLogo.png");
 };
 
