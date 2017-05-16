@@ -91,7 +91,14 @@ void World::Initialise()
 
 	
 
-
+	CEntityPickup* healthPickup = new CEntityPickup(2, 0, 0, 0);
+	CEntityPickup* healthPickup2 = new CEntityPickup(0, 2, 0, 0);
+	CEntityPickup* healthPickup3 = new CEntityPickup(0, 0, 2, 0);
+	CEntityPickup* healthPickup4 = new CEntityPickup(0, 0, 0, 2);
+	entityVector.push_back(healthPickup);
+	entityVector.push_back(healthPickup2);
+	entityVector.push_back(healthPickup3);
+	entityVector.push_back(healthPickup4);
 	First_Room = new Room("Room_Floor_1.png", Position_To_Spawn, "Corners_And_Walls_Room_1.png", 32);
 
 
@@ -106,7 +113,7 @@ void World::Initialise()
 	Second_Room->Create_Complex_Room(test_texture);
 
 
-
+	
 
 }
 
@@ -119,6 +126,8 @@ void World::Playing()
 
 	if (currTime >= updateTime)
 	{
+
+
 		for (auto p : entityVector)
 			p->update(*this);
 
@@ -130,7 +139,7 @@ void World::Playing()
 		for (auto p : entityVector)
 			for (auto r : entityVector)
 			{
-				if (p->isAlive() && r->isAlive() && p->getSide() != r->getSide() && p->isInvunerable() == false && r->isInvunerable() == false)
+				if (p->isAlive() && r->isAlive() && p->getSide() != r->getSide())
 					if (p->getPntrToSprite()->CheckCollision(p->getPos(), r->getSprite(), r->getPos()) == true)
 					{
 						p->hasCollided(*r);
@@ -151,16 +160,16 @@ void World::Playing()
 		updateTime = HAPI_Sprites.GetTime() + 30.0f;
 	}
 
-	First_Room->Render_Floor();
+	First_Room->Render_Floor(getPlayerPos());
 
-	Second_Room->Render_Floor();
+	Second_Room->Render_Floor(getPlayerPos());
 
 
 	for (auto p : entityVector) //might be better to have a single vector instead of two and have the offset for where the bullets start
-		p->render();
+		p->render(getPlayerPos());
 
 	for (auto p : bulletVector) //also the render is seperate to the update as update is every tick, render may be slowed down
-		p->render();
+		p->render(getPlayerPos());
 
 
 }
@@ -181,7 +190,7 @@ void World::mainMenu()
 
 		HAPI_Sprites.RenderText(0, 750, HAPI_TColour(255, 255, 255, trans1), "Play", 84);
 		HAPI_Sprites.RenderText(0, 870, HAPI_TColour(255, 255, 255, trans2), "Controls", 84);
-		sp.render();
+		sp.render(getPlayerPos());
 		if (conData.analogueButtons[HK_ANALOGUE_RIGHT_TRIGGER]) //selection
 		{
 			currentState = selectedState;
