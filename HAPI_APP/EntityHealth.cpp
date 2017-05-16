@@ -34,7 +34,7 @@ void EntityHealth::update(World& world)
 
 }
 
-void EntityHealth::render()
+void EntityHealth::render(Point playerPos)
 {
 	offsetHeart = 0;
 	

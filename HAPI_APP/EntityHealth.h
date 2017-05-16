@@ -11,7 +11,7 @@ public:
 	void initialiseValues();
 	void update(World& world);
 
-	void render();
+	void render(Point playerPos);
 
 private:
 	int maxHealth = 8;

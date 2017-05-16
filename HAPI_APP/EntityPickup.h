@@ -8,7 +8,7 @@ public:
 	~CEntityPickup();
 	void initialiseValues();
 	void update(World& world);
-	void render();
+	void render(Point playerPos);
 	void hasCollided(CEntity& other);
 private:
 };

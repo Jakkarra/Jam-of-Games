@@ -16,7 +16,7 @@ public:
 	void update(World& world);
 	void setValues(CEntity &other);
 	void resetValues();
-	void render();
+	void render(Point playerPos);
 	int getDamage() { return attack_; }
 private:
 	Point startPosition{ 0,0 };

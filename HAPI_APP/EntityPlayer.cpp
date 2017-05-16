@@ -16,18 +16,34 @@ CEntityPlayer::~CEntityPlayer()
 }
 //delete sprite
 
-void CEntityPlayer::initialiseValues() //feel like sprite data going to be deleted once ou
+void CEntityPlayer::initialiseValues(int health, int speed, int rof, int damage) 
 {
 	
-	pos_ = Point{ 50,50 };
-	health_ = 9;
-	speed_ = 4;
-	attack_ = 10;
+	pos_ = Point{ 960,540 };
+	health_ = health;
+	speed_ = speed;
+	reloadTime = 500 / rof;
+	attack_ = damage;
 	side = player;
 	alive_ = true;
 	angle_ = 0;
 	
 	
+}
+
+void CEntityPlayer::initialiseValues() //this is temp!!
+{
+
+	pos_ = Point{ 960,540 };
+	health_ = 4;
+	speed_ = 4;
+	reloadTime = 500 / 2;
+	attack_ = 4;
+	side = player;
+	alive_ = true;
+	angle_ = 0;
+
+
 }
 
 
@@ -38,7 +54,7 @@ void CEntityPlayer::update(World& world)
 	if (health_ <= 0)
 		alive_ = false;
 
-	invunerable_ = true; //testing/////////////////////////////////////////////////////
+	
 
 	float xRight = conData.analogueButtons[HK_ANALOGUE_RIGHT_THUMB_X];
 	float yRight = conData.analogueButtons[HK_ANALOGUE_RIGHT_THUMB_Y];
@@ -88,6 +104,8 @@ void CEntityPlayer::update(World& world)
 	if (HAPI_Sprites.GetTime() > invunerableTime)
 		invunerable_ = false;
 
+	invunerable_ = true; //testing/////////////////////////////////////////////////////
+
 	if (angle_ >= 6.28)//6.28 is 360 degrees in radians
 	{
 		angle_ -= 6.28;
@@ -126,6 +144,4 @@ void CEntityPlayer::hasCollided(CEntity &other)
 	}
 
 }
-
-
 

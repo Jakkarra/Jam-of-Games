@@ -12,7 +12,7 @@ class CEntity
 public:
 	CEntity(); 
 	virtual ~CEntity();
-	virtual void render();
+	virtual void render(Point playerPos);
 
 	enum sides { player, enemy, neutral, pickup };
 

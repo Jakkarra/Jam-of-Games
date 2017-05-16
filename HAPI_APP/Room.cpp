@@ -257,17 +257,17 @@ void Room::Create_Joined_Room(std::shared_ptr<Surface> other_surface)
 	}
 }
 
-void Room::Render_Floor()
+void Room::Render_Floor(Point PlayerPos)
 {
 	Sprite Floor_To_Render(Floor_Sprite);
 
-	Floor_To_Render.Render(SCREEN_SURFACE, Floor_Position);
+	Floor_To_Render.Render(SCREEN_SURFACE, Floor_Position - (PlayerPos - Point(960, 540)));
 
 	Sprite spriteSheet("Data\\" + Sheet_Name + ".xml", "Data\\");
 
 	for (auto &p : Walls_And_Corners)
 	{
-		spriteSheet.Render(SCREEN_SURFACE, p.Wall_Position, p.Frame_Number);
+		spriteSheet.Render(SCREEN_SURFACE, p.Wall_Position - (PlayerPos - Point(960, 540)), p.Frame_Number);
 
 	}
 }

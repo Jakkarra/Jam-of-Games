@@ -15,6 +15,7 @@ public:
 
 	CEntityPlayer();
 	~CEntityPlayer();
+	void initialiseValues(int health, int speed, int rof, int damage);
 	void initialiseValues();
 	void update(World& world);
 	void shoot(CEntityBullet* bullet);

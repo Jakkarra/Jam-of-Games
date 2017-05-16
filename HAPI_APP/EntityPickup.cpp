@@ -42,7 +42,7 @@ void CEntityPickup::update(World & world)
 
 }
 
-void CEntityPickup::render()
+void CEntityPickup::render(Point playerPos)
 {
 	if (alive_ == true)
 	{
@@ -50,7 +50,7 @@ void CEntityPickup::render()
 		int speed = speed_;
 		int damage = attack_;
 
-		sprite_->RenderRotated(SCREEN_SURFACE, pos_, angle_, [&](const Point p, HAPI_TColour& dest, const HAPI_TColour& source)
+		sprite_->RenderRotated(SCREEN_SURFACE, pos_ - (playerPos - Point(960, 540)), angle_, [&](const Point p, HAPI_TColour& dest, const HAPI_TColour& source)
 		{
 			dest.red = source.alpha*(255 / (1 + speed + damage)) >> 8;
 			dest.green = source.alpha * (255 / (1 + health + speed)) >> 8;
