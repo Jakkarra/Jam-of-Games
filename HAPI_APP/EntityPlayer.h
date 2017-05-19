@@ -20,6 +20,8 @@ public:
 	void update(World& world);
 	void shoot(CEntityBullet* bullet);
 	void hasCollided(CEntity &other);
+
+	void render(Point playerPos);
 	
 	int getMaxHealth() { return maxHealth_; }
 private:

@@ -1,24 +1,37 @@
 #include "EntityPlayer.h"
 #include "World.h"
+#include <HAPISprites_lib.h>
+
+using namespace HAPISPACE;
+
+#include <cassert>
 
 
+#include <algorithm>
+#include <glm/glm.hpp>
+#include <iostream>
 
-CEntityPlayer::CEntityPlayer()//:CEntity(textureLocation)
+
+CEntityPlayer::CEntityPlayer()
 {
-	sprite_ = new Sprite(HAPI_Sprites.MakeSurface("Data\\tranImage.png"));// we could make it so you pass in a value for the texture but we should know what textures are going to be used
+
+	sprite_ = new Sprite("Data\\sprites.xml", "Data\\");
+
+	sprite_->GetAllFrames();
+
+	//sprite_ = new Sprite(HAPI_Sprites.MakeSurface());// we could make it so you pass in a value for the texture but we should know what textures are going to be used
 	initialiseValues();
-
-
 }
 
 CEntityPlayer::~CEntityPlayer()
 {
+
 }
 //delete sprite
 
-void CEntityPlayer::initialiseValues(int health, int speed, int rof, int damage) 
+void CEntityPlayer::initialiseValues(int health, int speed, int rof, int damage)
 {
-	
+
 	pos_ = Point{ 960,540 };
 	health_ = health;
 	maxHealth_ = health;
@@ -29,8 +42,8 @@ void CEntityPlayer::initialiseValues(int health, int speed, int rof, int damage)
 	side = player;
 	alive_ = true;
 	angle_ = 0;
-	
-	
+
+
 }
 
 void CEntityPlayer::initialiseValues() //this is temp!!
@@ -52,12 +65,12 @@ void CEntityPlayer::initialiseValues() //this is temp!!
 void CEntityPlayer::update(World& world)
 {
 	const HAPI_TControllerData &conData = HAPI_Sprites.GetControllerData(0);
-	
+
 	oldPos = pos_;
 
 	if (health_ <= 0)
 		alive_ = false;
-	
+
 
 	float xRight = conData.analogueButtons[HK_ANALOGUE_RIGHT_THUMB_X];
 	float yRight = conData.analogueButtons[HK_ANALOGUE_RIGHT_THUMB_Y];
@@ -106,22 +119,22 @@ void CEntityPlayer::update(World& world)
 	}
 
 
-	
+
 	if (HAPI_Sprites.GetTime() > invunerableTime)
 		invunerable_ = false;
 
-	
+
 
 	if (angle_ >= 6.28)//6.28 is 360 degrees in radians
 	{
 		angle_ -= 6.28;
 	}
-	
-	
+
+
 	interpValue = 0;
 
-	
-	
+
+
 }
 
 void CEntityPlayer::shoot(CEntityBullet* bullet)
@@ -142,22 +155,37 @@ void CEntityPlayer::hasCollided(CEntity &other)
 		invunerable_ = true;
 		invunerableTime = HAPI_Sprites.GetTime() + 200;
 	}
-	else if(other.getSide() == pickup)
+	else if (other.getSide() == pickup)
 	{
 		maxHealth_ += other.getHealth();
 		health_ += other.getHealth();
 		speed_ += other.getSpeed();
 		rof_ += other.getROF();
-		reloadTime = 500 / (rof_+1);
+		reloadTime = 500 / (rof_ + 1);
 		attack_ += other.getAttack();
 	}
 	/*else if (other.getSide() == wall)
 	{
-		pos_ = oldPos;
+	pos_ = oldPos;
 	}
 	else if(other.isFinish())
-		hasFinished == true then check for this in the world loop
+	hasFinished == true then check for this in the world loop
 	*/
 
 }
 
+void CEntityPlayer::render(Point playerPos)
+{	//i want to interp all but not sure how to 
+
+	//_frameNum = offset
+	//offset was defined off the angle 
+	//on attack 
+	if (alive_ == true)
+	{
+		sprite_->Render(SCREEN_SURFACE, pos_ - (playerPos - Point(960, 540)), _frameNum);
+		_frameNum++;
+		if (_frameNum > 90)
+			_frameNum = 0;
+	}
+
+}
