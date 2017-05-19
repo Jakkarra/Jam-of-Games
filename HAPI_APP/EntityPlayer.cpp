@@ -5,7 +5,7 @@
 
 CEntityPlayer::CEntityPlayer()//:CEntity(textureLocation)
 {
-	sprite_ = new Sprite(HAPI_Sprites.MakeSurface("Data\\tranImage.png"));// we could make it so you pass in a value for the texture but we should know what textures are going to be used
+	sprite_ = new Sprite("Data\\sprites.xml", "Data\\");// we could make it so you pass in a value for the texture but we should know what textures are going to be used
 	initialiseValues();
 
 
@@ -67,12 +67,10 @@ void CEntityPlayer::update(World& world)
 		angle_ = atan2(-yRight, xRight);
 
 	}
-	//downwards angle_ = 1.57;
-	// right angle_ = 0;
-	// up angle_ = -1.57;
-	// left angle_ = 3.14;
+	
 	if (angle_ > 3.14)
 		angle_ -= 3.14;
+
 	//best to probably make a vector of "to move" and then add up all movements then before applying check if it is possible, room or wall in way etc.
 	if (conData.analogueButtons[HK_ANALOGUE_LEFT_THUMB_Y] < -deadzone_left_)
 	{
@@ -117,19 +115,22 @@ void CEntityPlayer::update(World& world)
 
 	
 
-	if (angle_ > -0.80 && angle_ <= 0.80 )									//6.28 is 360 degrees in radians
+	if (angle_ > -0.80 && angle_ <= 0.80 )	//left								//6.28 is 360 degrees in radians
 	{
 		renderAngle = 0;
+		//frameOffset = frame number where animation starts
+		//numerOfFramesForAnimation = how many frames in animation
+
 	}
-	else if (angle_ > -2.4 && angle_ <= -0.8)									
+	else if (angle_ > -2.4 && angle_ <= -0.8)				//up					
 	{
 		renderAngle = -1.6;
 	}
-	else if (angle_ > 0.8 && angle_ <=  2.4)									
+	else if (angle_ > 0.8 && angle_ <=  2.4)	//down								
 	{
 		renderAngle = 1.6;
 	}
-	else 									
+	else 	//right								
 	{
 		renderAngle = 3.14;
 	}
@@ -177,5 +178,17 @@ void CEntityPlayer::hasCollided(CEntity &other)
 		hasFinished == true then check for this in the world loop
 	*/
 
+}
+
+void CEntityPlayer::render(Point playerPos)
+{
+	if (alive_ == true)
+	{
+		sprite_->Render(SCREEN_SURFACE, pos_ - (playerPos - Point(960, 540)), _frameNum);
+		_frameNum++;
+
+		if (_frameNum >= frameOffset + numerOfFramesForAnimation)
+			_frameNum = frameOffset;
+	}
 }
 
