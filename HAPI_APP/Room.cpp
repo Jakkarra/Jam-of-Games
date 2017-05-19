@@ -261,13 +261,16 @@ void Room::Render_Floor(Point PlayerPos)
 {
 	Sprite Floor_To_Render(Floor_Sprite);
 
+
+
 	Floor_To_Render.Render(SCREEN_SURFACE, Floor_Position - (PlayerPos - Point(960, 540)));
 
 	Sprite spriteSheet("Data\\" + Sheet_Name + ".xml", "Data\\");
 
 	for (auto &p : Walls_And_Corners)
 	{
-		spriteSheet.Render(SCREEN_SURFACE, p.Wall_Position - (PlayerPos - Point(960, 540)), p.Frame_Number);
+		
+		spriteSheet.Render(SCREEN_SURFACE, p.Wall_Position - (PlayerPos - Point(960, 540)) ,p.Frame_Number);//this is needed not an error
 
 	}
 }

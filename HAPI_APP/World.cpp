@@ -26,7 +26,7 @@ void World::Run()
 	{
 		//
 		SCREEN_SURFACE.Clear();
-		if (currentState == eMainMenu) //Main Menu goes here
+		if (currentState == eMainMenu)
 		{
 			mainMenu();
 		}
@@ -37,14 +37,18 @@ void World::Run()
 		}
 
 		if (currentState == eGameOver)
-		{
-			
+		{			
 			endGame();					
 		}
 
 		if (currentState == eCharacter)
 		{
 			charCreation();
+		}
+
+		if (currentState == ePaused)
+		{
+			pause();
 		}
 	}
 }
@@ -73,10 +77,10 @@ void World::Initialise()
 	entityVector.push_back(health);
 
 
-	CEntityPickup *pickup1 = new CEntityPickup(1, 2, 53, 2);//get sprites for the pickups just define them as we wish
-	CEntityPickup *pickup3 = new CEntityPickup(0, 0, 10, 0);
+	CEntityPickup *pickup1 = new CEntityPickup(1, 2, 4, 2);//get sprites for the pickups just define them as we wish
+	CEntityPickup *pickup3 = new CEntityPickup(0, 0, 4, 0);
 	CEntityPickup *pickup4 = new CEntityPickup(0, 3, 0, 0);
-	CEntityPickup *pickup2 = new CEntityPickup(15, 0, 0, 0);
+	CEntityPickup *pickup2 = new CEntityPickup(2, 0, 0, 0);
 
 	entityVector.push_back(pickup1);
 	entityVector.push_back(pickup2);
@@ -105,6 +109,12 @@ void World::Playing()
 {
 	if (player_->isAlive() == false)
 		currentState = eGameOver;
+	const HAPI_TControllerData &conData = HAPI_Sprites.GetControllerData(0); //maybe find a way to make this a public thing so we dont ned to constantly create it
+
+	if (conData.analogueButtons[HK_ANALOGUE_LEFT_TRIGGER] && conData.analogueButtons[HK_ANALOGUE_RIGHT_TRIGGER])
+	{
+		currentState = ePaused;
+	}
 
 	currTime = HAPI_Sprites.GetTime();
 
@@ -427,4 +437,21 @@ void World::endGame()
 
 
 }
+void World::pause()
+{
+	const HAPI_TControllerData &conData = HAPI_Sprites.GetControllerData(0);
+	static bool canExit = false;
 
+	if (!conData.analogueButtons[HK_ANALOGUE_LEFT_TRIGGER])
+		canExit = true;
+	
+	HAPI_Sprites.RenderText(660, 540, HAPI_TColour(255, 255, 0), "PAUSED", 70);
+
+	if (conData.analogueButtons[HK_ANALOGUE_LEFT_TRIGGER] && canExit == true)
+	{
+		currentState = ePlay;
+		canExit = false;
+	}
+
+
+}

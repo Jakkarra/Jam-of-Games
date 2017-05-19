@@ -33,7 +33,7 @@ private:
 	float invunerableTime = 0;
 	int maxHealth_ = 8;
 	float currAngle = 0;
-protected:
+	float renderAngle = 0;
 
 
 
