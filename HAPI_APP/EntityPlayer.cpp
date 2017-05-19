@@ -67,7 +67,12 @@ void CEntityPlayer::update(World& world)
 		angle_ = atan2(-yRight, xRight);
 
 	}
-
+	//downwards angle_ = 1.57;
+	// right angle_ = 0;
+	// up angle_ = -1.57;
+	// left angle_ = 3.14;
+	if (angle_ > 3.14)
+		angle_ -= 3.14;
 	//best to probably make a vector of "to move" and then add up all movements then before applying check if it is possible, room or wall in way etc.
 	if (conData.analogueButtons[HK_ANALOGUE_LEFT_THUMB_Y] < -deadzone_left_)
 	{
@@ -112,11 +117,24 @@ void CEntityPlayer::update(World& world)
 
 	
 
-	if (angle_ >= 6.28)//6.28 is 360 degrees in radians
+	if (angle_ > -0.80 && angle_ <= 0.80 )									//6.28 is 360 degrees in radians
 	{
-		angle_ -= 6.28;
+		renderAngle = 0;
+	}
+	else if (angle_ > -2.4 && angle_ <= -0.8)									
+	{
+		renderAngle = -1.6;
+	}
+	else if (angle_ > 0.8 && angle_ <=  2.4)									
+	{
+		renderAngle = 1.6;
+	}
+	else 									
+	{
+		renderAngle = 3.14;
 	}
 	
+	angle_ = renderAngle;
 	
 	interpValue = 0;
 

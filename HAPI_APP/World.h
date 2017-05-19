@@ -27,6 +27,7 @@ public:
 	void mainMenu();
 	void charCreation();
 	void endGame();
+	void pause();
 	std::vector<CEntityBullet*> getBullets() { return bulletVector; }
 	Point getPlayerPos() { return player_->getPos(); }
 	int getPlayerHealth() { return player_->getHealth(); }
