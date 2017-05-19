@@ -14,9 +14,6 @@ CEntity::~CEntity()
 
 }
 
-
-
-
 void CEntity::hasCollided(CEntity &other)
 {
 }

@@ -15,6 +15,7 @@ public:
 	void initialiseValues();
 	void update(World& world);
 	void hasCollided(CEntity &other);
+	void render(Point playerPos);
 
 
 private:
