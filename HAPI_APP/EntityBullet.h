@@ -14,10 +14,12 @@ public:
 	~CEntityBullet();
 	void initialiseValues();
 	void update(World& world);
-	void setValues(HAPI_TColour colour, float angle, Point startPos, sides team);
+	void setValues(CEntity &other);
 	void resetValues();
-
+	void render(Point playerPos);
+	int getDamage() { return attack_; }
 private:
 	Point startPosition{ 0,0 };
+	float lifeDuration = 0;
 };
 

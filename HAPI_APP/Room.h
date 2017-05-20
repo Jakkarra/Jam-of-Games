@@ -76,7 +76,7 @@ public:
 
 	// Render walls & floor
 
-	void Render_Floor();
+	void Render_Floor(Point PlayerPos);
 
 	~Room();
 

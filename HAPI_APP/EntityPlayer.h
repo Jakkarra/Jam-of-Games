@@ -15,19 +15,27 @@ public:
 
 	CEntityPlayer();
 	~CEntityPlayer();
+	void initialiseValues(int health, int speed, int rof, int damage);
 	void initialiseValues();
 	void update(World& world);
 	void shoot(CEntityBullet* bullet);
-	
+	void hasCollided(CEntity &other);
 
+	void render(Point playerPos);
+	
+	int getMaxHealth() { return maxHealth_; }
 private:
 
-
-	int deadzone_left_ = HK_GAMEPAD_LEFT_THUMB_DEADZONE;
-	int reloadTime = 0;
-	int bulletNum= 0;
-	
-protected:
+	int deadzone_left_ = HK_GAMEPAD_LEFT_THUMB_DEADZONE; //numberofKeys
+	int timeToShoot = 0.f;
+	unsigned int reloadTime = 500.f;
+	unsigned int bulletNum= 0;
+	float invunerableTime = 0;
+	int maxHealth_ = 8;
+	float currAngle = 0;
+	float renderAngle = 0;
+	unsigned int frameOffset = 0; //this would be the one you change to set different animations
+	unsigned int numerOfFramesForAnimation = 1; //total number of frames to loop through with the animation
 
 
 
