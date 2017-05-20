@@ -8,7 +8,6 @@
 EntityEnemy::EntityEnemy(std::string textureLocation)//:CEntity (textureLocation)
 {
 	sprite_ = new Sprite(HAPI_Sprites.MakeSurface(textureLocation));
-
 	initialiseValues();
 }
 
@@ -42,19 +41,13 @@ void EntityEnemy::update(World& world)
 
 		if (playerpos_.x > pos_.x) {
 			//distance.x = playerpos_.x - pos_.x;
-
 			pos_.x += speed_;
-
 
 		}
 		else  {
 			//	distance.x = mypos_.x - playerpos_.x;
-
-			//if (distance.x > 0) {
 			pos_.x -= speed_;
-			//}
-
-
+			
 		}
 
 		if (playerpos_.y > pos_.y) {
@@ -98,7 +91,7 @@ void EntityEnemy::render(Point playerPos)
 {	//i want to interp all but not sure how to 
 	if (alive_ == true)
 	{
-		int redMult =1+( maxHealth_ - health_);
+		int redMult =	1+( maxHealth_ - health_);
 		sprite_->RenderRotated(SCREEN_SURFACE, pos_ - (playerPos - Point(960, 540)), angle_, [&](const Point p, HAPI_TColour& dest, const HAPI_TColour& source)
 		{
 			if (source.alpha == 255)

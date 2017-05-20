@@ -68,7 +68,6 @@ void World::Initialise()
 	for (int i = 0; i < 20; i++)
 	{
 		EntityEnemy* enemy_ = new EntityEnemy("Data//rocketUp.png"); // we would need to make different types of enemies, or better yet opn room load randomly choose different types
-
 		entityVector.push_back(enemy_);
 	}
 
@@ -149,6 +148,11 @@ void World::Playing()
 						r->hasCollided(*p);
 					}
 			}
+
+		//for auto player and reference to room vector
+		//if player collides with and hasnt entered before
+		//player cant leave room and spawn enemies
+
 		updateTime = HAPI_Sprites.GetTime() + 30.0f;
 	}
 
@@ -162,6 +166,8 @@ void World::Playing()
 
 	for (auto p : bulletVector) //also the render is seperate to the update as update is every tick, render may be slowed down
 		p->render(getPlayerPos());
+	
+	//need check collision between the rooms and player/enemies also then corridor checks 
 
 
 }

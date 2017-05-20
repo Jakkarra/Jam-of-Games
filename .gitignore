@@ -67,3 +67,4 @@ HAPI_APP.VC.VC.opendb
 *.exp
 *.ilk
 *.lib
+HAPI_APP/Data/testFloor.png.xml
