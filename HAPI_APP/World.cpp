@@ -4,6 +4,31 @@
 using namespace HAPISPACE;
 World::World()
 {
+	Point Position_To_Spawn{ 100, 150 };
+
+	Point Position_To_Spawn_second{ 1500, 750 };
+
+	Point Position_To_Spawn_third{ 1300, 675 };
+
+	First_Room = new Room("Floor.png", Position_To_Spawn, "Corners_And_Walls_Room_1.png", 32);
+
+	First_Room->Create_Invidividual_Room();
+
+	Second_Room = new Room("Room_Floor_1_.png", Position_To_Spawn_second, "Corners_And_Walls_Room_1.png", 32);
+
+	Second_Room->Create_Invidividual_Room();
+
+	//Third_Room = new Room("Room_Floor_1_.png", Position_To_Spawn_third, "Corners_And_Walls_Room_1.png", 32);
+
+	//Third_Room->Create_Invidividual_Room();
+
+	First_Room->Pathfind_Corridor(*Second_Room);
+
+	//Second_Room->Pathfind_Corridor(*Third_Room);
+
+	First_Room->Link_Rooms(*Second_Room);
+
+	//Second_Room->Link_Rooms(*Third_Room);
 }
 
 
@@ -43,6 +68,15 @@ void World::Run()
 			}
 		}
 
+		First_Room->Render_Path("Seamless_Texture.png");
+		//Second_Room->Render_Path("Corridor_Floor.png");
+
+		First_Room->Render_Floor();
+		Second_Room->Render_Floor();
+		//Third_Room->Render_Floor();
+		First_Room->Spawn_Points();
+		//Second_Room->Spawn_Points();
+
 		if (currentState == eGameOver)
 		{
 			HAPI_Sprites.RenderText(960, 540, HAPI_TColour(255, 0, 0), "Game Over State");
@@ -77,15 +111,7 @@ void World::Playing()
 
 void World::mainMenu()
 {
-	for (auto p : entityVector)
-		p->update(*this);
 
-	for (auto p : bulletVector) //seperate bullet vector so i can pass them through,
-		p->update(*this);
 
-	for (auto p : entityVector) //might be better to have a single vector instead of two and have the offset for where the bullets start
-		p->render();
 
-	for (auto p : bulletVector) //also the render is seperate to the update as update is every tick, render may be slowed down
-		p->render();
 }

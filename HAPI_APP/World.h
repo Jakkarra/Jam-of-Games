@@ -3,6 +3,7 @@
 #include "EntityBullet.h"
 #include "EntityPlayer.h"
 #include "EntityMenu.h"
+#include "Room.h"
 
 class CEntity;
 
@@ -25,6 +26,12 @@ public:
 	
 private:
 	menuStates currentState = eMainMenu;
+
+	Room *First_Room;
+
+	Room *Second_Room;
+
+	Room *Third_Room;
 
 	std::vector<CEntity*> entityVector;
 	std::vector<CEntityBullet*> bulletVector;
