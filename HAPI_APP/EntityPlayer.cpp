@@ -126,7 +126,7 @@ void CEntityPlayer::update(World& world)
 
 	
 	if (HAPI_Sprites.GetTime() > invunerableTime)
-		invunerable_ = false;
+		invunerable_ = true;
 
 	
 

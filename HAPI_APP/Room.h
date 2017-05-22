@@ -84,6 +84,8 @@ public:
 
 	Point Get_Room_Position();
 
+	Rectangle getsize(){ return  FloorRect; }
+
 	~Room();
 
 

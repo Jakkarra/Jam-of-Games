@@ -1,5 +1,5 @@
 #include "World.h"
-
+#include <random>
 
 using namespace HAPISPACE;
 World::World()
@@ -61,6 +61,10 @@ void World::Run()
 void World::Initialise()
 {
 
+	Create_Rooms(8, 32);
+
+	Connect_Rooms();
+
 	entityVector.push_back(player_);
 
 	for (int i = 0; i < 500; i++)
@@ -70,11 +74,32 @@ void World::Initialise()
 		//max of 500 bullets
 	}
 
-	//for (int i = 0; i < 20; i++)
-	//{
-	//	EntityEnemy* enemy_ = new EntityEnemy("Data//rocketUp.png"); // we would need to make different types of enemies, or better yet opn room load randomly choose different types
-	//	entityVector.push_back(enemy_);
-	//}
+	EntityEnemy* enemy_;
+
+	for (int i = 0; i < 20; i++)
+	{
+		int select = (rand() % 2);
+
+		EnemyType type_select;
+
+		switch (select)
+		{
+		case 0:
+			type_select = eMelee;
+			break;
+		case 1:
+			type_select = eRanged;
+			break;
+		case 2:
+			type_select = eBrute;
+			break;
+		}
+
+		spawnenemy(enemy_, First_Room->Get_Room_Position(), First_Room->getsize(), "", type_select);
+	}
+
+	spawnenemy(enemy_, First_Room->Get_Room_Position(), First_Room->getsize(), "", eBoss);
+
 
 	//here we would add enemies to enemy vector to set a max number of enemies, all initally dead. then set however many we want to alive as you enter a room
 	EntityHealth* health = new EntityHealth();
@@ -90,10 +115,6 @@ void World::Initialise()
 	entityVector.push_back(pickup2);
 	entityVector.push_back(pickup3);
 	entityVector.push_back(pickup4);
-
-	Create_Rooms(8, 32);
-
-	Connect_Rooms();
 
 }
 
@@ -420,7 +441,7 @@ void World::charCreation()
 
 	if (conData.analogueButtons[HK_ANALOGUE_RIGHT_TRIGGER] && totalPoints == 0)
 	{
-		player_->initialiseValues(healthPoints, speedPoints, ratePoints, damagePoints);
+		player_->initialiseValues(healthPoints, speedPoints, ratePoints, damagePoints, 0);
 		healthPoints = ratePoints = damagePoints = speedPoints = 1;
 		currentState = ePlay;
 	}
@@ -613,4 +634,36 @@ int World::Generate_random_vector(int minimum_value, int maximum_value)
 	int random_scalar = int_rand(rand_engine);
 
 	return random_scalar;
+}
+
+void World::spawnenemy(EntityEnemy* enemy_, Point tl, Rectangle room_size, std::string sprite, EnemyType type)
+{
+	int width = room_size.Width();
+	int height = room_size.Height();
+
+	int posX = rand() %  width+ tl.x;
+	int posY = rand() % height + tl.y;
+
+	switch (type)
+	{
+	case eMelee:
+		enemy_ = new CEntityEnemyMelee("Data//fireBall.png");
+		break;
+	case eRanged:
+		enemy_ = new CEntityRangedEnemy("Data//rocketUp.png");
+		break;
+	case eBrute:
+		enemy_ = new CEntityBruteEnemy("Data//HPHeartEmpty.png");
+		break;
+	case eBoss:
+		enemy_ = new CEntityEnemyBOSS("Data//HAPI Sprites Logo.png");
+		break;
+	}
+
+
+	Point pos = { posX,posY };
+
+	enemy_->setpos(pos);
+
+	entityVector.push_back(enemy_);
 }
