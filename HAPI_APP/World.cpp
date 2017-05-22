@@ -14,6 +14,7 @@ World::~World()
 
 	for (auto p : bulletVector)
 		delete p;
+
 }
 
 void World::Run()
@@ -24,51 +25,41 @@ void World::Run()
 	while (HAPI_Sprites.Update())
 	{
 		//
-		HAPI_TMouseData mouse = HAPI_Sprites.GetMouseData();
 		SCREEN_SURFACE.Clear();
-		if (currentState == eMainMenu) //Main Menu goes here
+		if (currentState == eMainMenu)
 		{
 			mainMenu();
-
-			if (mouse.rightButtonDown)
-			{
-				currentState = ePlay;
-			}
 		}
 
 		if (currentState == ePlay)
 		{
 			Playing();
-			//do playing function
-			if (mouse.leftButtonDown)
-			{
-				currentState = eGameOver;
-			}
 		}
 
 		if (currentState == eGameOver)
-		{
-			HAPI_Sprites.RenderText(660, 540, HAPI_TColour(255, 255, 0), "Game Over State", 70);
-			//do gameover function
-			if (mouse.middleButtonDown)
-			{
-				for (auto p : entityVector)
-					p->initialiseValues();
-
-				currentState = ePlay;
-			}
+		{			
+			endGame();					
 		}
 
 		if (currentState == eCharacter)
 		{
 			charCreation();
 		}
+
+		if (currentState == ePaused)
+		{
+			pause();
+		}
+		int x = Generate_random_vector(-500, 500);
+		int v = Generate_random_vector(-500, 500);
+		int y = Generate_random_vector(-250, 250);
+		std::cout <<"First Random:" <<  x << std::endl;
+		std::cout <<"Second Random" << x*y << std::endl;
 	}
 }
 
 void World::Initialise()
 {
-	//healthVector.push_back()
 
 	entityVector.push_back(player_);
 
@@ -79,56 +70,30 @@ void World::Initialise()
 		//max of 500 bullets
 	}
 
-
-	First_Room = new Room("Room_Floor_1.png", Position_To_Spawn, "Corners_And_Walls_Room_1.png", 32);
-
-
-	First_Room->Create_Invidividual_Room();
-
-
-	Second_Room = new Room("Room_Floor_1_.png", Position_To_Spawn_second, "Corners_And_Walls_Room_1.png", 32);
-
-
-	auto test_texture = HAPI_Sprites.MakeSurface("Data\\Room_Floor_1.png");
-
-	Second_Room->Create_Complex_Room(test_texture);
-
-
-	EntityEnemy* enemy_;
-
-	for (int i = 0; i < 20; i++)
-	{
-
-
-		int select = (rand() % 2);
-
-		EnemyType type_select;
-
-		switch (select)
-		{
-		case 0:
-			type_select = eMelee;
-			break;
-		case 1:
-			type_select = eRanged;
-			break;
-		case 2:
-			type_select = eBrute;
-			break;
-		}
-
-		spawnenemy(enemy_, First_Room->getPos(),First_Room->getsize(), "",type_select);
-	}
-
-	spawnenemy(enemy_, First_Room->getPos(), First_Room->getsize(),"",eBoss );
+	//for (int i = 0; i < 20; i++)
+	//{
+	//	EntityEnemy* enemy_ = new EntityEnemy("Data//rocketUp.png"); // we would need to make different types of enemies, or better yet opn room load randomly choose different types
+	//	entityVector.push_back(enemy_);
+	//}
 
 	//here we would add enemies to enemy vector to set a max number of enemies, all initally dead. then set however many we want to alive as you enter a room
 	EntityHealth* health = new EntityHealth();
 	entityVector.push_back(health);
 
 
+	CEntityPickup *pickup1 = new CEntityPickup(1, 2, 4, 2);//get sprites for the pickups just define them as we wish
+	CEntityPickup *pickup3 = new CEntityPickup(0, 0, 4, 0);
+	CEntityPickup *pickup4 = new CEntityPickup(0, 3, 0, 0);
+	CEntityPickup *pickup2 = new CEntityPickup(2, 0, 0, 0);
 
+	entityVector.push_back(pickup1);
+	entityVector.push_back(pickup2);
+	entityVector.push_back(pickup3);
+	entityVector.push_back(pickup4);
 
+	Create_Rooms(8, 32);
+
+	Connect_Rooms();
 
 }
 
@@ -136,6 +101,12 @@ void World::Playing()
 {
 	if (player_->isAlive() == false)
 		currentState = eGameOver;
+	const HAPI_TControllerData &conData = HAPI_Sprites.GetControllerData(0); //maybe find a way to make this a public thing so we dont ned to constantly create it
+
+	if (conData.analogueButtons[HK_ANALOGUE_LEFT_TRIGGER] && conData.analogueButtons[HK_ANALOGUE_RIGHT_TRIGGER])
+	{
+		currentState = ePaused;
+	}
 
 	currTime = HAPI_Sprites.GetTime();
 
@@ -143,7 +114,6 @@ void World::Playing()
 	{
 		for (auto p : entityVector)
 			p->update(*this);
-
 
 		for (auto p : bulletVector) //seperate bullet vector so i can pass them through
 			p->update(*this);
@@ -153,7 +123,7 @@ void World::Playing()
 		for (auto p : entityVector)
 			for (auto r : entityVector)
 			{
-				if (p->isAlive() && r->isAlive() && p->getSide() != r->getSide() && p->isInvunerable() == false && r->isInvunerable() == false)
+				if (p->isAlive() && r->isAlive() && p->getSide() != r->getSide())
 					if (p->getPntrToSprite()->CheckCollision(p->getPos(), r->getSprite(), r->getPos()) == true)
 					{
 						p->hasCollided(*r);
@@ -171,12 +141,25 @@ void World::Playing()
 						r->hasCollided(*p);
 					}
 			}
+
+		//for auto player and reference to room vector
+		//if player collides with and hasnt entered before
+		//player cant leave room and spawn enemies
+
 		updateTime = HAPI_Sprites.GetTime() + 30.0f;
 	}
 
-	First_Room->Render_Floor(getPlayerPos());
+	for (auto room : Rooms)
+	{
+		room.Render_Floor(getPlayerPos());
+		
+		if (room.Check_Path_Exists() == true)
+		{
+			room.Render_Path("Seamless_Texture.png", getPlayerPos());
 
-	Second_Room->Render_Floor(getPlayerPos());
+			room.Spawn_Points(getPlayerPos());
+		}
+	}
 
 
 	for (auto p : entityVector) //might be better to have a single vector instead of two and have the offset for where the bullets start
@@ -184,6 +167,10 @@ void World::Playing()
 
 	for (auto p : bulletVector) //also the render is seperate to the update as update is every tick, render may be slowed down
 		p->render(getPlayerPos());
+	
+	//need check collision between the rooms and player/enemies also then corridor checks 
+
+
 }
 
 void World::mainMenu()
@@ -253,7 +240,6 @@ void World::mainMenu()
 		}
 	}
 }
-
 void World::charCreation()
 {
 	//Menu
@@ -435,38 +421,196 @@ void World::charCreation()
 	if (conData.analogueButtons[HK_ANALOGUE_RIGHT_TRIGGER] && totalPoints == 0)
 	{
 		player_->initialiseValues(healthPoints, speedPoints, ratePoints, damagePoints);
+		healthPoints = ratePoints = damagePoints = speedPoints = 1;
 		currentState = ePlay;
 	}
 
 
 }
-
-void World::spawnenemy(EntityEnemy* enemy_, Point tl, int room_size, std::string sprite, EnemyType type)
+void World::endGame()
 {
-	int posX = rand() % tl.x + room_size;
-	int posY = rand() % tl.y + room_size;
-	
-	switch (type)
+
+	const HAPI_TControllerData &conData = HAPI_Sprites.GetControllerData(0);
+	HAPI_Sprites.RenderText(660, 540, HAPI_TColour(255, 255, 0), "Game Over State, LT to retry", 70);
+
+	if (conData.analogueButtons[HK_ANALOGUE_LEFT_TRIGGER])
 	{
-		case eMelee:
-			enemy_ = new CEntityEnemyMelee("Data//fireBall.png");
-			break;
-		case eRanged:
-			enemy_ = new CEntityRangedEnemy("Data//rocketUp.png");
-			break;
-		case eBrute:
-			enemy_ = new CEntityBruteEnemy("Data//HPHeartEmpty.png");
-			break;
-		case eBoss:
-			enemy_ = new CEntityEnemyBOSS("Data//HAPI Sprites Logo.png");
-			break;
-	}	
+		for (auto p : entityVector)
+			p->initialiseValues();
+
+		currentState = eCharacter;
+	}
 
 
-	Point pos = { posX,posY };
 
-	enemy_->setpos(pos);
+}
+void World::pause()
+{
+	const HAPI_TControllerData &conData = HAPI_Sprites.GetControllerData(0);
+	static bool canExit = false;
 
-	entityVector.push_back(enemy_);
+	if (!conData.analogueButtons[HK_ANALOGUE_LEFT_TRIGGER])
+		canExit = true;
+	
+	HAPI_Sprites.RenderText(660, 540, HAPI_TColour(255, 255, 0), "PAUSED", 70);
+
+	if (conData.analogueButtons[HK_ANALOGUE_LEFT_TRIGGER] && canExit == true)
+	{
+		currentState = ePlay;
+		canExit = false;
+	}
+
+
 }
 
+void World::Create_Rooms(int Number_of_Rooms, int Walls_Texture_Size)
+{
+	Point First_Room_Position{ 960,  540 };
+
+	First_Room = new Room("Floor_1.png", First_Room_Position, "Corners_And_Walls_Room_1.png", Walls_Texture_Size);
+
+	First_Room->Create_Invidividual_Room();
+
+	Rooms.push_back(*First_Room);
+
+	int offset_for_corridor = Walls_Texture_Size * 4;
+
+	Point Last_Room_Position = First_Room_Position;
+
+	Rectangle Last_Floor_Rect = First_Room->Get_Collision_Rectangle();
+
+	int last_direction_to_spawn = 0;
+
+	for (int i = 0; i < (Number_of_Rooms + 1); i++)
+	{
+		bool safe_to_spawn = false;
+
+		while (safe_to_spawn == false)
+		{
+			int floor_number = Generate_random_vector(1, 5);
+
+			std::string file_name;
+
+			std::shared_ptr<Surface> Floor_Sprite;
+
+			if (i == Number_of_Rooms)
+			{
+				file_name = "Boss_Room.png";
+
+				Floor_Sprite = HAPI_Sprites.MakeSurface("Data\\" + file_name);
+			}
+			else
+			{
+				file_name = "Floor_" + std::to_string(floor_number) + ".png";
+
+				Floor_Sprite = HAPI_Sprites.MakeSurface("Data\\" + file_name);
+			}
+
+
+			if (!Floor_Sprite->HasData())
+			{
+				return;
+			}
+
+			Point Position_To_Spawn_Room;
+
+			bool try_position = false;
+
+			while (try_position == false)
+			{
+				int direction_to_spawn = Generate_random_vector(1, 4);
+
+				if (direction_to_spawn == 1 && last_direction_to_spawn != 2)
+				{
+					Position_To_Spawn_Room = Point{Last_Room_Position.x - (int)Floor_Sprite->Width() - Generate_random_vector(600, 800),  Last_Room_Position.y };
+					last_direction_to_spawn = direction_to_spawn;
+					try_position = true;
+				}
+
+				if (direction_to_spawn == 2 && last_direction_to_spawn != 1)
+				{
+					Position_To_Spawn_Room = Point{ Last_Room_Position.x + (int)Last_Floor_Rect.Width() + Generate_random_vector(600, 800),  Last_Room_Position.y };
+					last_direction_to_spawn = direction_to_spawn;
+					try_position = true;
+				}
+
+				if (direction_to_spawn == 3 && last_direction_to_spawn != 4)
+				{
+					Position_To_Spawn_Room = Point{ Last_Room_Position.x, Last_Room_Position.y - (int)Floor_Sprite->Height() - Generate_random_vector(600, 800) };
+					last_direction_to_spawn = direction_to_spawn;
+					try_position = true;
+				}
+
+				if (direction_to_spawn == 4 && last_direction_to_spawn != 3)
+				{
+					Position_To_Spawn_Room = Point{ Last_Room_Position.x, Last_Room_Position.y + (int)Last_Floor_Rect.Height() + Generate_random_vector(600, 800) };
+					last_direction_to_spawn = direction_to_spawn;
+					try_position = true;
+				}
+			}
+
+			Rectangle FloorRect = Rectangle(Position_To_Spawn_Room.x, Position_To_Spawn_Room.x+ Floor_Sprite->Width(), Position_To_Spawn_Room.y , Position_To_Spawn_Room.y +Floor_Sprite->Height());
+
+			safe_to_spawn = true;
+
+			for (auto & room : Rooms)
+			{
+				if (room.Get_Collision_Rectangle().Intersects(FloorRect))
+				{
+					safe_to_spawn = false;
+				}
+			}
+
+			if (safe_to_spawn == true && i == Number_of_Rooms)
+			{
+				Room * Another_Room = new Room("Boss_Room.png", Position_To_Spawn_Room, "Corners_And_Walls_Room_1.png", Walls_Texture_Size);
+
+				Another_Room->Create_Invidividual_Room();
+
+				Rooms.push_back(*Another_Room);
+			}
+			else
+			{
+				if (safe_to_spawn == true && i != Number_of_Rooms)
+				{
+					Room * Another_Room = new Room("Floor_" + std::to_string(floor_number) + ".png", Position_To_Spawn_Room, "Corners_And_Walls_Room_1.png", Walls_Texture_Size);
+
+					Another_Room->Create_Invidividual_Room();
+
+					Rooms.push_back(*Another_Room);
+
+					Last_Room_Position = Position_To_Spawn_Room;
+
+					Last_Floor_Rect = Rectangle(Position_To_Spawn_Room.x, Position_To_Spawn_Room.x + Floor_Sprite->Width(), Position_To_Spawn_Room.y, Position_To_Spawn_Room.y + Floor_Sprite->Height());
+				}
+				else
+				{
+					safe_to_spawn = false;
+				}
+			}
+		}
+	}
+
+	number_of_rooms = Number_of_Rooms + 2;
+
+}
+
+void World::Connect_Rooms()
+{
+	for (int i = 0; i < (number_of_rooms - 1); i++)
+	{
+		Rooms[i].Pathfind_Corridor(Rooms[i + 1]);
+		Rooms[i].Link_Rooms(Rooms[i + 1]);
+	}
+}
+
+int World::Generate_random_vector(int minimum_value, int maximum_value)
+{
+	rand_engine.seed(HAPI_Sprites.GetTime());
+
+	std::uniform_int_distribution<int> int_rand(minimum_value, maximum_value);
+
+	int random_scalar = int_rand(rand_engine);
+
+	return random_scalar;
+}
