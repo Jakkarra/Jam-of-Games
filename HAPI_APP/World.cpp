@@ -151,16 +151,16 @@ void World::Playing()
 		updateTime = HAPI_Sprites.GetTime() + 30.0f;
 	}
 
-	First_Room->Render_Floor();
+	First_Room->Render_Floor(getPlayerPos());
 
-	Second_Room->Render_Floor();
+	Second_Room->Render_Floor(getPlayerPos());
 
 
 	for (auto p : entityVector) //might be better to have a single vector instead of two and have the offset for where the bullets start
-		p->render();
+		p->render(getPlayerPos());
 
 	for (auto p : bulletVector) //also the render is seperate to the update as update is every tick, render may be slowed down
-		p->render();
+		p->render(getPlayerPos());
 
 
 }
@@ -180,8 +180,8 @@ void World::mainMenu()
 
 	HAPI_Sprites.RenderText(0, 750, HAPI_TColour(255, 255, 255, trans1), "Play", 84);
 	HAPI_Sprites.RenderText(0, 870, HAPI_TColour(255, 255, 255, trans2), "Controls", 84);
-	bg->render();
-	sp->render();
+	bg->render(getPlayerPos());
+	sp->render(getPlayerPos());
 	
 	if (conData.analogueButtons[HK_ANALOGUE_RIGHT_TRIGGER]) //selection
 	{
@@ -260,8 +260,8 @@ void World::charCreation()
 	sp->setPosition(Point{ 1725,980 });
 	HAPI_Sprites.RenderText(1650, 990, HAPI_TColour(255, 255, 255, 255), "Press		 to select", 24);
 
-	bg->render();
-	sp->render();
+	bg->render(getPlayerPos());
+	sp->render(getPlayerPos());
 	
 
 	const HAPI_TControllerData &conData = HAPI_Sprites.GetControllerData(0);
@@ -412,7 +412,8 @@ void World::charCreation()
 
 	if (conData.analogueButtons[HK_ANALOGUE_RIGHT_TRIGGER] && totalPoints == 0)
 	{
-		
+		player_->initialiseValues(healthPoints, speedPoints, ratePoints, damagePoints);
+		currentState = ePlay;
 	}
 
 
