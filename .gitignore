@@ -68,3 +68,6 @@ HAPI_APP.VC.VC.opendb
 *.ilk
 *.lib
 HAPI_APP/Data/testFloor.png.xml
+HAPI_APP/x64/Release/HAPI_APP.res
+x64/Release/HAPI_APP.iobj
+x64/Release/HAPI_APP.ipdb

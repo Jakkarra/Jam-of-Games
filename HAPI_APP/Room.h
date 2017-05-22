@@ -78,6 +78,9 @@ public:
 
 	void Render_Floor(Point PlayerPos);
 
+	Sprite getFloorSprite() { return Floor_Sprite; }
+	Point getFloorPos() { return Floor_Position; }
+
 	~Room();
 
 

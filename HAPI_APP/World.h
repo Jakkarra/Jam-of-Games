@@ -54,7 +54,7 @@ private:
 	int currentHealth = 6;
 
 	Point Position_To_Spawn{ 250,250 };
-	Point Position_To_Spawn_second{ 450,450 };
+	Point Position_To_Spawn_second{ 1000,450 };
 
 	//Character Creation Variables
 	unsigned int totalPoints = 8;

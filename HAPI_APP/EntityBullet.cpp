@@ -5,6 +5,7 @@
 CEntityBullet::CEntityBullet()//CEntity(textureLocation)
 {
 	sprite_ = new Sprite(HAPI_Sprites.MakeSurface("Data\\rocketUp.png"));
+	
 	initialiseValues();
 	
 }
@@ -17,8 +18,8 @@ CEntityBullet::~CEntityBullet()
 
 void CEntityBullet::initialiseValues()
 {
-	health_ = 3;
-	speed_ = 200;
+	health_ = 1;
+	speed_ = 300;
 	attack_ = 2;
 
 
@@ -46,7 +47,7 @@ void CEntityBullet::update(World& world)
 	interpValue = 0;
 }
 
-void CEntityBullet::setValues(CEntity &other) //when gun is fired, give bullet stats
+void CEntityBullet::setValues(CEntity &other, int weapon) //when gun is fired, give bullet stats
 {						
 	//need to get the angle and with that use it to make the bullet move in the wanted direction
 
@@ -62,6 +63,17 @@ void CEntityBullet::setValues(CEntity &other) //when gun is fired, give bullet s
 	angle_ = other.getAngle(); // i can just do a check to see if angle is between an 8-directional area and then send bullet that direction
 	attack_ = other.getAttack();//instead of their attack maybe have a seprate stats for bullets fired like bullets speed not just player speed
 	lifeDuration = HAPI_Sprites.GetTime() + 2500;
+	if (weapon == bow)
+	{
+		speed_ *= 1.5;
+		sprite_ = new Sprite(HAPI_Sprites.MakeSurface("Data\\rocketUp.png"));
+	}
+	if (weapon == staff)
+	{
+		health_ = 3;
+		sprite_ = new Sprite(HAPI_Sprites.MakeSurface("Data\\rocketUp.png"));
+	}
+	
 	//we could add bool for different powerups such as faster bullets or bullets that spin or go at odd angles etc last longer are bigger use different sprites.
 	//seperate render function so we can set the colour, maybe if statements in player and if damage is x high, add red colour. speed add yellow etc.
 }
@@ -75,8 +87,6 @@ void CEntityBullet::render(Point playerPos)
 {	//i want to interp all but not sure how to 
 	if (alive_ == true)
 	{
-
-
 		xVector = cos(angle_);
 		yVector = sin(angle_);
 		Point newPos;

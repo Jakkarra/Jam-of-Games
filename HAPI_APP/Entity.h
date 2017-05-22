@@ -36,9 +36,7 @@ public:
 	virtual void hasCollided(CEntity &other);
 	virtual void initialiseValues() = 0;
 protected:
-
-	
-	
+	enum weapons { sword = 0, staff, bow };
 	
 	Sprite* sprite_{ nullptr };
 	Point pos_ = { 5,5 };

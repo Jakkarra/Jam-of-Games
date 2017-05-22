@@ -58,7 +58,6 @@ void CEntityPickup::render(Point playerPos)
 			}
 			else if (source.alpha > 0)
 			{
-
 				dest.red =	 source.alpha*((255 / (1 + speed_ + attack_)) - dest.red) >> 8;//not working needs fix!
 				dest.green = source.alpha*((255 / (1 + health_ + attack_)) - dest.green) >> 8;
 				dest.blue =  source.alpha*((255 / (1 + health_ + attack_)) - dest.blue) >> 8;

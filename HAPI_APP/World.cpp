@@ -15,6 +15,8 @@ World::~World()
 	for (auto p : bulletVector)
 		delete p;
 
+	for (auto p : healthVector)
+		delete p;
 }
 
 void World::Run()
@@ -92,12 +94,10 @@ void World::Initialise()
 	First_Room->Create_Invidividual_Room();
 
 
-	Second_Room = new Room("Room_Floor_1_.png", Position_To_Spawn_second, "Corners_And_Walls_Room_1.png", 32);
+	//Second_Room = new Room("Room_Floor_1_.png", Position_To_Spawn_second, "Corners_And_Walls_Room_1.png", 32);
 
 
-	auto test_texture = HAPI_Sprites.MakeSurface("Data\\Room_Floor_1.png");
-
-	Second_Room->Create_Complex_Room(test_texture);
+	//Second_Room->Create_Complex_Room(test_texture);
 
 
 
@@ -137,6 +137,7 @@ void World::Playing()
 						r->hasCollided(*p);
 					}
 			}
+		
 
 		for (auto p : entityVector)
 			for (auto r : bulletVector)
@@ -150,15 +151,18 @@ void World::Playing()
 			}
 
 		//for auto player and reference to room vector
-		//if player collides with and hasnt entered before
+		//if player is not colliding with a floor or corridior revert the movement
 		//player cant leave room and spawn enemies
+		if (!player_->getSprite().CheckCollision(getPlayerPos(), First_Room->getFloorSprite(), First_Room->getFloorPos()))
+			player_->setOutOfBounds(true);
+		
 
 		updateTime = HAPI_Sprites.GetTime() + 30.0f;
 	}
 
 	First_Room->Render_Floor(getPlayerPos());
 
-	Second_Room->Render_Floor(getPlayerPos());
+	//Second_Room->Render_Floor(getPlayerPos());
 
 
 	for (auto p : entityVector) //might be better to have a single vector instead of two and have the offset for where the bullets start
@@ -419,7 +423,7 @@ void World::charCreation()
 
 	if (conData.analogueButtons[HK_ANALOGUE_RIGHT_TRIGGER] && totalPoints == 0)
 	{
-		player_->initialiseValues(healthPoints, speedPoints, ratePoints, damagePoints);
+		player_->initialiseValues(healthPoints, speedPoints, ratePoints, damagePoints, 0);//going to need to input the weapon here
 		healthPoints = ratePoints = damagePoints = speedPoints = 1;
 		currentState = ePlay;
 	}
