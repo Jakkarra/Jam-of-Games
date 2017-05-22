@@ -18,6 +18,7 @@ CEntityBullet::~CEntityBullet()
 void CEntityBullet::initialiseValues()
 {
 	health_ = 3;
+	health_ = 1;
 	speed_ = 100;
 	attack_ = 2;
 
@@ -48,13 +49,13 @@ void CEntityBullet::update(World& world)
 	interpValue = 0;
 }
 
-void CEntityBullet::setValues(CEntity &other) //when gun is fired, give bullet stats
+void CEntityBullet::setValues(CEntity &other, float angle = 0) //when gun is fired, give bullet stats
 {						
 	//need to get the angle and with that use it to make the bullet move in the wanted direction
 
 	interpValue = 0;
 	
-	invunerable_ = true; //testing
+	invunerable_ = false; //testing
 	
 
 	alive_ = true;
@@ -64,6 +65,10 @@ void CEntityBullet::setValues(CEntity &other) //when gun is fired, give bullet s
 	angle_ = other.getAngle(); // i can just do a check to see if angle is between an 8-directional area and then send bullet that direction
 	attack_ = other.getAttack();//instead of their attack maybe have a seprate stats for bullets fired like bullets speed not just player speed
 	lifeDuration = HAPI_Sprites.GetTime() + 2500;
+	if (angle != 0)
+	{
+		angle_ = angle;
+	}
 	//seperate render function so we can set the colour, maybe if statements in player and if damage is x high, add red colour. speed add yellow etc.
 }
 
@@ -71,6 +76,7 @@ void CEntityBullet::resetValues()
 {
 	alive_ = false;
 }
+
 
 void CEntityBullet::render(Point playerPos)
 {	//i want to interp all but not sure how to 
@@ -94,8 +100,22 @@ void CEntityBullet::render(Point playerPos)
 		else
 			interpValue += 0.03f;
 
-		sprite_->RenderRotated(SCREEN_SURFACE, pos_- (playerPos - Point(960, 540)), angle_);
+		sprite_->RenderRotated(SCREEN_SURFACE, pos_ - (playerPos - Point(960, 540)), angle_);
+	}
+}
+
+	void CEntityBullet::hasCollided(CEntity &other)
+	{
+		if (other.getSide() != side)
+		{
+			alive_ = false;
+		}
 	}
 
-}
+	void CEntityBullet::setangle(float angle)
+	{
+		angle_ = angle;
+	}
+
+
 

@@ -32,6 +32,9 @@ public:
 
 	void Render_Floor(Point PlayerPos);
 
+	Point getPos() const { return  Floor_Position; }
+	int getsize() const { return  Texture_Size; }
+
 	~Room();
 
 private:

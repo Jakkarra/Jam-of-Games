@@ -14,7 +14,6 @@ World::~World()
 
 	for (auto p : bulletVector)
 		delete p;
-
 }
 
 void World::Run()
@@ -79,17 +78,6 @@ void World::Initialise()
 		bulletVector.push_back(bullet);
 		//max of 500 bullets
 	}
-	for (int i = 0; i < 20; i++)
-	{
-		EntityEnemy* enemy_ = new EntityEnemy("Data//rocketUp.png"); // we would need to make different types of enemies, or better yet opn room load randomly choose different types
-
-		entityVector.push_back(enemy_);
-	}
-	//here we would add enemies to enemy vector to set a max number of enemies, all initally dead. then set however many we want to alive as you enter a room
-	EntityHealth* health = new EntityHealth();
-	entityVector.push_back(health);
-
-
 
 
 	First_Room = new Room("Room_Floor_1.png", Position_To_Spawn, "Corners_And_Walls_Room_1.png", 32);
@@ -104,6 +92,40 @@ void World::Initialise()
 	auto test_texture = HAPI_Sprites.MakeSurface("Data\\Room_Floor_1.png");
 
 	Second_Room->Create_Complex_Room(test_texture);
+
+
+	EntityEnemy* enemy_;
+
+	for (int i = 0; i < 20; i++)
+	{
+
+
+		int select = (rand() % 2);
+
+		EnemyType type_select;
+
+		switch (select)
+		{
+		case 0:
+			type_select = eMelee;
+			break;
+		case 1:
+			type_select = eRanged;
+			break;
+		case 2:
+			type_select = eBrute;
+			break;
+		}
+
+		spawnenemy(enemy_, First_Room->getPos(),First_Room->getsize(), "",type_select);
+	}
+
+	spawnenemy(enemy_, First_Room->getPos(), First_Room->getsize(),"",eBoss );
+
+	//here we would add enemies to enemy vector to set a max number of enemies, all initally dead. then set however many we want to alive as you enter a room
+	EntityHealth* health = new EntityHealth();
+	entityVector.push_back(health);
+
 
 
 
@@ -121,6 +143,7 @@ void World::Playing()
 	{
 		for (auto p : entityVector)
 			p->update(*this);
+
 
 		for (auto p : bulletVector) //seperate bullet vector so i can pass them through
 			p->update(*this);
@@ -151,18 +174,16 @@ void World::Playing()
 		updateTime = HAPI_Sprites.GetTime() + 30.0f;
 	}
 
-	First_Room->Render_Floor();
+	First_Room->Render_Floor(getPlayerPos());
 
-	Second_Room->Render_Floor();
+	Second_Room->Render_Floor(getPlayerPos());
 
 
 	for (auto p : entityVector) //might be better to have a single vector instead of two and have the offset for where the bullets start
-		p->render();
+		p->render(getPlayerPos());
 
 	for (auto p : bulletVector) //also the render is seperate to the update as update is every tick, render may be slowed down
-		p->render();
-
-
+		p->render(getPlayerPos());
 }
 
 void World::mainMenu()
@@ -180,8 +201,8 @@ void World::mainMenu()
 
 	HAPI_Sprites.RenderText(0, 750, HAPI_TColour(255, 255, 255, trans1), "Play", 84);
 	HAPI_Sprites.RenderText(0, 870, HAPI_TColour(255, 255, 255, trans2), "Controls", 84);
-	bg->render();
-	sp->render();
+	bg->render(getPlayerPos());
+	sp->render(getPlayerPos());
 	
 	if (conData.analogueButtons[HK_ANALOGUE_RIGHT_TRIGGER]) //selection
 	{
@@ -232,6 +253,7 @@ void World::mainMenu()
 		}
 	}
 }
+
 void World::charCreation()
 {
 	//Menu
@@ -260,8 +282,8 @@ void World::charCreation()
 	sp->setPosition(Point{ 1725,980 });
 	HAPI_Sprites.RenderText(1650, 990, HAPI_TColour(255, 255, 255, 255), "Press		 to select", 24);
 
-	bg->render();
-	sp->render();
+	bg->render(getPlayerPos());
+	sp->render(getPlayerPos());
 	
 
 	const HAPI_TControllerData &conData = HAPI_Sprites.GetControllerData(0);
@@ -412,9 +434,39 @@ void World::charCreation()
 
 	if (conData.analogueButtons[HK_ANALOGUE_RIGHT_TRIGGER] && totalPoints == 0)
 	{
-		
+		player_->initialiseValues(healthPoints, speedPoints, ratePoints, damagePoints);
+		currentState = ePlay;
 	}
 
 
+}
+
+void World::spawnenemy(EntityEnemy* enemy_, Point tl, int room_size, std::string sprite, EnemyType type)
+{
+	int posX = rand() % tl.x + room_size;
+	int posY = rand() % tl.y + room_size;
+	
+	switch (type)
+	{
+		case eMelee:
+			enemy_ = new CEntityEnemyMelee("Data//fireBall.png");
+			break;
+		case eRanged:
+			enemy_ = new CEntityRangedEnemy("Data//rocketUp.png");
+			break;
+		case eBrute:
+			enemy_ = new CEntityBruteEnemy("Data//HPHeartEmpty.png");
+			break;
+		case eBoss:
+			enemy_ = new CEntityEnemyBOSS("Data//HAPI Sprites Logo.png");
+			break;
+	}	
+
+
+	Point pos = { posX,posY };
+
+	enemy_->setpos(pos);
+
+	entityVector.push_back(enemy_);
 }
 

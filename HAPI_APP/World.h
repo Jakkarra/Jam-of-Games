@@ -7,6 +7,10 @@
 #include "EntityHealth.h"
 #include "EntityPickup.h"
 #include "Room.h"
+#include "EntityRangedEnemy.h"
+#include "EntityEnemyMelee.h"
+#include "EntityBruteEnemy.h"
+#include "EntityEnemyBOSS.h"
 
 class CEntity;
 
@@ -15,6 +19,11 @@ class World
 public:
 	World();
 	~World();
+
+	enum EnemyType
+	{
+		eMelee, eRanged, eBrute, eBoss
+	};
 
 	enum menuStates
 	{
@@ -30,6 +39,7 @@ public:
 	Point getPlayerPos() { return player_->getPos(); }
 	int getPlayerHealth() { return player_->getHealth(); }
 	int getPlayerMaxHealth() { return player_->getMaxHealth(); }
+	void spawnenemy(EntityEnemy* enemy_, Point tl, int room_size,std::string sprite,EnemyType type);
 	
 private:
 	menuStates currentState = eMainMenu;
@@ -41,6 +51,7 @@ private:
 	std::vector<CEntity*> healthVector;
 
 	CEntityPlayer* player_ = new CEntityPlayer;
+	EntityEnemy* boss_;
 
 	float currTime = 0;
 	float updateTime = 0;
@@ -65,6 +76,7 @@ private:
 	bool isSpeed = false;
 	bool isRate = false;
 	bool isDamage = false;
+	int enemiesalive = 0;
 
 	CEntityMenu *bg = new CEntityMenu("Data//Background.jpg");
 	CEntityMenu *sp = new CEntityMenu("Data//XboxRTLogo.png");
