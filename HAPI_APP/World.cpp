@@ -50,11 +50,7 @@ void World::Run()
 		{
 			pause();
 		}
-		int x = Generate_random_vector(-500, 500);
-		int v = Generate_random_vector(-500, 500);
-		int y = Generate_random_vector(-250, 250);
-		std::cout <<"First Random:" <<  x << std::endl;
-		std::cout <<"Second Random" << x*y << std::endl;
+		
 	}
 }
 
