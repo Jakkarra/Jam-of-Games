@@ -9,7 +9,7 @@ CEntityPickup::CEntityPickup(int health, int speed, int rof, int attack)
 	rof_ = rof;
 	attack_ = attack;
 
-	sprite_ = new Sprite(HAPI_Sprites.MakeSurface("Data\\thing.png"));// we could make it so you pass in a value for the texture but we should know what textures are going to be used
+	sprite_ = new Sprite(HAPI_Sprites.MakeSurface("Data\\tranImage.png"));// we could make it so you pass in a value for the texture but we should know what textures are going to be used
 	
 	initialiseValues();
 
@@ -25,7 +25,7 @@ void CEntityPickup::initialiseValues()
 	invunerable_ = true;
 	side = pickup;
 	alive_ = true;
-	pos_ =  { (rand()%800) + 200,(rand()%800) + 200 };
+	pos_ =  { (rand()%800) + 400,(rand()%800) + 400 };
 
 }
 
@@ -46,16 +46,27 @@ void CEntityPickup::render(Point playerPos)
 {
 	if (alive_ == true)
 	{
-		int health = health_;
-		int speed = speed_;
-		int damage = attack_;
+
 
 		sprite_->RenderRotated(SCREEN_SURFACE, pos_ - (playerPos - Point(960, 540)), angle_, [&](const Point p, HAPI_TColour& dest, const HAPI_TColour& source)
 		{
-			dest.red = source.alpha*(255 / (1 + speed + damage)) >> 8;
-			dest.green = source.alpha * (255 / (1 + health + speed)) >> 8;
-			dest.blue = source.alpha * (255 / (1 + speed + health)) >> 8;
+			if (source.alpha == 255)
+			{
+				dest.red = (255 / (1 + speed_ + attack_));
+				dest.green = (255 / (1 + health_ + attack_));
+				dest.blue = (255 / (1 + health_ + attack_));
+			}
+			else if (source.alpha > 0)
+			{
+
+				dest.red =	 source.alpha*((255 / (1 + speed_ + attack_)) - dest.red) >> 8;//not working needs fix!
+				dest.green = source.alpha*((255 / (1 + health_ + attack_)) - dest.green) >> 8;
+				dest.blue =  source.alpha*((255 / (1 + health_ + attack_)) - dest.blue) >> 8;
+			}
 		});
+		
+
+	
 	}
 }
 

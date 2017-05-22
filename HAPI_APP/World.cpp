@@ -25,51 +25,36 @@ void World::Run()
 	while (HAPI_Sprites.Update())
 	{
 		//
-		HAPI_TMouseData mouse = HAPI_Sprites.GetMouseData();
 		SCREEN_SURFACE.Clear();
-		if (currentState == eMainMenu) //Main Menu goes here
+		if (currentState == eMainMenu)
 		{
 			mainMenu();
-
-			if (mouse.rightButtonDown)
-			{
-				currentState = ePlay;
-			}
 		}
 
 		if (currentState == ePlay)
 		{
 			Playing();
-			//do playing function
-			if (mouse.leftButtonDown)
-			{
-				currentState = eGameOver;
-			}
 		}
 
 		if (currentState == eGameOver)
-		{
-			HAPI_Sprites.RenderText(660, 540, HAPI_TColour(255, 255, 0), "Game Over State", 70);
-			//do gameover function
-			if (mouse.middleButtonDown)
-			{
-				for (auto p : entityVector)
-					p->initialiseValues();
-
-				currentState = ePlay;
-			}
+		{			
+			endGame();					
 		}
 
 		if (currentState == eCharacter)
 		{
 			charCreation();
 		}
+
+		if (currentState == ePaused)
+		{
+			pause();
+		}
 	}
 }
 
 void World::Initialise()
 {
-	//healthVector.push_back()
 
 	entityVector.push_back(player_);
 
@@ -79,20 +64,29 @@ void World::Initialise()
 		bulletVector.push_back(bullet);
 		//max of 500 bullets
 	}
+
 	for (int i = 0; i < 20; i++)
 	{
 		EntityEnemy* enemy_ = new EntityEnemy("Data//rocketUp.png"); // we would need to make different types of enemies, or better yet opn room load randomly choose different types
-
 		entityVector.push_back(enemy_);
 	}
+
 	//here we would add enemies to enemy vector to set a max number of enemies, all initally dead. then set however many we want to alive as you enter a room
 	EntityHealth* health = new EntityHealth();
 	entityVector.push_back(health);
 
 
+	CEntityPickup *pickup1 = new CEntityPickup(1, 2, 4, 2);//get sprites for the pickups just define them as we wish
+	CEntityPickup *pickup3 = new CEntityPickup(0, 0, 4, 0);
+	CEntityPickup *pickup4 = new CEntityPickup(0, 3, 0, 0);
+	CEntityPickup *pickup2 = new CEntityPickup(2, 0, 0, 0);
 
+	entityVector.push_back(pickup1);
+	entityVector.push_back(pickup2);
+	entityVector.push_back(pickup3);
+	entityVector.push_back(pickup4);
 
-	First_Room = new Room("Room_Floor_1.png", Position_To_Spawn, "Corners_And_Walls_Room_1.png", 32);
+	First_Room = new Room("testFloor.png", Position_To_Spawn, "Corners_And_Walls_Room_1.png", 32);
 
 
 	First_Room->Create_Invidividual_Room();
@@ -114,6 +108,12 @@ void World::Playing()
 {
 	if (player_->isAlive() == false)
 		currentState = eGameOver;
+	const HAPI_TControllerData &conData = HAPI_Sprites.GetControllerData(0); //maybe find a way to make this a public thing so we dont ned to constantly create it
+
+	if (conData.analogueButtons[HK_ANALOGUE_LEFT_TRIGGER] && conData.analogueButtons[HK_ANALOGUE_RIGHT_TRIGGER])
+	{
+		currentState = ePaused;
+	}
 
 	currTime = HAPI_Sprites.GetTime();
 
@@ -130,7 +130,7 @@ void World::Playing()
 		for (auto p : entityVector)
 			for (auto r : entityVector)
 			{
-				if (p->isAlive() && r->isAlive() && p->getSide() != r->getSide() && p->isInvunerable() == false && r->isInvunerable() == false)
+				if (p->isAlive() && r->isAlive() && p->getSide() != r->getSide())
 					if (p->getPntrToSprite()->CheckCollision(p->getPos(), r->getSprite(), r->getPos()) == true)
 					{
 						p->hasCollided(*r);
@@ -148,6 +148,11 @@ void World::Playing()
 						r->hasCollided(*p);
 					}
 			}
+
+		//for auto player and reference to room vector
+		//if player collides with and hasnt entered before
+		//player cant leave room and spawn enemies
+
 		updateTime = HAPI_Sprites.GetTime() + 30.0f;
 	}
 
@@ -161,6 +166,8 @@ void World::Playing()
 
 	for (auto p : bulletVector) //also the render is seperate to the update as update is every tick, render may be slowed down
 		p->render(getPlayerPos());
+	
+	//need check collision between the rooms and player/enemies also then corridor checks 
 
 
 }
@@ -413,9 +420,44 @@ void World::charCreation()
 	if (conData.analogueButtons[HK_ANALOGUE_RIGHT_TRIGGER] && totalPoints == 0)
 	{
 		player_->initialiseValues(healthPoints, speedPoints, ratePoints, damagePoints);
+		healthPoints = ratePoints = damagePoints = speedPoints = 1;
 		currentState = ePlay;
 	}
 
 
 }
+void World::endGame()
+{
 
+	const HAPI_TControllerData &conData = HAPI_Sprites.GetControllerData(0);
+	HAPI_Sprites.RenderText(660, 540, HAPI_TColour(255, 255, 0), "Game Over State, LT to retry", 70);
+
+	if (conData.analogueButtons[HK_ANALOGUE_LEFT_TRIGGER])
+	{
+		for (auto p : entityVector)
+			p->initialiseValues();
+
+		currentState = eCharacter;
+	}
+
+
+
+}
+void World::pause()
+{
+	const HAPI_TControllerData &conData = HAPI_Sprites.GetControllerData(0);
+	static bool canExit = false;
+
+	if (!conData.analogueButtons[HK_ANALOGUE_LEFT_TRIGGER])
+		canExit = true;
+	
+	HAPI_Sprites.RenderText(660, 540, HAPI_TColour(255, 255, 0), "PAUSED", 70);
+
+	if (conData.analogueButtons[HK_ANALOGUE_LEFT_TRIGGER] && canExit == true)
+	{
+		currentState = ePlay;
+		canExit = false;
+	}
+
+
+}
