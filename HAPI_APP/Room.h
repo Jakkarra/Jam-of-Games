@@ -82,7 +82,11 @@ public:
 
 	bool Check_Path_Exists();
 
+	bool getHasPlayerEntered() { return playerHasEntered; }
+	void setHasPlayerEntered(bool entered) { playerHasEntered = entered; }
+
 	Point Get_Room_Position();
+	std::vector<std::vector<HAPISPACE::Line>>	getAllPaths() { return All_Paths; }
 
 	~Room();
 
@@ -131,6 +135,7 @@ private:
 
 	std::vector<HAPISPACE::Line > Actual_Path;
 	std::vector<std::vector<HAPISPACE::Line>> All_Paths;
+	bool playerHasEntered = false;
 
 };
 

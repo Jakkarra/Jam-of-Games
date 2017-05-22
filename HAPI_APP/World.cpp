@@ -149,17 +149,44 @@ void World::Playing()
 		updateTime = HAPI_Sprites.GetTime() + 30.0f;
 	}
 
+	player_->setOutOfBounds(true);
+
 	for (auto room : Rooms)
 	{
 		room.Render_Floor(getPlayerPos());
+
+		std::vector<std::vector<HAPISPACE::Line>> allPaths = room.getAllPaths();
 		
+		for (auto path : allPaths)
+		{
+			for (auto p2 : path)
+			{
+				if (p2.p1.DistanceBetween(getPlayerPos()) <= 40)
+				{
+					player_->setOutOfBounds(false);
+					break;
+				}
+			}
+
+		}
+
+		if (room.Get_Collision_Rectangle().Contains(getPlayerPos()))
+		{
+			player_->setOutOfBounds(false);
+			if(!room.getHasPlayerEntered())
+
+			break;
+		}
+
+
 		if (room.Check_Path_Exists() == true)
 		{
 			room.Render_Path("Seamless_Texture.png", getPlayerPos());
-
-			room.Spawn_Points(getPlayerPos());
+	
 		}
 	}
+
+	
 
 
 	for (auto p : entityVector) //might be better to have a single vector instead of two and have the offset for where the bullets start
@@ -168,7 +195,6 @@ void World::Playing()
 	for (auto p : bulletVector) //also the render is seperate to the update as update is every tick, render may be slowed down
 		p->render(getPlayerPos());
 	
-	//need check collision between the rooms and player/enemies also then corridor checks 
 
 
 }
@@ -420,7 +446,7 @@ void World::charCreation()
 
 	if (conData.analogueButtons[HK_ANALOGUE_RIGHT_TRIGGER] && totalPoints == 0)
 	{
-		player_->initialiseValues(healthPoints, speedPoints, ratePoints, damagePoints);
+		player_->initialiseValues(healthPoints, speedPoints, ratePoints, damagePoints, 0);
 		healthPoints = ratePoints = damagePoints = speedPoints = 1;
 		currentState = ePlay;
 	}
@@ -465,11 +491,12 @@ void World::pause()
 
 void World::Create_Rooms(int Number_of_Rooms, int Walls_Texture_Size)
 {
-	Point First_Room_Position{ 960,  540 };
+	Point First_Room_Position{ 760,  340 };
 
 	First_Room = new Room("Floor_1.png", First_Room_Position, "Corners_And_Walls_Room_1.png", Walls_Texture_Size);
 
 	First_Room->Create_Invidividual_Room();
+	First_Room->setHasPlayerEntered(true);
 
 	Rooms.push_back(*First_Room);
 
