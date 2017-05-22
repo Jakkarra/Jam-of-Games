@@ -4,6 +4,10 @@
 #include "EntityPlayer.h"
 #include "EntityMenu.h"
 #include "EntityEnemy.h"
+#include "EntityRangedEnemy.h"
+#include "EntityEnemyMelee.h"
+#include "EntityBruteEnemy.h"
+#include "EntityEnemyBOSS.h"
 #include "EntityHealth.h"
 #include "EntityPickup.h"
 #include "Room.h"
@@ -16,6 +20,11 @@ class World
 public:
 	World();
 	~World();
+
+	enum EnemyType
+	{
+		eMelee, eRanged, eBrute, eBoss
+	};
 
 	enum menuStates
 	{
@@ -36,6 +45,7 @@ public:
 	Point getPlayerPos() { return player_->getPos(); }
 	int getPlayerHealth() { return player_->getHealth(); }
 	int getPlayerMaxHealth() { return player_->getMaxHealth(); }
+	void spawnenemy(EntityEnemy* enemy_, Point tl, Rectangle room_size, std::string sprite, EnemyType type);
 	
 private:
 	menuStates currentState = eMainMenu;

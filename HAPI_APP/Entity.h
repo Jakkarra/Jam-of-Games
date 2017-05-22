@@ -54,6 +54,8 @@ protected:
 	float xVector = 0;
 	float yVector = 0;
 	float interpValue = 0.f;
+	int min_range_{ 0 };
+	int max_range_{ 0 };
 private:
 
 	

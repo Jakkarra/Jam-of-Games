@@ -1,0 +1,9 @@
+diff a/HAPI_APP/EntityBullet.cpp b/HAPI_APP/EntityBullet.cpp	(rejected hunks)
+@@ -17,7 +17,6 @@
+ 
+ void CEntityBullet::initialiseValues()
+ {
+-	health_ = 3;
+ 	health_ = 1;
+ 	speed_ = 100;
+ 	attack_ = 2;
