@@ -694,3 +694,25 @@ void World::spawnenemy(EntityEnemy* enemy_, Point tl, Rectangle room_size, std::
 
 	entityVector.push_back(enemy_);
 }
+
+void World::activatenemy(Point tl, Rectangle roomsize, EnemyType type)
+{
+
+	int width = roomsize.Width();
+	int height = roomsize.Height();
+
+	int posX = rand() % width + tl.x;
+	int posY = rand() % height + tl.y;
+	Point pos = { posX, posY };
+	for (int i = 0; i < entityVector.size(); i++)
+	{
+		if (entityVector[i]->getclass() != eplayer)
+		{
+			if (entityVector[i]->getclass() == type)
+			{
+				entityVector[i]->setPosition(pos);
+				entityVector[i]->isAlive();
+			}
+		}
+	}
+}

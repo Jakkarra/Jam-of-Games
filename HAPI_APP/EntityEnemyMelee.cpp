@@ -6,10 +6,11 @@ void CEntityEnemyMelee::initialiseValues()
 {
 	health_ = 1;
 	pos_ = { (rand() % 800) + 200,(rand() % 800) + 200 };
-	alive_ = true;
+	alive_ = false;
 	speed_ = 2;
 	side = enemy;
 	attack_ = 1;
+	myclass = eMelee;
 
 	max_range_ = 60;
 	angle_ = 0;
