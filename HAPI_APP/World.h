@@ -23,7 +23,7 @@ public:
 
 	enum EnemyType
 	{
-		eMelee, eRanged, eBrute, eBoss
+		eMelee, eRanged, eBrute, eBoss, eplayer	
 	};
 
 	enum menuStates
@@ -46,6 +46,7 @@ public:
 	int getPlayerHealth() { return player_->getHealth(); }
 	int getPlayerMaxHealth() { return player_->getMaxHealth(); }
 	void spawnenemy(EntityEnemy* enemy_, Point tl, Rectangle room_size, std::string sprite, EnemyType type);
+	void activatenemy(Point tl, Rectangle roomsize, EnemyType type);
 	
 private:
 	menuStates currentState = eMainMenu;

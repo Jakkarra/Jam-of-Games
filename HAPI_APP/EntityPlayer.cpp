@@ -27,6 +27,7 @@ void CEntityPlayer::initialiseValues(int health, int speed, int rof, int damage,
 	reloadTime = 500 / rof;
 	attack_ = damage;
 	side = player;
+	myclass = eplayer;
 	alive_ = true;
 	angle_ = 0;
 	

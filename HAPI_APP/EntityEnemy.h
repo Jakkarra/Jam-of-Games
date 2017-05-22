@@ -23,6 +23,7 @@ public:
 	void BOSSshoot(CEntityBullet* bullet, float angle);
 	void BOSSALTshoot(CEntityBullet* bullet, float angle);
 	void setpos(Point pos);
+	bool setalive() { alive_ = true; }
 
 protected:
 

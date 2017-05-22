@@ -6,10 +6,11 @@ void CEntityRangedEnemy::initialiseValues()
 {
 	health_ = 1;
 	pos_ = { (rand() % 800) + 200,(rand() % 800) + 200 };
-	alive_ = true;
+	alive_ = false;
 	speed_ = 3;
 	side = enemy;
 	attack_ = 1;
+	myclass = eRanged;
 
 	max_range_ = 60;
 	min_range_ = 30;

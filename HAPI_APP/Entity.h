@@ -10,6 +10,11 @@ class World;
 class CEntity
 {
 public:
+	enum EnemyType
+	{
+		eMelee, eRanged, eBrute, eBoss, eplayer
+	};
+
 	CEntity(); 
 	virtual ~CEntity();
 	virtual void render(Point playerPos);
@@ -31,6 +36,7 @@ public:
 	int getROF() { return rof_; }
 	float getAngle() { return angle_; }
 	sides getSide() { return side; }
+	EnemyType getclass() { return myclass; }
 	virtual void update(World& world) = 0;
 
 	virtual void hasCollided(CEntity &other);
@@ -56,6 +62,8 @@ protected:
 	float interpValue = 0.f;
 	int min_range_{ 0 };
 	int max_range_{ 0 };
+	EnemyType myclass;
+
 private:
 
 	
