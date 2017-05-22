@@ -64,7 +64,7 @@ public:
 
 	void Link_Rooms(Room & Other_Room);
 
-	void Spawn_Points();
+	void Spawn_Points(Point Player_Pos);
 
 	// Pushing walls into the vector.
 
@@ -72,14 +72,17 @@ public:
 
 	void Create_Joined_Room(std::shared_ptr<Surface> other_surface);
 
-	void Render_Path(std::string file_name);
+	void Render_Path(std::string file_name, Point PlayerPos);
 
 	// Render walls & floor
 
 	void Render_Floor(Point PlayerPos);
 
-	Sprite getFloorSprite() { return Floor_Sprite; }
-	Point getFloorPos() { return Floor_Position; }
+	const Rectangle Get_Collision_Rectangle() const;
+
+	bool Check_Path_Exists();
+
+	Point Get_Room_Position();
 
 	~Room();
 
@@ -94,6 +97,8 @@ private:
 	std::shared_ptr<Surface> Floor_Sprite;
 
 	Rectangle FloorRect;
+
+	Rectangle CollisionRect;
 
 	std::string Sheet_Name;
 
@@ -122,7 +127,10 @@ private:
 
 	Corridor_Information Corridor_Data;
 
-	std::vector<HAPISPACE::Line> Actual_Path;
+	bool Has_Path;
+
+	std::vector<HAPISPACE::Line > Actual_Path;
+	std::vector<std::vector<HAPISPACE::Line>> All_Paths;
 
 };
 

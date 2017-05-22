@@ -19,7 +19,11 @@ Room::Room(std::string sprite_floor_name, Point Position_To_Spawn, std::string s
 
 	FloorRect = Rectangle(Floor_Sprite->Width(), Floor_Sprite->Height());
 
+	CollisionRect = Rectangle(Floor_Position.x, Floor_Position.x + Floor_Sprite->Width(), Floor_Position.y, Floor_Position.y + Floor_Sprite->Height());
+
 	Sheet_Name = sheet_name;
+
+	Has_Path = false;
 
 	Save_Sprite_Sheet_XML();
 
@@ -404,14 +408,14 @@ void Room::Create_Corridor(int start_index, int end_index, Entrance First_Locati
 
 			Actual_Path.push_back(line_1);
 			Actual_Path.push_back(line_2);
-
-
-
 		}
 
 		if (index == end_index)
 		{
 			target_reached = true;
+			All_Paths.push_back(Actual_Path);
+			Actual_Path.clear();
+			Pathfinding_Points.clear();
 		}
 
 	}
@@ -573,12 +577,15 @@ void Room::Link_Rooms(Room & Other_Room)
 		}
 	}
 
+	Has_Path = true;
+
 	Link_Positions(Access_Point_1, Access_Point_2);
 	
 }
 
-void Room::Spawn_Points()
+void Room::Spawn_Points(Point Player_Pos)
 {
+	/*
 	for (auto p : Pathfinding_Points)
 	{
 		if (p.flag == true)
@@ -586,9 +593,11 @@ void Room::Spawn_Points()
 			SCREEN_SURFACE.DrawFilledCircle(p.Position, 7, HAPI_TColour::Random());
 		}
 	}
-
+	*/
 	for (auto l : Actual_Path)
 	{
+		l.p1 -= Player_Pos - Point{960,540};
+		l.p2 -= Player_Pos - Point{ 960,540 };
 		SCREEN_SURFACE.DrawLine(l, HAPI_TColour::Random());
 	}
 
@@ -782,7 +791,7 @@ void Room::Create_Joined_Room(std::shared_ptr<Surface> other_surface)
 	}
 }
 
-void Room::Render_Path(std::string file_name)
+void Room::Render_Path(std::string file_name, Point PlayerPos)
 {
 	std::shared_ptr<Surface> Corridor_Sprite = HAPI_Sprites.MakeSurface("Data\\" + file_name);
 
@@ -793,10 +802,15 @@ void Room::Render_Path(std::string file_name)
 
 	Sprite Corridor_Tile(Corridor_Sprite);
 
-	for (auto & corridor : Actual_Path)
+	for (auto & path : All_Paths)
 	{
-		Corridor_Tile.Render(SCREEN_SURFACE, corridor.p1);
+
+		for (auto & corridor : path)
+		{
+			Corridor_Tile.Render(SCREEN_SURFACE, corridor.p1 - (PlayerPos - Point(960, 540)));
+		}
 	}
+
 	
 }
 
@@ -816,6 +830,21 @@ void Room::Render_Floor(Point playerPos)
 		}
 
 	}
+}
+
+const Rectangle Room::Get_Collision_Rectangle() const
+{
+	return CollisionRect;
+}
+
+bool Room::Check_Path_Exists()
+{
+	return Has_Path;
+}
+
+Point Room::Get_Room_Position()
+{
+	return Floor_Position;
 }
 
 
