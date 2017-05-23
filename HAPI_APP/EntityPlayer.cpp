@@ -153,7 +153,7 @@ void CEntityPlayer::shoot(CEntityBullet* bullet)
 {
 	if (HAPI_Sprites.GetTime() > timeToShoot)
 	{
-		bullet->setValues(*this, currentWeapon); //need to make the player rotate so i can try shooting at different angles. I need to calc bullet direction from player angle
+		bullet->setValues(*this, 0 ,currentWeapon); //need to make the player rotate so i can try shooting at different angles. I need to calc bullet direction from player angle
 		timeToShoot = HAPI_Sprites.GetTime() + reloadTime;
 	}
 
@@ -164,7 +164,7 @@ void CEntityPlayer::hasCollided(CEntity &other)
 	if (other.getSide() == enemy && invunerable_ == false)
 	{
 		health_ -= other.getAttack();
-		invunerable_ = true;
+		invunerable_ = false;
 		invunerableTime = HAPI_Sprites.GetTime() + 200;
 	}
 	else if(other.getSide() == pickup)

@@ -14,7 +14,7 @@ public:
 	~CEntityBullet();
 	void initialiseValues();
 	void update(World& world);
-	void setValues(CEntity &other, float angle);
+	void setValues(CEntity &other, float angle, int weapon);
 	void resetValues();
 	void render(Point playerPos);
 	int getDamage() { return attack_; }

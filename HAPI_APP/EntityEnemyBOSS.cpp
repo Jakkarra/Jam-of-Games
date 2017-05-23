@@ -9,7 +9,7 @@ void CEntityEnemyBOSS::initialiseValues()
 	health_ = 40;
 	pos_ = { (rand() % 800) + 200,(rand() % 800) + 200 };
 	alive_ = false;
-	speed_ = 1;
+	speed_ = 0.5;
 	side = enemy;
 	attack_ = 2;
 	myclass = eBoss;
