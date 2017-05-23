@@ -800,11 +800,11 @@ void Room::Render_Path(std::string file_name)
 	
 }
 
-void Room::Render_Floor()
+void Room::Render_Floor(Point playerPos)
 {
 	Sprite Floor_To_Render(Floor_Sprite);
 
-	Floor_To_Render.Render(SCREEN_SURFACE, Floor_Position);
+	Floor_To_Render.Render(SCREEN_SURFACE, Floor_Position - (playerPos - Point(960, 540)));
 
 	Sprite spriteSheet("Data\\" + Sheet_Name + ".xml", "Data\\");
 
@@ -812,7 +812,7 @@ void Room::Render_Floor()
 	{
 		if (p.active == true)
 		{
-			spriteSheet.Render(SCREEN_SURFACE, p.Wall_Position, p.Frame_Number);
+			spriteSheet.Render(SCREEN_SURFACE, p.Wall_Position - (playerPos - Point(960, 540)), p.Frame_Number);
 		}
 
 	}

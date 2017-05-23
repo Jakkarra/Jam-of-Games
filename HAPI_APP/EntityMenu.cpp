@@ -25,3 +25,9 @@ void CEntityMenu::initialiseValues()
 	alive_ = true;
 }
 
+void CEntityMenu::render(Point playerPos)
+{
+	
+	sprite_->Render(SCREEN_SURFACE, pos_);
+
+}

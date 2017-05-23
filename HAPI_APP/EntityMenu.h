@@ -9,6 +9,8 @@ public:
 	void update(World &world);
 
 	void initialiseValues();
+
+	void render(Point playerPos);
 	
 private:
 

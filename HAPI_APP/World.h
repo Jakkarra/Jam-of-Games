@@ -27,7 +27,7 @@ public:
 	void mainMenu();
 	void charCreation();
 	void endGame();
-	void pause();
+	void Pause();
 	std::vector<CEntityBullet*> getBullets() { return bulletVector; }
 	Point getPlayerPos() { return player_->getPos(); }
 	int getPlayerHealth() { return player_->getHealth(); }
@@ -68,7 +68,17 @@ private:
 	bool isRate = false;
 	bool isDamage = false;
 
+	//Pause Menu Variables
+	bool isControls = false;
+	bool isExit = false;
+	bool isContinue = false;
+
+	//Images
 	CEntityMenu *bg = new CEntityMenu("Data//Background.jpg");
 	CEntityMenu *sp = new CEntityMenu("Data//XboxRTLogo.png");
+	CEntityMenu *lt = new CEntityMenu("Data//XboxLTLogoLarge.png");
+	CEntityMenu *gbg = new CEntityMenu("Data//GameOverBG.jpg");
+	CEntityMenu *pbg = new CEntityMenu("Data//PauseBG.png");
+
 };
 
