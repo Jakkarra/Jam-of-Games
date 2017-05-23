@@ -61,7 +61,7 @@ void CEntityBullet::setValues(CEntity &other, int weapon) //when gun is fired, g
 	{
 		sprite_ = new Sprite(HAPI_Sprites.MakeSurface("Data\\Fireball2.png"));
 	}
-	else if (weapon == 2)
+	else 
 	{
 		sprite_ = new Sprite(HAPI_Sprites.MakeSurface("Data\\Arrow.png")); 
 	}

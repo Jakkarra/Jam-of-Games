@@ -26,6 +26,9 @@ public:
 		eMelee, eRanged, eBrute, eBoss, eplayer	
 	};
 
+
+	enum sides { player, enemy, neutral, pickup };
+
 	enum menuStates
 	{
 		eMainMenu, ePlay, eGameOver, ePaused, eCreation, eWin, eControls, eCharacter
