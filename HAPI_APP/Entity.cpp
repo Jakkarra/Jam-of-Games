@@ -33,7 +33,7 @@ void CEntity::render(Point playerPos)
 	if (alive_ == true)
 	{
 		sprite_->Render(SCREEN_SURFACE, pos_ - (playerPos - Point(960,540)), _frameNum);
-		if (_frameNum >= frameOffset + numerOfFramesForAnimation)
+		if (_frameNum >= frameOffset + numberOfFramesForAnimation)
 			_frameNum = frameOffset;
 	}
 	
