@@ -94,6 +94,7 @@ void World::Initialise()
 	Create_Rooms(8, 32);
 
 	Connect_Rooms();
+	Play_sound();
 
 }
 
@@ -613,4 +614,19 @@ int World::Generate_random_vector(int minimum_value, int maximum_value)
 	int random_scalar = int_rand(rand_engine);
 
 	return random_scalar;
+}
+
+void World::Play_sound()
+{
+	HAPI_TStreamedMediaOptions sound_options;
+
+	sound_options.loop = true;
+	sound_options.volume = 2.f;
+
+	unsigned int musicID = 1;
+
+	if (!HAPI_Sprites.PlayStreamedMedia("Data\\Background_Music.wav", sound_options, musicID))
+	{
+
+	}
 }

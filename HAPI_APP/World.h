@@ -31,6 +31,7 @@ public:
 	void pause();
 	void Create_Rooms(int Number_of_Rooms, int Texture_Size);
 	void Connect_Rooms();
+	void Play_sound();
 	int Generate_random_vector(int minimum_value, int maximum_values);
 	std::vector<CEntityBullet*> getBullets() { return bulletVector; }
 	Point getPlayerPos() { return player_->getPos(); }
@@ -51,9 +52,6 @@ private:
 
 	float currTime = 0;
 	float updateTime = 0;
-
-	Room* First_Room = new Room;
-	Room* Second_Room = new Room;
 
 	int optionSelected = 0;
 	int currentHealth = 6;
