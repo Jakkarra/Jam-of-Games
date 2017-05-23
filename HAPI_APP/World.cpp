@@ -99,16 +99,17 @@ void World::Initialise()
 	entityVector.push_back(health);
 
 
-	CEntityPickup *pickup1 = new CEntityPickup(1, 2, 4, 2);//get sprites for the pickups just define them as we wish
-	CEntityPickup *pickup3 = new CEntityPickup(0, 0, 4, 0);
-	CEntityPickup *pickup4 = new CEntityPickup(0, 3, 0, 0);
-	CEntityPickup *pickup2 = new CEntityPickup(2, 0, 0, 0);
 
-	entityVector.push_back(pickup1);
-	entityVector.push_back(pickup2);
-	entityVector.push_back(pickup3);
-	entityVector.push_back(pickup4);
 
+	for (int i = 0; i < 5 ; i++)
+	{
+		CEntityPickup *pickup1 = new CEntityPickup(1, 2, 4, 2);
+		entityVector.push_back(pickup1);
+		//max of 500 bullets
+	}
+	
+	
+	Play_background_music();
 }
 
 void World::Playing()
@@ -636,7 +637,7 @@ void World::Create_Rooms(int Number_of_Rooms, int Walls_Texture_Size)
 {
 	Point First_Room_Position{ 760,  340 };
 
-	First_Room = new Room("Floor_1.png", First_Room_Position, "Corners_And_Walls_Room_1.png", Walls_Texture_Size);
+	Room *First_Room = new Room("Floor_1.png", First_Room_Position, "Corners_And_Walls_Room_1.png", Walls_Texture_Size);
 
 	First_Room->Create_Invidividual_Room();
 	First_Room->setHasPlayerEntered(true);
@@ -692,28 +693,28 @@ void World::Create_Rooms(int Number_of_Rooms, int Walls_Texture_Size)
 
 				if (direction_to_spawn == 1 && last_direction_to_spawn != 2)
 				{
-					Position_To_Spawn_Room = Point{Last_Room_Position.x - (int)Floor_Sprite->Width() - Generate_random_vector(600, 800),  Last_Room_Position.y };
+					Position_To_Spawn_Room = Point{Last_Room_Position.x - (int)Floor_Sprite->Width() - Generate_random_vector(600, 800),  Last_Room_Position.y + Generate_random_vector(-100, 100) };
 					last_direction_to_spawn = direction_to_spawn;
 					try_position = true;
 				}
 
 				if (direction_to_spawn == 2 && last_direction_to_spawn != 1)
 				{
-					Position_To_Spawn_Room = Point{ Last_Room_Position.x + (int)Last_Floor_Rect.Width() + Generate_random_vector(600, 800),  Last_Room_Position.y };
+					Position_To_Spawn_Room = Point{ Last_Room_Position.x + (int)Last_Floor_Rect.Width() + Generate_random_vector(600, 800),  Last_Room_Position.y + Generate_random_vector(-100, 100) };
 					last_direction_to_spawn = direction_to_spawn;
 					try_position = true;
 				}
 
 				if (direction_to_spawn == 3 && last_direction_to_spawn != 4)
 				{
-					Position_To_Spawn_Room = Point{ Last_Room_Position.x, Last_Room_Position.y - (int)Floor_Sprite->Height() - Generate_random_vector(600, 800) };
+					Position_To_Spawn_Room = Point{ Last_Room_Position.x + Generate_random_vector(-100, 100), Last_Room_Position.y - (int)Floor_Sprite->Height() - Generate_random_vector(600, 800) };
 					last_direction_to_spawn = direction_to_spawn;
 					try_position = true;
 				}
 
 				if (direction_to_spawn == 4 && last_direction_to_spawn != 3)
 				{
-					Position_To_Spawn_Room = Point{ Last_Room_Position.x, Last_Room_Position.y + (int)Last_Floor_Rect.Height() + Generate_random_vector(600, 800) };
+					Position_To_Spawn_Room = Point{ Last_Room_Position.x + Generate_random_vector(-100, 100), Last_Room_Position.y + (int)Last_Floor_Rect.Height() + Generate_random_vector(600, 800) };
 					last_direction_to_spawn = direction_to_spawn;
 					try_position = true;
 				}
@@ -771,6 +772,21 @@ void World::Connect_Rooms()
 	{
 		Rooms[i].Pathfind_Corridor(Rooms[i + 1]);
 		Rooms[i].Link_Rooms(Rooms[i + 1]);
+	}
+}
+
+void World::Play_background_music()
+{
+	HAPI_TStreamedMediaOptions sound_options;
+
+	sound_options.loop = true;
+	sound_options.volume = 0.5f;
+
+	unsigned int musicID = 1;
+
+	if (!HAPI_Sprites.PlayStreamedMedia("Data\\Background_Music.wav", sound_options, musicID))
+	{
+
 	}
 }
 

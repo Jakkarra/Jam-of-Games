@@ -112,7 +112,10 @@ void CEntityPlayer::update(World& world)
 			bulletNum++;
 			if (bulletNum > 499)
 				bulletNum = 0;
-		
+			if (!HAPI_Sprites.PlaySound("Data\\Fire_Arrow.wav"))
+			{
+
+			}
 		
 	}
 
@@ -153,7 +156,7 @@ void CEntityPlayer::shoot(CEntityBullet* bullet)
 {
 	if (HAPI_Sprites.GetTime() > timeToShoot)
 	{
-		bullet->setValues(*this, 0 ,currentWeapon); //need to make the player rotate so i can try shooting at different angles. I need to calc bullet direction from player angle
+		bullet->setValues(*this, currentWeapon); //need to make the player rotate so i can try shooting at different angles. I need to calc bullet direction from player angle
 		timeToShoot = HAPI_Sprites.GetTime() + reloadTime;
 	}
 
@@ -166,6 +169,7 @@ void CEntityPlayer::hasCollided(CEntity &other)
 		health_ -= other.getAttack();
 		invunerable_ = false;
 		invunerableTime = HAPI_Sprites.GetTime() + 200;
+		HAPI_Sprites.PlaySound("Data\\Grunt.wav");
 	}
 	else if(other.getSide() == pickup)
 	{
@@ -175,6 +179,7 @@ void CEntityPlayer::hasCollided(CEntity &other)
 		rof_ += other.getROF();
 		reloadTime = 500 / (rof_+1);
 		attack_ += other.getAttack();
+		HAPI_Sprites.PlaySound("Data\\Power_Up.wav");
 	}/*
 	else if(other.isFinish())
 		hasFinished == true then check for this in the world loop
