@@ -215,8 +215,7 @@ void Room::Pathfind_Corridor(Room & Other_Room)
 
 	int index_counter = 0;
 
-	// 1.85
-	float sensitive_value = 3.0f;
+	float sensitive_value = 3.2f;
 
 	for (int y = Pathfinding_Rectangle->top; y < Pathfinding_Rectangle->bottom; y += (int)offset_for_corridor / sensitive_value)
 	{
@@ -271,8 +270,8 @@ void Room::Pathfind_Corridor(Room & Other_Room)
 void Room::Create_Corridor(int start_index, int end_index, Entrance First_Location, Entrance Second_Location)
 {	
 	int index = start_index;
-	int nr_elements_per_row = (Corridor_Data.Pathfinding_Rectangle->right - Corridor_Data.Pathfinding_Rectangle->left) / ((int)Corridor_Data.offset_for_corridor / 3) + 1;
-	int nr_elements_per_column = (Corridor_Data.Pathfinding_Rectangle->bottom - Corridor_Data.Pathfinding_Rectangle->top) / ((int)Corridor_Data.offset_for_corridor / 3) + 1;
+	int nr_elements_per_row = (Corridor_Data.Pathfinding_Rectangle->right - Corridor_Data.Pathfinding_Rectangle->left) / ((int)Corridor_Data.offset_for_corridor / 3.2f) + 1;
+	int nr_elements_per_column = (Corridor_Data.Pathfinding_Rectangle->bottom - Corridor_Data.Pathfinding_Rectangle->top) / ((int)Corridor_Data.offset_for_corridor / 3.2f) + 1;
 
 	Pathfinding_Points[index];
 

@@ -32,7 +32,9 @@ void CEntity::render(Point playerPos)
 {	//i want to interp all but not sure how to 
 	if (alive_ == true)
 	{
-		sprite_->RenderRotated(SCREEN_SURFACE, pos_ - (playerPos - Point(960,540)), angle_);
+		sprite_->Render(SCREEN_SURFACE, pos_ - (playerPos - Point(960,540)), _frameNum);
+		if (_frameNum >= frameOffset + numerOfFramesForAnimation)
+			_frameNum = frameOffset;
 	}
 	
 }
