@@ -49,7 +49,7 @@ void CEntityBullet::update(World& world)
 	interpValue = 0;
 }
 
-void CEntityBullet::setValues(CEntity &other, float angle = 0, int weapon = 1 ) //when gun is fired, give bullet stats
+void CEntityBullet::setValues(CEntity &other, int weapon) //when gun is fired, give bullet stats
 {						
 	//need to get the angle and with that use it to make the bullet move in the wanted direction
 
@@ -74,11 +74,8 @@ void CEntityBullet::setValues(CEntity &other, float angle = 0, int weapon = 1 ) 
 	oldPos = other.getPos();
 	angle_ = other.getAngle(); // i can just do a check to see if angle is between an 8-directional area and then send bullet that direction
 	attack_ = other.getAttack();//instead of their attack maybe have a seprate stats for bullets fired like bullets speed not just player speed
-	lifeDuration = HAPI_Sprites.GetTime() + 4000;
-	if (angle != 0)
-	{
-		angle_ = angle;
-	}
+	lifeDuration = HAPI_Sprites.GetTime() + 2500;
+
 	//seperate render function so we can set the colour, maybe if statements in player and if damage is x high, add red colour. speed add yellow etc.
 }
 

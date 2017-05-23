@@ -18,7 +18,7 @@ void EntityEnemy::NPCshoot(CEntityBullet * bullet)
 {
 	if (HAPI_Sprites.GetTime() > reloadTime)
 	{
-		bullet->setValues(*this, 0, 1);
+		bullet->setValues(*this, 1);
 		reloadTime = HAPI_Sprites.GetTime() + 1250;
 	}
 }
@@ -27,7 +27,7 @@ void EntityEnemy::BOSSshoot(CEntityBullet * bullet,float angle)
 {
 	if (HAPI_Sprites.GetTime() > bossreloadtime)
 	{
-		bullet->setValues(*this, angle, 1);
+		bullet->setValues(*this, 1);
 		bossreloadtime = HAPI_Sprites.GetTime() + 75;
 	}
 }
@@ -36,7 +36,7 @@ void EntityEnemy::BOSSALTshoot(CEntityBullet * bullet, float angle)
 {
 	if (HAPI_Sprites.GetTime() > bossreloadrearreload)
 	{
-		bullet->setValues(*this, angle, 1);
+		bullet->setValues(*this, 1);
 		bossreloadrearreload = HAPI_Sprites.GetTime() + 75;
 	}
 }

@@ -26,7 +26,6 @@ public:
 		eMelee, eRanged, eBrute, eBoss, eplayer	
 	};
 
-	enum sides { player, enemy, neutral, pickup };
 	enum menuStates
 	{
 		eMainMenu, ePlay, eGameOver, ePaused, eCreation, eWin, eControls, eCharacter
@@ -38,7 +37,7 @@ public:
 	void mainMenu();
 	void charCreation();
 	void endGame();
-	void pause();
+	void Pause();
 	void Create_Rooms(int Number_of_Rooms, int Texture_Size);
 	void Connect_Rooms();
 	int Generate_random_vector(int minimum_value, int maximum_values);
@@ -46,15 +45,8 @@ public:
 	Point getPlayerPos() { return player_->getPos(); }
 	int getPlayerHealth() { return player_->getHealth(); }
 	int getPlayerMaxHealth() { return player_->getMaxHealth(); }
-	void spawnenemy(Point tl, Rectangle room_size);
-	bool checkEnemiesDead() {
-		for (auto e : entityVector) {
-			if (e->getSide() == enemy)
-				if (e->isAlive() == true)
-					return false;
-		}
-		return true;
-	}
+	void spawnenemy(EntityEnemy* enemy_, Point tl, Rectangle room_size, std::string sprite, EnemyType type);
+	void activatenemy(Point tl, Rectangle roomsize, EnemyType type);
 	
 private:
 	menuStates currentState = eMainMenu;
@@ -65,13 +57,14 @@ private:
 	std::vector<CEntityBullet*> bulletVector;
 	std::vector<CEntity*> healthVector;
 	std::vector<Room> Rooms;
-	int number_of_rooms;
+
 	CEntityPlayer* player_ = new CEntityPlayer;
 
 	float currTime = 0;
 	float updateTime = 0;
 
-	Room* First_Room;
+	Room* First_Room = new Room;
+	Room* Second_Room = new Room;
 
 	int optionSelected = 0;
 	int currentHealth = 6;
@@ -91,10 +84,19 @@ private:
 	bool isRate = false;
 	bool isDamage = false;
 
+	//Pause Menu Variables
+	bool isControls = false;
+	bool isExit = false;
+	bool isContinue = false;
+
+	//Images
 	CEntityMenu *bg = new CEntityMenu("Data//Background.jpg");
 	CEntityMenu *sp = new CEntityMenu("Data//XboxRTLogo.png");
-
+	CEntityMenu *lt = new CEntityMenu("Data//XboxLTLogoLarge.png");
+	CEntityMenu *gbg = new CEntityMenu("Data//GameOverBG.jpg");
+	CEntityMenu *pbg = new CEntityMenu("Data//PauseBG.png");
 	std::default_random_engine rand_engine;
-	
+	int number_of_rooms;
+
 };
 
