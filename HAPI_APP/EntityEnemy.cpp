@@ -18,6 +18,7 @@ void EntityEnemy::NPCshoot(CEntityBullet * bullet)
 {
 	if (HAPI_Sprites.GetTime() > reloadTime)
 	{
+		HAPI_Sprites.PlaySound("Data\\Fireball.wav");
 		bullet->setValues(*this, 1);
 		reloadTime = HAPI_Sprites.GetTime() + 1250;
 	}

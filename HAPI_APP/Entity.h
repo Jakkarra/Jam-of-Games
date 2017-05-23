@@ -64,6 +64,8 @@ protected:
 	int min_range_{ 0 };
 	int max_range_{ 0 };
 	EnemyType myclass;
+	unsigned int frameOffset = 0;
+	unsigned int numerOfFramesForAnimation = 0;
 
 private:
 

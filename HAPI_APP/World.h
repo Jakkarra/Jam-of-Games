@@ -42,7 +42,7 @@ public:
 	void Pause();
 	void Create_Rooms(int Number_of_Rooms, int Texture_Size);
 	void Connect_Rooms();
-	void Play_sound();
+	void Play_background_music();
 	int Generate_random_vector(int minimum_value, int maximum_values);
 	std::vector<CEntityBullet*> getBullets() { return bulletVector; }
 	Point getPlayerPos() { return player_->getPos(); }

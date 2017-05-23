@@ -58,6 +58,25 @@ void CEntityBruteEnemy::update(World& world)
 				pos_.y -= speed_;
 			}
 		}
+
+		if (angle_ > -0.80 && angle_ <= 0.80)	//left
+		{
+			//frameOffset 
+			//numerOfFramesForAnimation
+
+		}
+		else if (angle_ > -2.4 && angle_ <= -0.8)				//up					
+		{
+
+		}
+		else if (angle_ > 0.8 && angle_ <= 2.4)	//down								
+		{
+
+		}
+		else 	//right								
+		{
+
+		}
 	}
 }
 
