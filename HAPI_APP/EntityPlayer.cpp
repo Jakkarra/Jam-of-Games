@@ -33,9 +33,8 @@ void CEntityPlayer::initialiseValues(int health, int speed, int rof, int damage,
 	
 	currentWeapon = bow;//for now, should be currentWeapon = weapon;
 
-	if(currentWeapon == sword)
-		weaponSprite = new Sprite(HAPI_Sprites.MakeSurface("Data\\sword.png"));
-	else if(currentWeapon == staff)
+	
+	if(currentWeapon == staff)
 		weaponSprite = new Sprite(HAPI_Sprites.MakeSurface("Data\\staff.png"));
 	else 
 		weaponSprite = new Sprite(HAPI_Sprites.MakeSurface("Data\\bow.png"));
@@ -108,19 +107,12 @@ void CEntityPlayer::update(World& world)
 
 	if (conData.analogueButtons[HK_ANALOGUE_RIGHT_TRIGGER])
 	{
-		if (currentWeapon == sword)
-		{
-			//might have to leave sword as there is no swing animation only stab and that would be difficult to balance we could have both
-
-
-		}
-		else
-		{
+		
 			shoot(world.getBullets().at(bulletNum));
 			bulletNum++;
 			if (bulletNum > 499)
 				bulletNum = 0;
-		}
+		
 		
 	}
 
@@ -161,8 +153,16 @@ void CEntityPlayer::shoot(CEntityBullet* bullet)
 {
 	if (HAPI_Sprites.GetTime() > timeToShoot)
 	{
-		bullet->setValues(*this, currentWeapon); //need to make the player rotate so i can try shooting at different angles. I need to calc bullet direction from player angle
+		bullet->setValues(*this,currentWeapon); //need to make the player rotate so i can try shooting at different angles. I need to calc bullet direction from player angle
 		timeToShoot = HAPI_Sprites.GetTime() + reloadTime;
+		if (currentWeapon = 1)
+		{
+			HAPI_Sprites.PlaySound("Data//Firebolt.mp3");
+		}
+		else
+		{
+			HAPI_Sprites.PlaySound("Data//Arrow_shot.mp3");
+		}
 	}
 
 }

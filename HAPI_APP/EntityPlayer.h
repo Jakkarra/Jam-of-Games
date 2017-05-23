@@ -24,6 +24,7 @@ public:
 	void render(Point playerPos);
 	int getMaxHealth() { return maxHealth_; }
 	void setOutOfBounds(bool value) { outOfBounds = value; }
+	bool getOutOfBounds() { return outOfBounds;}
 private:
 	int deadzone_left_ = HK_GAMEPAD_LEFT_THUMB_DEADZONE; //numberofKeys
 	float timeToShoot = 0.f;

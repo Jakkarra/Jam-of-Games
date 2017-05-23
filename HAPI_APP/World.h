@@ -26,6 +26,8 @@ public:
 		eMelee, eRanged, eBrute, eBoss, eplayer	
 	};
 
+	enum sides { player, enemy, neutral, pickup };
+
 	enum menuStates
 	{
 		eMainMenu, ePlay, eGameOver, ePaused, eLoading, eWin, eControls, eCharacter
@@ -41,13 +43,21 @@ public:
 	void Controls(int cameFrom);
 	void Create_Rooms(int Number_of_Rooms, int Texture_Size);
 	void Connect_Rooms();
+	void Play_sound();
 	int Generate_random_vector(int minimum_value, int maximum_values);
 	std::vector<CEntityBullet*> getBullets() { return bulletVector; }
 	Point getPlayerPos() { return player_->getPos(); }
 	int getPlayerHealth() { return player_->getHealth(); }
 	int getPlayerMaxHealth() { return player_->getMaxHealth(); }
-	void spawnenemy(EntityEnemy* enemy_, Point tl, Rectangle room_size, std::string sprite, EnemyType type);
-	void activatenemy(Point tl, Rectangle roomsize, EnemyType type);
+	void spawnenemy(Point tl, Rectangle room_size);
+	bool checkEnemiesDead() {
+		for (auto e : entityVector) {
+			if (e->getSide() == enemy)
+				if (e->isAlive() == true)
+					return false;
+		}
+		return true;
+	}
 	
 private:
 	menuStates currentState = eMainMenu;
@@ -63,9 +73,6 @@ private:
 
 	float currTime = 0;
 	float updateTime = 0;
-
-	Room* First_Room = new Room;
-	Room* Second_Room = new Room;
 
 	int optionSelected = 0;
 	int currentHealth = 6;
