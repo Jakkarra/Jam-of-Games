@@ -5,7 +5,7 @@
 
 void CEntityBruteEnemy::initialiseValues()
 {
-	health_ = 5;
+	health_ = 6;
 	pos_ = { (rand() % 800) + 200,(rand() % 800) + 200 };
 	alive_ = false;
 	speed_ = 1;

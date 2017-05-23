@@ -4,21 +4,22 @@
 
 void CEntityRangedEnemy::initialiseValues()
 {
-	health_ = 1;
+	health_ = 2;
 	pos_ = { (rand() % 800) + 200,(rand() % 800) + 200 };
-	alive_ = false;
-	speed_ = 3;
+	alive_ = true;
+	speed_ = 2;
 	side = enemy;
 	attack_ = 1;
 	myclass = eRanged;
 
-	max_range_ = 60;
-	min_range_ = 30;
+	max_range_ = 300;
+	min_range_ = 150;
 	angle_ = 0;
 }
 
 void CEntityRangedEnemy::update(World& world)
 {
+	invunerable_ = true;
 	playerpos_ = world.getPlayerPos();
 
 	if (health_ <= 0) {

@@ -31,7 +31,7 @@ protected:
 	Distance distance_;
 	int totaldistance{ 0 };
 	int timeToShoot = 0.f;
-	unsigned int reloadTime = 500.f;
+	unsigned int reloadTime = 250.f;
 	unsigned int bulletNum = 0;
 	unsigned int bossreloadtime = 50.f;
 	unsigned int bossreloadrearreload = 50.f;

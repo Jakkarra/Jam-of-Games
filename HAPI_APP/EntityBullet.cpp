@@ -4,7 +4,7 @@
 
 CEntityBullet::CEntityBullet()//CEntity(textureLocation)
 {
-	sprite_ = new Sprite(HAPI_Sprites.MakeSurface("Data\\rocketUp.png"));
+	
 	initialiseValues();
 	
 }
@@ -19,7 +19,7 @@ void CEntityBullet::initialiseValues()
 {
 	health_ = 3;
 	health_ = 1;
-	speed_ = 100;
+	speed_ = 170;
 	attack_ = 2;
 
 
@@ -49,7 +49,7 @@ void CEntityBullet::update(World& world)
 	interpValue = 0;
 }
 
-void CEntityBullet::setValues(CEntity &other, float angle = 0) //when gun is fired, give bullet stats
+void CEntityBullet::setValues(CEntity &other, float angle = 0, int weapon = 1 ) //when gun is fired, give bullet stats
 {						
 	//need to get the angle and with that use it to make the bullet move in the wanted direction
 
@@ -57,8 +57,18 @@ void CEntityBullet::setValues(CEntity &other, float angle = 0) //when gun is fir
 	
 	invunerable_ = false; //testing
 	
-
+	if (weapon == 1)
+	{
+		sprite_ = new Sprite(HAPI_Sprites.MakeSurface("Data\\Fireball2.png"));
+	}
+	else if (weapon == 2)
+	{
+		sprite_ = new Sprite(HAPI_Sprites.MakeSurface("Data\\Arrow.png")); 
+	}
+	
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
 	alive_ = true;
+	speed_ += other.getSpeed();
 	side = other.getSide();
 	pos_ = other.getPos();
 	oldPos = other.getPos();

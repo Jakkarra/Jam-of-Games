@@ -4,7 +4,7 @@
 
 void CEntityEnemyMelee::initialiseValues()
 {
-	health_ = 1;
+	health_ = 2;
 	pos_ = { (rand() % 800) + 200,(rand() % 800) + 200 };
 	alive_ = false;
 	speed_ = 2;
