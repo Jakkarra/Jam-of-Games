@@ -1,5 +1,5 @@
 #include "World.h"
-
+#include <random>
 
 using namespace HAPISPACE;
 World::World()
@@ -50,11 +50,20 @@ void World::Run()
 		{
 			Pause();
 		}
+		int x = Generate_random_vector(-500, 500);
+		int v = Generate_random_vector(-500, 500);
+		int y = Generate_random_vector(-250, 250);
+		std::cout <<"First Random:" <<  x << std::endl;
+		std::cout <<"Second Random" << x*y << std::endl;
 	}
 }
 
 void World::Initialise()
 {
+
+	Create_Rooms(8, 32);
+
+	Connect_Rooms();
 
 	entityVector.push_back(player_);
 
@@ -65,11 +74,32 @@ void World::Initialise()
 		//max of 500 bullets
 	}
 
+	EntityEnemy* enemy_;
+
 	for (int i = 0; i < 20; i++)
 	{
-		EntityEnemy* enemy_ = new EntityEnemy("Data//rocketUp.png"); // we would need to make different types of enemies, or better yet opn room load randomly choose different types
-		entityVector.push_back(enemy_);
+		int select = (rand() % 2);
+
+		EnemyType type_select;
+
+		switch (select)
+		{
+		case 0:
+			type_select = eMelee;
+			break;
+		case 1:
+			type_select = eRanged;
+			break;
+		case 2:
+			type_select = eBrute;
+			break;
+		}
+
+		spawnenemy(enemy_, First_Room->Get_Room_Position(), First_Room->getsize(), "", type_select);
 	}
+
+	spawnenemy(enemy_, First_Room->Get_Room_Position(), First_Room->getsize(), "", eBoss);
+
 
 	//here we would add enemies to enemy vector to set a max number of enemies, all initally dead. then set however many we want to alive as you enter a room
 	EntityHealth* health = new EntityHealth();
@@ -85,22 +115,6 @@ void World::Initialise()
 	entityVector.push_back(pickup2);
 	entityVector.push_back(pickup3);
 	entityVector.push_back(pickup4);
-
-	First_Room = new Room("testFloor.png", Position_To_Spawn, "Corners_And_Walls_Room_1.png", 32);
-
-
-	First_Room->Create_Invidividual_Room();
-
-
-	Second_Room = new Room("Room_Floor_1_.png", Position_To_Spawn_second, "Corners_And_Walls_Room_1.png", 32);
-
-
-	auto test_texture = HAPI_Sprites.MakeSurface("Data\\Room_Floor_1.png");
-
-	Second_Room->Create_Complex_Room(test_texture);
-
-
-
 
 }
 
@@ -156,9 +170,17 @@ void World::Playing()
 		updateTime = HAPI_Sprites.GetTime() + 30.0f;
 	}
 
-	First_Room->Render_Floor(getPlayerPos());
+	for (auto room : Rooms)
+	{
+		room.Render_Floor(getPlayerPos());
+		
+		if (room.Check_Path_Exists() == true)
+		{
+			room.Render_Path("Seamless_Texture.png", getPlayerPos());
 
-	Second_Room->Render_Floor(getPlayerPos());
+			room.Spawn_Points(getPlayerPos());
+		}
+	}
 
 
 	for (auto p : entityVector) //might be better to have a single vector instead of two and have the offset for where the bullets start
@@ -437,7 +459,7 @@ void World::charCreation()
 
 	if (conData.analogueButtons[HK_ANALOGUE_RIGHT_TRIGGER] && totalPoints == 0)
 	{
-		player_->initialiseValues(healthPoints, speedPoints, ratePoints, damagePoints);
+		player_->initialiseValues(healthPoints, speedPoints, ratePoints, damagePoints, 0);
 		healthPoints = ratePoints = damagePoints = speedPoints = 1;
 		currentState = ePlay;
 	}
@@ -570,4 +592,210 @@ void World::Pause()
 		}
 	}
 
+}
+
+void World::Create_Rooms(int Number_of_Rooms, int Walls_Texture_Size)
+{
+	Point First_Room_Position{ 960,  540 };
+
+	First_Room = new Room("Floor_1.png", First_Room_Position, "Corners_And_Walls_Room_1.png", Walls_Texture_Size);
+
+	First_Room->Create_Invidividual_Room();
+
+	Rooms.push_back(*First_Room);
+
+	int offset_for_corridor = Walls_Texture_Size * 4;
+
+	Point Last_Room_Position = First_Room_Position;
+
+	Rectangle Last_Floor_Rect = First_Room->Get_Collision_Rectangle();
+
+	int last_direction_to_spawn = 0;
+
+	for (int i = 0; i < (Number_of_Rooms + 1); i++)
+	{
+		bool safe_to_spawn = false;
+
+		while (safe_to_spawn == false)
+		{
+			int floor_number = Generate_random_vector(1, 5);
+
+			std::string file_name;
+
+			std::shared_ptr<Surface> Floor_Sprite;
+
+			if (i == Number_of_Rooms)
+			{
+				file_name = "Boss_Room.png";
+
+				Floor_Sprite = HAPI_Sprites.MakeSurface("Data\\" + file_name);
+			}
+			else
+			{
+				file_name = "Floor_" + std::to_string(floor_number) + ".png";
+
+				Floor_Sprite = HAPI_Sprites.MakeSurface("Data\\" + file_name);
+			}
+
+
+			if (!Floor_Sprite->HasData())
+			{
+				return;
+			}
+
+			Point Position_To_Spawn_Room;
+
+			bool try_position = false;
+
+			while (try_position == false)
+			{
+				int direction_to_spawn = Generate_random_vector(1, 4);
+
+				if (direction_to_spawn == 1 && last_direction_to_spawn != 2)
+				{
+					Position_To_Spawn_Room = Point{Last_Room_Position.x - (int)Floor_Sprite->Width() - Generate_random_vector(600, 800),  Last_Room_Position.y };
+					last_direction_to_spawn = direction_to_spawn;
+					try_position = true;
+				}
+
+				if (direction_to_spawn == 2 && last_direction_to_spawn != 1)
+				{
+					Position_To_Spawn_Room = Point{ Last_Room_Position.x + (int)Last_Floor_Rect.Width() + Generate_random_vector(600, 800),  Last_Room_Position.y };
+					last_direction_to_spawn = direction_to_spawn;
+					try_position = true;
+				}
+
+				if (direction_to_spawn == 3 && last_direction_to_spawn != 4)
+				{
+					Position_To_Spawn_Room = Point{ Last_Room_Position.x, Last_Room_Position.y - (int)Floor_Sprite->Height() - Generate_random_vector(600, 800) };
+					last_direction_to_spawn = direction_to_spawn;
+					try_position = true;
+				}
+
+				if (direction_to_spawn == 4 && last_direction_to_spawn != 3)
+				{
+					Position_To_Spawn_Room = Point{ Last_Room_Position.x, Last_Room_Position.y + (int)Last_Floor_Rect.Height() + Generate_random_vector(600, 800) };
+					last_direction_to_spawn = direction_to_spawn;
+					try_position = true;
+				}
+			}
+
+			Rectangle FloorRect = Rectangle(Position_To_Spawn_Room.x, Position_To_Spawn_Room.x+ Floor_Sprite->Width(), Position_To_Spawn_Room.y , Position_To_Spawn_Room.y +Floor_Sprite->Height());
+
+			safe_to_spawn = true;
+
+			for (auto & room : Rooms)
+			{
+				if (room.Get_Collision_Rectangle().Intersects(FloorRect))
+				{
+					safe_to_spawn = false;
+				}
+			}
+
+			if (safe_to_spawn == true && i == Number_of_Rooms)
+			{
+				Room * Another_Room = new Room("Boss_Room.png", Position_To_Spawn_Room, "Corners_And_Walls_Room_1.png", Walls_Texture_Size);
+
+				Another_Room->Create_Invidividual_Room();
+
+				Rooms.push_back(*Another_Room);
+			}
+			else
+			{
+				if (safe_to_spawn == true && i != Number_of_Rooms)
+				{
+					Room * Another_Room = new Room("Floor_" + std::to_string(floor_number) + ".png", Position_To_Spawn_Room, "Corners_And_Walls_Room_1.png", Walls_Texture_Size);
+
+					Another_Room->Create_Invidividual_Room();
+
+					Rooms.push_back(*Another_Room);
+
+					Last_Room_Position = Position_To_Spawn_Room;
+
+					Last_Floor_Rect = Rectangle(Position_To_Spawn_Room.x, Position_To_Spawn_Room.x + Floor_Sprite->Width(), Position_To_Spawn_Room.y, Position_To_Spawn_Room.y + Floor_Sprite->Height());
+				}
+				else
+				{
+					safe_to_spawn = false;
+				}
+			}
+		}
+	}
+
+	number_of_rooms = Number_of_Rooms + 2;
+
+}
+
+void World::Connect_Rooms()
+{
+	for (int i = 0; i < (number_of_rooms - 1); i++)
+	{
+		Rooms[i].Pathfind_Corridor(Rooms[i + 1]);
+		Rooms[i].Link_Rooms(Rooms[i + 1]);
+	}
+}
+
+int World::Generate_random_vector(int minimum_value, int maximum_value)
+{
+	rand_engine.seed(HAPI_Sprites.GetTime());
+
+	std::uniform_int_distribution<int> int_rand(minimum_value, maximum_value);
+
+	int random_scalar = int_rand(rand_engine);
+
+	return random_scalar;
+}
+
+void World::spawnenemy(EntityEnemy* enemy_, Point tl, Rectangle room_size, std::string sprite, EnemyType type)
+{
+	int width = room_size.Width();
+	int height = room_size.Height();
+
+	int posX = rand() %  width+ tl.x;
+	int posY = rand() % height + tl.y;
+
+	switch (type)
+	{
+	case eMelee:
+		enemy_ = new CEntityEnemyMelee("Data//fireBall.png");
+		break;
+	case eRanged:
+		enemy_ = new CEntityRangedEnemy("Data//rocketUp.png");
+		break;
+	case eBrute:
+		enemy_ = new CEntityBruteEnemy("Data//HPHeartEmpty.png");
+		break;
+	case eBoss:
+		enemy_ = new CEntityEnemyBOSS("Data//HAPI Sprites Logo.png");
+		break;
+	}
+
+
+	Point pos = { posX,posY };
+
+	enemy_->setpos(pos);
+
+	entityVector.push_back(enemy_);
+}
+
+void World::activatenemy(Point tl, Rectangle roomsize, EnemyType type)
+{
+
+	int width = roomsize.Width();
+	int height = roomsize.Height();
+
+	int posX = rand() % width + tl.x;
+	int posY = rand() % height + tl.y;
+	Point pos = { posX, posY };
+	for (int i = 0; i < entityVector.size(); i++)
+	{
+		if (entityVector[i]->getclass() != eplayer)
+		{
+			if (entityVector[i]->getclass() == type)
+			{
+				entityVector[i]->setPosition(pos);
+				entityVector[i]->isAlive();
+			}
+		}
+	}
 }
