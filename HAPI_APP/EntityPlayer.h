@@ -35,7 +35,9 @@ private:
 	float currAngle = 0;
 	float renderAngle = 0;
 	unsigned int frameOffset = 0; //this would be the one you change to set different animations
-	unsigned int numerOfFramesForAnimation = 1; //total number of frames to loop through with the animation
+	unsigned int numberOfFramesForAnimation = 1; //total number of frames to loop through with the animation
+	float frameTime = 0;
+	Sprite* weaponSprite_;
 
 
 

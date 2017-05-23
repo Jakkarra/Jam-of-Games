@@ -20,6 +20,9 @@ public:
 
 private:
 	Point playerpos_;
-	
+	float eframeTime = 0;
+	unsigned int eframeOffset = 0;
+	unsigned int enumberOfFramesForAnimation = 1;
+
 };
 

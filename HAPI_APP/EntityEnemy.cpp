@@ -7,8 +7,7 @@
 
 EntityEnemy::EntityEnemy(std::string textureLocation)//:CEntity (textureLocation)
 {
-	sprite_ = new Sprite(HAPI_Sprites.MakeSurface(textureLocation));
-
+	sprite_ = new Sprite("Data\\goblin.xml", "Data\\");
 	initialiseValues();
 }
 
@@ -42,9 +41,9 @@ void EntityEnemy::update(World& world)
 
 		if (playerpos_.x > pos_.x) {
 			//distance.x = playerpos_.x - pos_.x;
-
 			pos_.x += speed_;
-
+			eframeOffset = 22;
+			enumberOfFramesForAnimation = 3;
 
 		}
 		else  {
@@ -52,6 +51,8 @@ void EntityEnemy::update(World& world)
 
 			//if (distance.x > 0) {
 			pos_.x -= speed_;
+			eframeOffset = 1;
+			enumberOfFramesForAnimation = 3;
 			//}
 
 
@@ -62,6 +63,8 @@ void EntityEnemy::update(World& world)
 
 			//if (distance.y > 0) {
 			pos_.y += speed_;
+			eframeOffset = 32;
+			enumberOfFramesForAnimation = 3;
 			//}
 
 
@@ -70,6 +73,8 @@ void EntityEnemy::update(World& world)
 			//	distance.y = mypos_.y - playerpos_.y;
 			//	if (distance.y > 0) {
 			pos_.y -= speed_;
+			eframeOffset = 11;
+			enumberOfFramesForAnimation = 3;
 			//	}
 
 
@@ -99,24 +104,24 @@ void EntityEnemy::render(Point playerPos)
 	if (alive_ == true)
 	{
 		int redMult =1+( maxHealth_ - health_);
-		sprite_->RenderRotated(SCREEN_SURFACE, pos_ - (playerPos - Point(960, 540)), angle_, [&](const Point p, HAPI_TColour& dest, const HAPI_TColour& source)
-		{
-			if (source.alpha == 255)
+		sprite_->Render(SCREEN_SURFACE, pos_ - (playerPos - Point(960, 540)), _eframeNum);
+			if (eframeTime < HAPI_Sprites.GetTime())
 			{
-				dest.red = source.red;//attempt at making enemies go more red if damaged, maybe not make it a scale just if elss than 2 health etc
-				dest.green = source.green / redMult;
-				dest.blue = source.blue / redMult;
+				if (_eframeNum >= (eframeOffset + enumberOfFramesForAnimation))
+				{
+					_eframeNum = eframeOffset;
+				}
+				else if (_eframeNum < eframeOffset)
+				{
+					_eframeNum = eframeOffset;
+				}
+				else
+				{
+					_eframeNum++;
+				}
+				eframeTime += 100;
 			}
-			else if(source.alpha > 0)
-			{
-				
-				dest.red	= dest.red + source.alpha*((source.red  - dest.red)) >> 8;
-				dest.green	= dest.green + source.alpha*((source.green- dest.green)/redMult) >> 8;
-				dest.blue	= dest.blue + source.alpha*((source.blue - dest.blue)/redMult) >> 8;
-			}
-		});
-	}
-
+		}
 }
 
 
