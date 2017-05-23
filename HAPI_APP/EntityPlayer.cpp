@@ -31,10 +31,10 @@ void CEntityPlayer::initialiseValues(int health, int speed, int rof, int damage,
 	alive_ = true;
 	angle_ = 0;
 	
-	currentWeapon = bow;//for now, should be currentWeapon = weapon;
+	currentWeapon = weapon % 2;//for now, should be currentWeapon = weapon;
 
 	
-	if(currentWeapon == staff)
+	if(currentWeapon == 0)
 		weaponSprite = new Sprite(HAPI_Sprites.MakeSurface("Data\\staff.png"));
 	else 
 		weaponSprite = new Sprite(HAPI_Sprites.MakeSurface("Data\\bow.png"));
@@ -122,7 +122,7 @@ void CEntityPlayer::update(World& world)
 
 	
 	if (HAPI_Sprites.GetTime() > invunerableTime)
-		invunerable_ = true;
+		invunerable_ = false;
 
 	
 
