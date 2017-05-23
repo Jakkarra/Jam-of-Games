@@ -85,7 +85,7 @@ void CEntityBruteEnemy::update(World& world)
 
 CEntityBruteEnemy::CEntityBruteEnemy(std::string textureLocation)
 {
-	sprite_ = new Sprite(HAPI_Sprites.MakeSurface(textureLocation));
+	sprite_ = new Sprite("Data\\ogre.xml", "Data\\");
 
 	initialiseValues();
 }

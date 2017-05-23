@@ -30,7 +30,7 @@ protected:
 	Point playerpos_;
 	Distance distance_;
 	int totaldistance{ 0 };
-	int timeToShoot = 0.f;
+	float timeToShoot = 0.f;
 	unsigned int reloadTime = 250.f;
 	unsigned int bulletNum = 0;
 	unsigned int bossreloadtime = 50.f;
