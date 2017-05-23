@@ -1,0 +1,44 @@
+<TextureAtlas imagePath="sprites.png">
+	<SubTexture name="ogre (1).png" x="349" y="153" width="134" height="112"/>
+	<SubTexture name="ogre (2).png" x="771" y="162" width="130" height="162"/>	
+	<SubTexture name="ogre (3).png" x="491" y="0" width="132" height="165"/>	
+	<SubTexture name="ogre (4).png" x="771" y="326" width="130" height="162"/>	
+	<SubTexture name="ogre (5).png" x="639" y="163" width="127" height="154"/>
+	<SubTexture name="ogre (6).png" x="0" y="151" width="188" height="153"/>
+	<SubTexture name="ogre (7).png" x="1390" y="164" width="113" height="162"/>
+	<SubTexture name="ogre (8).png" x="349" y="0" width="140" height="151"/>
+	<SubTexture name="ogre (9).png" x="1390" y="0" width="113" height="162"/>	
+	<SubTexture name="ogre (10).png" x="1153" y="346" width="114" height="162"/>
+	<SubTexture name="ogre (11).png" x="346" y="295" width="157" height="156"/>
+	<SubTexture name="ogre (12).png" x="1609" y="339" width="102" height="158"/>
+	<SubTexture name="ogre (13).png" x="1505" y="332" width="102" height="159"/>
+	<SubTexture name="ogre (14).png" x="1505" y="172" width="102" height="158"/>
+	<SubTexture name="ogre (15).png" x="1033" y="182" width="103" height="159"/>
+	<SubTexture name="ogre (16).png" x="1610" y="0" width="91" height="159"/>
+	<SubTexture name="ogre (17).png" x="1153" y="182" width="119" height="162"/>
+	<SubTexture name="ogre (18).png" x="903" y="179" width="128" height="162"/>
+	<SubTexture name="ogre (19).png" x="1032" y="343" width="119" height="155"/>
+	<SubTexture name="ogre (20).png" x="638" y="324" width="131" height="151"/>
+	<SubTexture name="ogre (21).png" x="173" y="306" width="171" height="164"/>
+	<SubTexture name="ogre (22).png" x="758" y="0" width="131" height="160"/>
+	<SubTexture name="ogre (23).png" x="505" y="167" width="132" height="155"/>
+	<SubTexture name="ogre (24).png" x="505" y="324" width="131" height="161"/>
+	<SubTexture name="ogre (25).png" x="903" y="343" width="127" height="161"/>
+	<SubTexture name="ogre (26).png" x="0" y="0" width="189" height="149"/>
+	<SubTexture name="ogre (27).png" x="1275" y="0" width="113" height="168"/>
+	<SubTexture name="ogre (28).png" x="191" y="0" width="140" height="145"/>
+	<SubTexture name="ogre (29).png" x="1390" y="328" width="113" height="165"/>
+	<SubTexture name="ogre (30).png" x="1274" y="182" width="114" height="171"/>
+	<SubTexture name="ogre (31).png" x="190" y="151" width="157" height="142"/>
+	<SubTexture name="ogre (32).png" x="1713" y="179" width="102" height="177"/>
+	<SubTexture name="ogre (33).png" x="1609" y="172" width="102" height="165"/>
+	<SubTexture name="ogre (34).png" x="1713" y="0" width="102" height="177"/>
+	<SubTexture name="ogre (35).png" x="1505" y="0" width="103" height="170"/>
+	<SubTexture name="ogre (36).png" x="1817" y="0" width="91" height="157"/>
+	<SubTexture name="ogre (37).png" x="1154" y="0" width="119" height="180"/>
+	<SubTexture name="ogre (38).png" x="903" y="0" width="128" height="177"/>
+	<SubTexture name="ogre (39).png" x="1033" y="0" width="119" height="180"/>
+	<SubTexture name="ogre (40).png" x="625" y="0" width="131" height="161"/>
+	<SubTexture name="ogre (41).png" x="0" y="306" width="171" height="150"/>
+
+</TextureAtlas>

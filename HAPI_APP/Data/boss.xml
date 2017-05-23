@@ -1,0 +1,23 @@
+<TextureAtlas imagePath="boss.png">
+	<SubTexture name="magician_01.png" x="132" y="0" width="120" height="216"/>
+	<SubTexture name="magician_02.png" x="254" y="0" width="117" height="216"/>
+	<SubTexture name="magician_03.png" x="590" y="447" width="103" height="218"/>
+	<SubTexture name="magician_04.png" x="483" y="227" width="106" height="218"/>
+	<SubTexture name="magician_05.png" x="0" y="0" width="130" height="214"/>
+	<SubTexture name="magician_17.png" x="373" y="0" width="114" height="225"/>
+	<SubTexture name="magician_18.png" x="364" y="441" width="117" height="223"/>
+	<SubTexture name="magician_19.png" x="0" y="428" width="121" height="221"/>
+	<SubTexture name="magician_20.png" x="245" y="218" width="120" height="221"/>
+	<SubTexture name="magician_21.png" x="480" y="666" width="108" height="231"/>
+	<SubTexture name="magician_33.png" x="123" y="428" width="120" height="224"/>
+	<SubTexture name="magician_34.png" x="245" y="441" width="117" height="220"/>
+	<SubTexture name="magician_35.png" x="590" y="667" width="103" height="220"/>
+	<SubTexture name="magician_36.png" x="489" y="0" width="106" height="220"/>
+	<SubTexture name="magician_37.png" x="0" y="216" width="130" height="210"/>
+	<SubTexture name="magician_49.png" x="364" y="666" width="114" height="207"/>
+	<SubTexture name="magician_50.png" x="245" y="663" width="117" height="205"/>
+	<SubTexture name="magician_51.png" x="0" y="651" width="121" height="201"/>
+	<SubTexture name="magician_52.png" x="123" y="654" width="120" height="203"/>
+	<SubTexture name="magician_53.png" x="132" y="218" width="108" height="193"/>
+	<SubTexture name="magician_64.png" x="0" y="899" width="82" height="63"/>
+</TextureAtlas>
