@@ -19,7 +19,7 @@ void CEntityRangedEnemy::initialiseValues()
 
 void CEntityRangedEnemy::update(World& world)
 {
-	invunerable_ = true;
+	invunerable_ = false;
 	playerpos_ = world.getPlayerPos();
 
 	if (health_ <= 0) {
