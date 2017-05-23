@@ -14,9 +14,6 @@
     <ClCompile Include="EntityMenu.cpp">
       <Filter>Entities</Filter>
     </ClCompile>
-    <ClCompile Include="EntityEnemy.cpp">
-      <Filter>Entities</Filter>
-    </ClCompile>
     <ClCompile Include="EntityBullet.cpp">
       <Filter>Entities</Filter>
     </ClCompile>
@@ -28,6 +25,21 @@
     </ClCompile>
     <ClCompile Include="EntityPickup.cpp">
       <Filter>Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="EntityBruteEnemy.cpp">
+      <Filter>Entities\Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="EntityEnemy.cpp">
+      <Filter>Entities\Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="EntityEnemyMelee.cpp">
+      <Filter>Entities\Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="EntityRangedEnemy.cpp">
+      <Filter>Entities\Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="EntityEnemyBOSS.cpp">
+      <Filter>Entities\Enemies</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -43,9 +55,6 @@
     <ClInclude Include="EntityMenu.h">
       <Filter>Entities</Filter>
     </ClInclude>
-    <ClInclude Include="EntityEnemy.h">
-      <Filter>Entities</Filter>
-    </ClInclude>
     <ClInclude Include="EntityBullet.h">
       <Filter>Entities</Filter>
     </ClInclude>
@@ -59,6 +68,21 @@
     <ClInclude Include="EntityPickup.h">
       <Filter>Entities</Filter>
     </ClInclude>
+    <ClInclude Include="EntityBruteEnemy.h">
+      <Filter>Entities\Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="EntityEnemy.h">
+      <Filter>Entities\Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="EntityEnemyMelee.h">
+      <Filter>Entities\Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="EntityRangedEnemy.h">
+      <Filter>Entities\Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="EntityEnemyBOSS.h">
+      <Filter>Entities\Enemies</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Entities">
@@ -66,6 +90,9 @@
     </Filter>
     <Filter Include="WorldModel">
       <UniqueIdentifier>{7f443730-b6b4-403b-bb59-49f5eab58f70}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Entities\Enemies">
+      <UniqueIdentifier>{d0577e18-e324-4768-86ba-b4f78f42288e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

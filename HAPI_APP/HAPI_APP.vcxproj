@@ -169,22 +169,30 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Entity.cpp" />
+    <ClCompile Include="EntityBruteEnemy.cpp" />
     <ClCompile Include="EntityBullet.cpp" />
     <ClCompile Include="EntityEnemy.cpp" />
+    <ClCompile Include="EntityEnemyBOSS.cpp" />
+    <ClCompile Include="EntityEnemyMelee.cpp" />
     <ClCompile Include="EntityMenu.cpp" />
     <ClCompile Include="EntityPickup.cpp" />
     <ClCompile Include="EntityPlayer.cpp" />
     <ClCompile Include="EntityHealth.cpp" />
+    <ClCompile Include="EntityRangedEnemy.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Room.cpp" />
     <ClCompile Include="World.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="EntityBruteEnemy.h" />
     <ClInclude Include="EntityBullet.h" />
     <ClInclude Include="EntityEnemy.h" />
+    <ClInclude Include="EntityEnemyBOSS.h" />
+    <ClInclude Include="EntityEnemyMelee.h" />
     <ClInclude Include="EntityMenu.h" />
     <ClInclude Include="EntityHealth.h" />
     <ClInclude Include="EntityPickup.h" />
+    <ClInclude Include="EntityRangedEnemy.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Room.h" />
     <ClInclude Include="World.h" />

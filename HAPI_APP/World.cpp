@@ -1,5 +1,5 @@
 #include "World.h"
-
+#include <random>
 
 using namespace HAPISPACE;
 World::World()
@@ -48,18 +48,18 @@ void World::Run()
 
 		if (currentState == ePaused)
 		{
-			pause();
+			Pause();
 		}
-		int x = Generate_random_vector(-500, 500);
-		int v = Generate_random_vector(-500, 500);
-		int y = Generate_random_vector(-250, 250);
-		std::cout <<"First Random:" <<  x << std::endl;
-		std::cout <<"Second Random" << x*y << std::endl;
+		
 	}
 }
 
 void World::Initialise()
 {
+
+	Create_Rooms(8, 32);
+
+	Connect_Rooms();
 
 	entityVector.push_back(player_);
 
@@ -70,11 +70,29 @@ void World::Initialise()
 		//max of 500 bullets
 	}
 
-	//for (int i = 0; i < 20; i++)
-	//{
-	//	EntityEnemy* enemy_ = new EntityEnemy("Data//rocketUp.png"); // we would need to make different types of enemies, or better yet opn room load randomly choose different types
-	//	entityVector.push_back(enemy_);
-	//}
+	
+
+	for (int i = 0; i < 20; i++)
+	{
+		EntityEnemy *enemy_;
+		int type = (rand() % 3);
+		switch (type)
+		{
+		case eMelee:
+			enemy_ = new CEntityEnemyMelee("Data//fireBall.png");
+			break;
+		case eRanged:
+			enemy_ = new CEntityRangedEnemy("Data//rocketUp.png");
+			break;
+		case eBrute:
+			enemy_ = new CEntityBruteEnemy("Data//HPHeartEmpty.png");
+			break;
+		}
+		entityVector.push_back(enemy_);	
+	}
+
+	//spawnenemy(enemy_, First_Room->Get_Room_Position(), First_Room->getsize(), "", eBoss);
+
 
 	//here we would add enemies to enemy vector to set a max number of enemies, all initally dead. then set however many we want to alive as you enter a room
 	EntityHealth* health = new EntityHealth();
@@ -91,11 +109,6 @@ void World::Initialise()
 	entityVector.push_back(pickup3);
 	entityVector.push_back(pickup4);
 
-	Create_Rooms(8, 32);
-
-	Connect_Rooms();
-	Play_sound();
-
 }
 
 void World::Playing()
@@ -104,7 +117,7 @@ void World::Playing()
 		currentState = eGameOver;
 	const HAPI_TControllerData &conData = HAPI_Sprites.GetControllerData(0); //maybe find a way to make this a public thing so we dont ned to constantly create it
 
-	if (conData.analogueButtons[HK_ANALOGUE_LEFT_TRIGGER] && conData.analogueButtons[HK_ANALOGUE_RIGHT_TRIGGER])
+	if (conData.analogueButtons[HK_ANALOGUE_LEFT_TRIGGER])
 	{
 		currentState = ePaused;
 	}
@@ -113,12 +126,59 @@ void World::Playing()
 
 	if (currTime >= updateTime)
 	{
+		player_->setOutOfBounds(true);
+		int roomNumber = 0;
+
 		for (auto p : entityVector)
 			p->update(*this);
 
 		for (auto p : bulletVector) //seperate bullet vector so i can pass them through
 			p->update(*this);
 
+
+		for (auto &room : Rooms)
+		{
+			roomNumber++;
+
+			std::vector<std::vector<HAPISPACE::Line>> allPaths = room.getAllPaths();
+
+			if (room.Get_Collision_Rectangle().Contains(getPlayerPos()))
+			{
+				player_->setOutOfBounds(false);
+				if (!room.getHasPlayerEntered())
+				{
+					if (roomNumber + 2 == number_of_rooms)
+					{
+						//spawn enemyBoss
+					}
+					else
+					{
+						spawnenemy(room.Get_Room_Position(), room.getsize());
+						room.setHasPlayerEntered(true);
+					}
+				}
+
+				break;
+			}
+
+			if (player_->getOutOfBounds() && checkEnemiesDead())
+			{
+				for (auto path : allPaths)
+				{
+					for (auto p2 : path)
+					{
+						if (p2.p1.DistanceBetween(getPlayerPos()) <= 40)
+						{
+							player_->setOutOfBounds(false);
+							break;
+						}
+					}
+
+				}
+			}
+
+			
+		}
 
 
 		for (auto p : entityVector)
@@ -150,17 +210,16 @@ void World::Playing()
 		updateTime = HAPI_Sprites.GetTime() + 30.0f;
 	}
 
-	for (auto room : Rooms)
+	
+	for (auto &room : Rooms)
 	{
 		room.Render_Floor(getPlayerPos());
-		
-		if (room.Check_Path_Exists() == true)
-		{
-			room.Render_Path("Seamless_Texture.png", getPlayerPos());
 
-			room.Spawn_Points(getPlayerPos());
-		}
+		if (room.Check_Path_Exists() == true && checkEnemiesDead())
+			room.Render_Path("Seamless_Texture.png", getPlayerPos());
 	}
+
+	
 
 
 	for (auto p : entityVector) //might be better to have a single vector instead of two and have the offset for where the bullets start
@@ -169,7 +228,6 @@ void World::Playing()
 	for (auto p : bulletVector) //also the render is seperate to the update as update is every tick, render may be slowed down
 		p->render(getPlayerPos());
 	
-	//need check collision between the rooms and player/enemies also then corridor checks 
 
 
 }
@@ -177,12 +235,19 @@ void World::Playing()
 void World::mainMenu()
 {
 	const HAPI_TControllerData &conData = HAPI_Sprites.GetControllerData(0);
+	const HAPI_TMouseData &mouse = HAPI_Sprites.GetMouseData();
 	static int trans1 = 255;
 	static int trans2 = 70;
 	static float timelimit = 0;
+	static bool canExit = false;
+	HAPI_Sprites.ChangeFont("Copperplate Gothic Light");
 
 	menuStates selectedState = eCharacter;
 	
+	if (!conData.analogueButtons[HK_ANALOGUE_RIGHT_TRIGGER])
+	{
+		canExit = true;
+	}
 
 	sp->setPosition(Point{ 1725,980 });
 	HAPI_Sprites.RenderText(1650, 990, HAPI_TColour(255, 255, 255, 255), "Press		 to select", 24);
@@ -191,10 +256,19 @@ void World::mainMenu()
 	HAPI_Sprites.RenderText(0, 870, HAPI_TColour(255, 255, 255, trans2), "Controls", 84);
 	bg->render(getPlayerPos());
 	sp->render(getPlayerPos());
-	
-	if (conData.analogueButtons[HK_ANALOGUE_RIGHT_TRIGGER]) //selection
+
+	if (mouse.leftButtonDown)
 	{
-		currentState = selectedState;
+		currentState = eGameOver;
+	}
+
+	if (canExit)
+	{
+		if (conData.analogueButtons[HK_ANALOGUE_RIGHT_TRIGGER]) //selection
+		{
+			currentState = selectedState;
+			canExit = false;
+		}
 	}
 	if (conData.analogueButtons[HK_ANALOGUE_LEFT_THUMB_Y] < -deadzoneLeft && HAPI_Sprites.GetTime() > timelimit) //changing selection
 	{
@@ -221,6 +295,7 @@ void World::mainMenu()
 	else if (conData.analogueButtons[HK_ANALOGUE_LEFT_THUMB_Y] > deadzoneLeft && HAPI_Sprites.GetTime() > timelimit) //changing selection
 	{
 
+		timelimit = HAPI_Sprites.GetTime() + 200;
 		optionSelected += 1;
 		if (optionSelected >= 2)
 			optionSelected = 0;
@@ -243,31 +318,32 @@ void World::mainMenu()
 }
 void World::charCreation()
 {
+	HAPI_Sprites.ChangeFont("Copperplate Gothic Light");
 	//Menu
 	totalStats = healthPoints + speedPoints + ratePoints + damagePoints;
 	totalPoints - totalStats;
 	static float timelimit = 0;
 	static int trans1 = 255;
-	static int trans2 = 70;
-	static int trans3 = 70;
-	static int trans4 = 70;
+	static int trans2 = 120;
+	static int trans3 = 120;
+	static int trans4 = 120;
 
-	HAPI_Sprites.RenderText(650, 200, HAPI_TColour(255, 255, 255, 255), 0, 0, "Choose Your Stats!", 60);
-	HAPI_Sprites.RenderText(500, 350, HAPI_TColour(255, 255, 255, trans1), 0, 0, "Health:", 34);
-	HAPI_Sprites.RenderText(500, 450, HAPI_TColour(255, 255, 255, trans2), 0, 0, "Speed:", 34);
-	HAPI_Sprites.RenderText(500, 550, HAPI_TColour(255, 255, 255, trans3), 0, 0, "Fire Rate:", 34);
-	HAPI_Sprites.RenderText(500, 650, HAPI_TColour(255, 255, 255, trans4), 0, 0, "Damage:", 34);
+	HAPI_Sprites.RenderText(550, 200, HAPI_TColour(255, 255, 255, 255), 0, 0, "Choose Your Stats!", 60);
+	HAPI_Sprites.RenderText(600, 350, HAPI_TColour(255, 255, 255, trans1), 0, 0, "Health:", 34);
+	HAPI_Sprites.RenderText(600, 450, HAPI_TColour(255, 255, 255, trans2), 0, 0, "Speed:", 34);
+	HAPI_Sprites.RenderText(600, 550, HAPI_TColour(255, 255, 255, trans3), 0, 0, "Fire Rate:", 34);
+	HAPI_Sprites.RenderText(600, 650, HAPI_TColour(255, 255, 255, trans4), 0, 0, "Damage:", 34);
 
-	HAPI_Sprites.RenderText(900, 350, HAPI_TColour(255, 255, 255, 255), 0, 0, std::to_string(healthPoints), 34);
-	HAPI_Sprites.RenderText(900, 450, HAPI_TColour(255, 255, 255, 255), 0, 0, std::to_string(speedPoints), 34);
-	HAPI_Sprites.RenderText(900, 550, HAPI_TColour(255, 255, 255, 255), 0, 0, std::to_string(ratePoints), 34);
-	HAPI_Sprites.RenderText(900, 650, HAPI_TColour(255, 255, 255, 255), 0, 0, std::to_string(damagePoints), 34);
+	HAPI_Sprites.RenderText(1100, 350, HAPI_TColour(255, 255, 255, 255), 0, 0, std::to_string(healthPoints), 38);
+	HAPI_Sprites.RenderText(1100, 450, HAPI_TColour(255, 255, 255, 255), 0, 0, std::to_string(speedPoints), 38);
+	HAPI_Sprites.RenderText(1100, 550, HAPI_TColour(255, 255, 255, 255), 0, 0, std::to_string(ratePoints), 38);
+	HAPI_Sprites.RenderText(1100, 650, HAPI_TColour(255, 255, 255, 255), 0, 0, std::to_string(damagePoints), 38, 1);
 
 	HAPI_Sprites.RenderText(1000, 270, HAPI_TColour(255, 255, 255, 255), 0, 0, "Points Remaining:", 34);
 	HAPI_Sprites.RenderText(1400, 272, HAPI_TColour(255, 255, 255, 255), 0, 0, std::to_string(totalPoints), 34);
 
-	sp->setPosition(Point{ 1725,980 });
-	HAPI_Sprites.RenderText(1650, 990, HAPI_TColour(255, 255, 255, 255), "Press		 to select", 24);
+	sp->setPosition(Point{ 1660,980 });
+	HAPI_Sprites.RenderText(1550, 990, HAPI_TColour(255, 255, 255, 255), "Press		 to select", 32);
 
 	bg->render(getPlayerPos());
 	sp->render(getPlayerPos());
@@ -304,32 +380,32 @@ void World::charCreation()
 		if (optionSelected == 0)
 		{
 			trans1 = 255;
-			trans2 = 70;
-			trans3 = 70; //health
-			trans4 = 70;
+			trans2 = 120;
+			trans3 = 120; //health
+			trans4 = 120;
 			isHealth = true;
 		}
 		if (optionSelected == 1)
 		{
-			trans1 = 70;
+			trans1 = 120;
 			trans2 = 255;
-			trans3 = 70; //speed
-			trans4 = 70;
+			trans3 = 120; //speed
+			trans4 = 120;
 			isSpeed = true;
 		}
 		if (optionSelected == 2)
 		{
-			trans1 = 70;
-			trans2 = 70; //firerate
+			trans1 = 120;
+			trans2 = 120; //firerate
 			trans3 = 255;
-			trans4 = 70;
+			trans4 = 120;
 			isRate = true;
 		}
 		if (optionSelected == 3)
 		{
-			trans1 = 70;
-			trans2 = 70; //damage
-			trans3 = 70;
+			trans1 = 120;
+			trans2 = 120; //damage
+			trans3 = 120;
 			trans4 = 255;
 			isDamage = true;
 		}
@@ -421,7 +497,7 @@ void World::charCreation()
 
 	if (conData.analogueButtons[HK_ANALOGUE_RIGHT_TRIGGER] && totalPoints == 0)
 	{
-		player_->initialiseValues(healthPoints, speedPoints, ratePoints, damagePoints);
+		player_->initialiseValues(healthPoints, speedPoints, ratePoints, damagePoints, 0);
 		healthPoints = ratePoints = damagePoints = speedPoints = 1;
 		currentState = ePlay;
 	}
@@ -432,7 +508,13 @@ void World::endGame()
 {
 
 	const HAPI_TControllerData &conData = HAPI_Sprites.GetControllerData(0);
-	HAPI_Sprites.RenderText(660, 540, HAPI_TColour(255, 255, 0), "Game Over State, LT to retry", 70);
+	lt->setPosition(Point{ 1725,980 });
+	gbg->render(getPlayerPos());
+	lt->setPosition(Point{ 650, 500 });
+	lt->render(getPlayerPos());
+	HAPI_Sprites.ChangeFont("Copperplate Gothic Light");
+	HAPI_Sprites.RenderText(600, 300, HAPI_TColour(255, 255, 255, 255), "You Died!", 150);
+	HAPI_Sprites.RenderText(400, 500, HAPI_TColour(255, 255, 255, 255), "Press		to Return to Menu", 70);
 
 	if (conData.analogueButtons[HK_ANALOGUE_LEFT_TRIGGER])
 	{
@@ -445,7 +527,7 @@ void World::endGame()
 
 
 }
-void World::pause()
+void World::Pause()
 {
 	const HAPI_TControllerData &conData = HAPI_Sprites.GetControllerData(0);
 	static bool canExit = false;
@@ -453,24 +535,111 @@ void World::pause()
 	if (!conData.analogueButtons[HK_ANALOGUE_LEFT_TRIGGER])
 		canExit = true;
 	
-	HAPI_Sprites.RenderText(660, 540, HAPI_TColour(255, 255, 0), "PAUSED", 70);
+	pbg->render(getPlayerPos());
 
-	if (conData.analogueButtons[HK_ANALOGUE_LEFT_TRIGGER] && canExit == true)
+	//Stats ----------------------------
+	HAPI_Sprites.RenderText(800, 200, HAPI_TColour(255, 255, 255, 255), "PAUSED", 70);
+
+	HAPI_Sprites.RenderText(10, 10, HAPI_TColour(255, 255, 255, 255), "Current Stats", 32, 4);
+	HAPI_Sprites.RenderText(10, 50, HAPI_TColour(255, 255, 255, 255), "Health:", 28);
+	HAPI_Sprites.RenderText(10, 80, HAPI_TColour(255, 255, 255, 255), "Speed:", 28);
+	HAPI_Sprites.RenderText(10, 110, HAPI_TColour(255, 255, 255, 255), "Fire Rate:", 28);
+	HAPI_Sprites.RenderText(10, 140, HAPI_TColour(255, 255, 255, 255), "Damage:", 28);
+
+	HAPI_Sprites.RenderText(150, 50, HAPI_TColour(255, 255, 255, 255), std::to_string(player_->getHealth()), 28);
+	HAPI_Sprites.RenderText(150, 80, HAPI_TColour(255, 255, 255, 255), std::to_string(player_->getSpeed()), 28);
+	HAPI_Sprites.RenderText(200, 110, HAPI_TColour(255, 255, 255, 255), std::to_string(player_->getROF()), 28);
+	HAPI_Sprites.RenderText(170, 140, HAPI_TColour(255, 255, 255, 255), std::to_string(player_->getAttack()), 28);
+
+	//Pause Menu -----------------------------
+	static float timelimit = 0;
+	static int trans1 = 255;
+	static int trans2 = 120;
+	static int trans3 = 120;
+	static int trans4 = 120;
+
+	isContinue = false;
+	isControls = false;
+	isExit = false;
+
+	HAPI_Sprites.RenderText(830, 350, HAPI_TColour(255, 255, 255, trans1), 0, 0, "Continue", 45);
+	HAPI_Sprites.RenderText(820, 450, HAPI_TColour(255, 255, 255, trans2), 0, 0, "Controls", 45);
+	HAPI_Sprites.RenderText(900, 550, HAPI_TColour(255, 255, 255, trans3), 0, 0, "Exit", 45);
+
+	if (conData.analogueButtons[HK_ANALOGUE_LEFT_THUMB_Y] < -deadzoneLeft && HAPI_Sprites.GetTime() > timelimit) //changing selection
 	{
-		currentState = ePlay;
-		canExit = false;
+		timelimit = HAPI_Sprites.GetTime() + 300;
+		std::cout << "Down Press" << std::endl;
+		optionSelected += 1;
+	}
+	if (conData.analogueButtons[HK_ANALOGUE_LEFT_THUMB_Y] > deadzoneLeft && HAPI_Sprites.GetTime() > timelimit) //changing selection
+	{
+		timelimit = HAPI_Sprites.GetTime() + 300;
+		std::cout << "Down Press" << std::endl;
+		optionSelected -= 1;
 	}
 
+
+
+	if (optionSelected >= 3)
+		optionSelected = 0;
+
+	if (optionSelected < 0)
+		optionSelected = 2;
+
+	if (optionSelected == 0)
+	{
+		trans1 = 255;
+		trans2 = 120;
+		trans3 = 120; //Continue
+		trans4 = 120;
+		isContinue = true;
+	}
+	if (optionSelected == 1)
+	{
+		trans1 = 120;
+		trans2 = 255;
+		trans3 = 120; //Controls
+		trans4 = 120;
+		isControls = true;
+	}
+	if (optionSelected == 2)
+	{
+		trans1 = 120;
+		trans2 = 120; //Exit
+		trans3 = 255;
+		trans4 = 120;
+		isExit = true;
+	}
+	if (canExit)
+	{
+		if (conData.analogueButtons[HK_ANALOGUE_RIGHT_TRIGGER] && isContinue == true)
+		{
+			currentState = ePlay;
+			canExit = false;
+		}
+		if (conData.analogueButtons[HK_ANALOGUE_RIGHT_TRIGGER] && isControls == true)
+		{
+			currentState = eControls;
+			canExit = false;
+		}
+		if (conData.analogueButtons[HK_ANALOGUE_RIGHT_TRIGGER] && isExit == true)
+		{
+			currentState = eMainMenu;
+			canExit = false;
+		}
+	}
 
 }
 
 void World::Create_Rooms(int Number_of_Rooms, int Walls_Texture_Size)
 {
-	Point First_Room_Position{ 960,  540 };
+	Point First_Room_Position{ 760,  340 };
 
 	First_Room = new Room("Floor_1.png", First_Room_Position, "Corners_And_Walls_Room_1.png", Walls_Texture_Size);
 
 	First_Room->Create_Invidividual_Room();
+	First_Room->setHasPlayerEntered(true);
 
 	Rooms.push_back(*First_Room);
 
@@ -616,17 +785,35 @@ int World::Generate_random_vector(int minimum_value, int maximum_value)
 	return random_scalar;
 }
 
-void World::Play_sound()
+void World::spawnenemy(Point tl, Rectangle room_size)
 {
-	HAPI_TStreamedMediaOptions sound_options;
+	int width = (6*room_size.Width())/7;
+	int height = (6*room_size.Height())/7;
 
-	sound_options.loop = true;
-	sound_options.volume = 2.f;
+	int posX;
+	int posY;
 
-	unsigned int musicID = 1;
-
-	if (!HAPI_Sprites.PlayStreamedMedia("Data\\Background_Music.wav", sound_options, musicID))
+	int numberOfEnemies = rand() % 5 + 5;
+	int enemyCounter = 0;
+	
+	while (enemyCounter < numberOfEnemies)
 	{
-
+		for (auto& entity : entityVector)
+		{
+			int randomCheck = rand() % 2;
+			if (entity->getSide() == enemy  && enemyCounter < numberOfEnemies && randomCheck == 1)
+			{
+				posX = rand() % width + tl.x + 50;
+				posY = rand() % height + tl.y + 50;
+				enemyCounter++;
+				entity->initialiseValues();
+				entity->setPosition(Point(posX, posY));
+				entity->setAlive(true);
+			}
+		}
 	}
+	
+
 }
+
+

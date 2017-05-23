@@ -4,6 +4,10 @@
 #include "EntityPlayer.h"
 #include "EntityMenu.h"
 #include "EntityEnemy.h"
+#include "EntityRangedEnemy.h"
+#include "EntityEnemyMelee.h"
+#include "EntityBruteEnemy.h"
+#include "EntityEnemyBOSS.h"
 #include "EntityHealth.h"
 #include "EntityPickup.h"
 #include "Room.h"
@@ -17,6 +21,11 @@ public:
 	World();
 	~World();
 
+	enum EnemyType
+	{
+		eMelee, eRanged, eBrute, eBoss, eplayer	
+	};
+
 	enum menuStates
 	{
 		eMainMenu, ePlay, eGameOver, ePaused, eCreation, eWin, eControls, eCharacter
@@ -28,7 +37,7 @@ public:
 	void mainMenu();
 	void charCreation();
 	void endGame();
-	void pause();
+	void Pause();
 	void Create_Rooms(int Number_of_Rooms, int Texture_Size);
 	void Connect_Rooms();
 	void Play_sound();
@@ -37,6 +46,15 @@ public:
 	Point getPlayerPos() { return player_->getPos(); }
 	int getPlayerHealth() { return player_->getHealth(); }
 	int getPlayerMaxHealth() { return player_->getMaxHealth(); }
+	void spawnenemy(Point tl, Rectangle room_size);
+	bool checkEnemiesDead() {
+		for (auto e : entityVector) {
+			if (e->getSide() == enemy)
+				if (e->isAlive() == true)
+					return false;
+		}
+		return true;
+	}
 	
 private:
 	menuStates currentState = eMainMenu;
@@ -71,10 +89,19 @@ private:
 	bool isRate = false;
 	bool isDamage = false;
 
+	//Pause Menu Variables
+	bool isControls = false;
+	bool isExit = false;
+	bool isContinue = false;
+
+	//Images
 	CEntityMenu *bg = new CEntityMenu("Data//Background.jpg");
 	CEntityMenu *sp = new CEntityMenu("Data//XboxRTLogo.png");
-
+	CEntityMenu *lt = new CEntityMenu("Data//XboxLTLogoLarge.png");
+	CEntityMenu *gbg = new CEntityMenu("Data//GameOverBG.jpg");
+	CEntityMenu *pbg = new CEntityMenu("Data//PauseBG.png");
 	std::default_random_engine rand_engine;
 	int number_of_rooms;
+
 };
 

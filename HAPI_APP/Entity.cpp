@@ -16,6 +16,10 @@ CEntity::~CEntity()
 
 void CEntity::hasCollided(CEntity &other)
 {
+	if (other.getSide() != side)
+	{
+		health_ -= other.getAttack();
+	}
 }
 
 void CEntity::initialiseValues()
