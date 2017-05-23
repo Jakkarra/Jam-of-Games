@@ -30,7 +30,7 @@ using namespace HAPISPACE;
 
 
 
-// Every HAPISprites program must have a HAPI_Sprites_Main as an entry point
+// Every HAPISprites program must have a HAPI_Sprites_Main as an entry pointx
 // When this function exits the program will close down
 void HAPI_Sprites_Main()
 {
@@ -38,7 +38,7 @@ void HAPI_Sprites_Main()
 	unsigned int screenWidth{ 1920 };
 	unsigned int screenHeight{ 1080 };
 
-	HAPI_Sprites.Initialise(screenWidth, screenHeight, "DIY:Dungeon It Yourself");
+	HAPI_Sprites.Initialise(screenWidth, screenHeight, "DIY:Dungeon It Yourself", eFullscreen);
 	World* world_ = new World;
 	world_->Run();
 }

@@ -2,10 +2,38 @@
 #include <HAPISprites_lib.h>
 #include <vector>
 #include <string>
+#include <cmath>
 using namespace HAPISPACE;
+
+enum ESide
+{
+	eRight,
+	eLeft,
+	eTop,
+	eBottom,
+	eInside,
+	eOutside
+};
 
 class Room
 {
+private:
+	struct Entrance
+	{
+		Point Entrance_Position;
+		ESide Entrance_Side;
+		bool In_Use;
+	};
+
+	struct Wall_Or_Corner
+	{
+		int Frame_Number;
+
+		Point Wall_Position;
+
+		bool active;
+	};
+
 public:
 
 	Room();
@@ -22,17 +50,49 @@ public:
 
 	void Save_Sprite_Sheet_XML();
 
+	bool Location_Safe(ESide direction, int nr_elements_per_row_, int nr_elements_per_column_, int current_index_position);
+
+	ESide Contains(Rectangle rct, Point other, int offset_value);
+
+	void Pathfind_Corridor(Room & Other_Room);
+
+	void Create_Corridor(int start_index, int end_index, Entrance First_Location, Entrance Second_Location);
+
+	void Special_Link(Entrance Position_1, Point Position_2);
+
+	void Link_Positions(Entrance First_Location, Entrance Second_Location);
+
+	void Link_Rooms(Room & Other_Room);
+
+	void Spawn_Points(Point Player_Pos);
+
 	// Pushing walls into the vector.
 
 	void Create_Walls();
 
 	void Create_Joined_Room(std::shared_ptr<Surface> other_surface);
 
+	void Render_Path(std::string file_name, Point PlayerPos);
+
 	// Render walls & floor
 
 	void Render_Floor(Point PlayerPos);
 
+	const Rectangle Get_Collision_Rectangle() const;
+
+	bool Check_Path_Exists();
+
+	bool getHasPlayerEntered() { return playerHasEntered; }
+	void setHasPlayerEntered(bool entered) { playerHasEntered = entered; }
+
+	Point Get_Room_Position();
+	std::vector<std::vector<HAPISPACE::Line>>	getAllPaths() { return All_Paths; }
+
+	Rectangle getsize(){ return  FloorRect; }
+
 	~Room();
+
+
 
 private:
 
@@ -44,24 +104,40 @@ private:
 
 	Rectangle FloorRect;
 
+	Rectangle CollisionRect;
+
 	std::string Sheet_Name;
 
 	std::vector<Frame> Room_Sheet_Frames;
 
-	// Information about each wall and corner.
-
-	struct Wall_Or_Corner
-	{
-		int Frame_Number;
-
-		Point Wall_Position;
-	};
-
-	// Vector that stores walls and corners.
+	std::vector<Entrance> Room_Access_Points;
 
 	std::vector<Wall_Or_Corner> Walls_And_Corners;
 
+	struct Intermediary_Point
+	{
+		int index;
+		Point Position;
+		bool flag;
+	};
 
+	std::vector<Intermediary_Point> Pathfinding_Points;
+	
+	struct Corridor_Information
+	{
+		Rectangle *Pathfinding_Rectangle;
+		int nr_elements_per_row;
+		int nr_elements_per_column;
+		int offset_for_corridor;
+	};
+
+	Corridor_Information Corridor_Data;
+
+	bool Has_Path;
+
+	std::vector<HAPISPACE::Line > Actual_Path;
+	std::vector<std::vector<HAPISPACE::Line>> All_Paths;
+	bool playerHasEntered = false;
 
 };
 

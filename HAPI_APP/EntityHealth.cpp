@@ -19,8 +19,6 @@ EntityHealth::~EntityHealth()
 
 void EntityHealth::initialiseValues()
 {
-	//push them onto vector?
-	//set to alive?
 	alive_ = true;
 	pos_ = { 15,15 };
 

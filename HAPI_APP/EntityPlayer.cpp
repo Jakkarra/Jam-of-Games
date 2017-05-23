@@ -3,11 +3,11 @@
 
 
 
-CEntityPlayer::CEntityPlayer()//:CEntity(textureLocation)
+CEntityPlayer::CEntityPlayer()
 {
-	sprite_ = new Sprite("Data\\player.xml", "Data\\");// we could make it so you pass in a value for the texture but we should know what textures are going to be used
-	initialiseValues();
 
+	sprite_ = new Sprite("Data\\sprites.xml", "Data\\");
+	initialiseValues();
 
 }
 
@@ -16,7 +16,7 @@ CEntityPlayer::~CEntityPlayer()
 }
 //delete sprite
 
-void CEntityPlayer::initialiseValues(int health, int speed, int rof, int damage) 
+void CEntityPlayer::initialiseValues(int health, int speed, int rof, int damage, int weapon)
 {
 	
 	pos_ = Point{ 960,540 };
@@ -27,12 +27,18 @@ void CEntityPlayer::initialiseValues(int health, int speed, int rof, int damage)
 	reloadTime = 500 / rof;
 	attack_ = damage;
 	side = player;
+	myclass = eplayer;
 	alive_ = true;
 	angle_ = 0;
-	//if (currentWeapon == staff)
-	//	weaponSprite = new Sprite(HAPI_Sprites.MakeSurface("Data\\staff.png"));
-	//else
-	//	weaponSprite = new Sprite(HAPI_Sprites.MakeSurface("Data\\bow.png"));
+	
+	currentWeapon = bow;//for now, should be currentWeapon = weapon;
+
+	
+	if(currentWeapon == staff)
+		weaponSprite = new Sprite(HAPI_Sprites.MakeSurface("Data\\staff.png"));
+	else 
+		weaponSprite = new Sprite(HAPI_Sprites.MakeSurface("Data\\bow.png"));
+	
 	
 	
 }
@@ -74,113 +80,91 @@ void CEntityPlayer::update(World& world)
 	
 	if (angle_ > 3.14)
 		angle_ -= 3.14;
-
-	if ((conData.analogueButtons[HK_ANALOGUE_LEFT_THUMB_X] > deadzone_left_) && (conData.analogueButtons[HK_ANALOGUE_LEFT_THUMB_Y] > deadzone_left_))//right up
-	{
-		pos_.y -= (speed_ / 1.5);
-		pos_.x += (speed_ / 1.5);
-		frameOffset = 31;
-		numberOfFramesForAnimation = 3;
-	}
-	else if ((conData.analogueButtons[HK_ANALOGUE_LEFT_THUMB_X] > deadzone_left_) && (conData.analogueButtons[HK_ANALOGUE_LEFT_THUMB_Y] < -deadzone_left_))//right down
-	{
-		pos_.y += (speed_ / 1.5);
-		pos_.x += (speed_ / 1.5);
-		frameOffset = 25;
-		numberOfFramesForAnimation = 3;
-	}
-	else if ((conData.analogueButtons[HK_ANALOGUE_LEFT_THUMB_X] < -deadzone_left_) && (conData.analogueButtons[HK_ANALOGUE_LEFT_THUMB_Y] > deadzone_left_))//left up
-	{
-		pos_.y -= (speed_ / 1.5);
-		pos_.x -= (speed_ / 1.5);
-		frameOffset = 16;
-		numberOfFramesForAnimation = 3;
-	}
-	else if ((conData.analogueButtons[HK_ANALOGUE_LEFT_THUMB_X] < -deadzone_left_) && (conData.analogueButtons[HK_ANALOGUE_LEFT_THUMB_Y] < -deadzone_left_))//left down
-	{
-		pos_.y += (speed_ / 1.5);
-		pos_.x -= (speed_ / 1.5);
-		frameOffset = 5;
-		numberOfFramesForAnimation = 3;
-	}
-	else if (conData.analogueButtons[HK_ANALOGUE_LEFT_THUMB_Y] < -deadzone_left_)//down
+	
+	//best to probably make a vector of "to move" and then add up all movements then before applying check if it is possible, room or wall in way etc.
+	if (conData.analogueButtons[HK_ANALOGUE_LEFT_THUMB_Y] < -deadzone_left_)
 	{
 		pos_.y += speed_;
-		frameOffset = 1;
-		numberOfFramesForAnimation = 3;
+		//directionToMove += speed;
+		//more of these then use final speed value to calculate the rendering
+		//can use to check if 
 	}
-	else if (conData.analogueButtons[HK_ANALOGUE_LEFT_THUMB_Y] > deadzone_left_)//up
+
+	if (conData.analogueButtons[HK_ANALOGUE_LEFT_THUMB_Y] > deadzone_left_)
 	{
 		pos_.y -= speed_;
-		frameOffset = 36;
-		numberOfFramesForAnimation = 3;
 	}
-	else if (conData.analogueButtons[HK_ANALOGUE_LEFT_THUMB_X] < -deadzone_left_)//left
+
+	if (conData.analogueButtons[HK_ANALOGUE_LEFT_THUMB_X] < -deadzone_left_)
 	{
 		pos_.x -= speed_;
-		frameOffset = 11;
-		numberOfFramesForAnimation = 3;
 	}
-	else if (conData.analogueButtons[HK_ANALOGUE_LEFT_THUMB_X] > deadzone_left_)//right
+
+	if (conData.analogueButtons[HK_ANALOGUE_LEFT_THUMB_X] > deadzone_left_)
 	{
 		pos_.x += speed_;
-		frameOffset = 21;
-		numberOfFramesForAnimation = 3;
-	}
-	else
-	{
-		frameOffset = 1;
-		numberOfFramesForAnimation = 0;
 	}
 
 	if (conData.analogueButtons[HK_ANALOGUE_RIGHT_TRIGGER])
 	{
-		shoot(world.getBullets().at(bulletNum));
-		bulletNum++;
-
-		if (angle_ > -0.80 && angle_ <= 0.80)	//right							//6.28 is 360 degrees in radians
-		{
-			frameOffset = 30;
-			numberOfFramesForAnimation = 0;
-		}
-		else if (angle_ > -2.4 && angle_ <= -0.8)				//up					
-		{
-			frameOffset = 40;
-			numberOfFramesForAnimation = 0;
-		}
-		else if (angle_ > 0.8 && angle_ <= 2.4)	//down								
-		{
-			frameOffset = 10;
-			numberOfFramesForAnimation = 0;
-		}
-		else 	//left							
-		{
-			frameOffset = 15;
-			numberOfFramesForAnimation = 0;
-		}
-
-		if (bulletNum > 499)
-			bulletNum = 0;
+		
+			shoot(world.getBullets().at(bulletNum));
+			bulletNum++;
+			if (bulletNum > 499)
+				bulletNum = 0;
+		
+		
 	}
 
 
 	
 	if (HAPI_Sprites.GetTime() > invunerableTime)
-		invunerable_ = false;
+		invunerable_ = true;
 
+	
 
-	angle_ = renderAngle;
+	if (angle_ > -0.80 && angle_ <= 0.80 )	//left								//6.28 is 360 degrees in radians
+	{
+		
+		//frameOffset = frame number where animation starts
+		//numerOfFramesForAnimation = how many frames in animation
+
+	}
+	else if (angle_ > -2.4 && angle_ <= -0.8)				//up					
+	{
+		
+	}
+	else if (angle_ > 0.8 && angle_ <=  2.4)	//down								
+	{
+		
+	}
+	else 	//right								
+	{
+		
+	}
 	
 	interpValue = 0;
+
+	
+	
 }
 
 void CEntityPlayer::shoot(CEntityBullet* bullet)
 {
 	if (HAPI_Sprites.GetTime() > timeToShoot)
 	{
-		bullet->setValues(*this); //need to make the player rotate so i can try shooting at different angles. I need to calc bullet direction from player angle
+		bullet->setValues(*this,currentWeapon); //need to make the player rotate so i can try shooting at different angles. I need to calc bullet direction from player angle
 		timeToShoot = HAPI_Sprites.GetTime() + reloadTime;
+		if (currentWeapon = 1)
+		{
+			HAPI_Sprites.PlaySound("Data//Firebolt.mp3");
+		}
+		else
+		{
+			HAPI_Sprites.PlaySound("Data//Arrow_shot.mp3");
+		}
 	}
+
 }
 
 void CEntityPlayer::hasCollided(CEntity &other)
@@ -188,7 +172,7 @@ void CEntityPlayer::hasCollided(CEntity &other)
 	if (other.getSide() == enemy && invunerable_ == false)
 	{
 		health_ -= other.getAttack();
-		invunerable_ = true;
+		invunerable_ = false;
 		invunerableTime = HAPI_Sprites.GetTime() + 200;
 	}
 	else if(other.getSide() == pickup)
@@ -199,11 +183,7 @@ void CEntityPlayer::hasCollided(CEntity &other)
 		rof_ += other.getROF();
 		reloadTime = 500 / (rof_+1);
 		attack_ += other.getAttack();
-	}
-	/*else if (other.getSide() == wall)
-	{
-		pos_ = oldPos;
-	}
+	}/*
 	else if(other.isFinish())
 		hasFinished == true then check for this in the world loop
 	*/
@@ -212,27 +192,23 @@ void CEntityPlayer::hasCollided(CEntity &other)
 
 void CEntityPlayer::render(Point playerPos)
 {
+
+	
+	if (outOfBounds == true)
+	{
+		pos_ = oldPos;
+		outOfBounds = false;
+	}
+
+
 	if (alive_ == true)
 	{
 		sprite_->Render(SCREEN_SURFACE, pos_ - (playerPos - Point(960, 540)), _frameNum);
-		//weaponSprite_->Render(SCREEN_SURFACE, pos_ - (playerPos - Point(960, 540)), _frameNum);
+		//weaponSprite->Render(SCREEN_SURFACE, pos_ - (playerPos - Point(960, 540)), _frameNum);
+		_frameNum++;
 
-		if (frameTime < HAPI_Sprites.GetTime())
-		{
-			if (_frameNum >= (frameOffset + numberOfFramesForAnimation))
-			{
-				_frameNum = frameOffset;
-			}
-			else if (_frameNum < frameOffset)
-			{
-				_frameNum = frameOffset;
-			}
-			else
-			{
-				_frameNum++;
-			}
-			frameTime += 100;
-		}
+		if (_frameNum >= frameOffset + numerOfFramesForAnimation)
+			_frameNum = frameOffset;
 	}
 }
 

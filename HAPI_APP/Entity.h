@@ -10,6 +10,11 @@ class World;
 class CEntity
 {
 public:
+	enum EnemyType
+	{
+		eMelee, eRanged, eBrute, eBoss, eplayer
+	};
+
 	CEntity(); 
 	virtual ~CEntity();
 	virtual void render(Point playerPos);
@@ -24,6 +29,7 @@ public:
 	Point getPos() { return pos_; }
 	void movement() { pos_ += Point{ speed_,speed_ };}
 	bool isAlive() { return alive_; }
+	void setAlive(bool alive) { alive_ = alive; }
 	bool isInvunerable() { return invunerable_; }
 	int getAttack() { return attack_; }
 	int getHealth() { return health_; }
@@ -31,14 +37,13 @@ public:
 	int getROF() { return rof_; }
 	float getAngle() { return angle_; }
 	sides getSide() { return side; }
+	EnemyType getclass() { return myclass; }
 	virtual void update(World& world) = 0;
 
 	virtual void hasCollided(CEntity &other);
 	virtual void initialiseValues() = 0;
 protected:
-
-	
-	
+	enum weapons { sword = 0, staff, bow };
 	
 	Sprite* sprite_{ nullptr };
 	Point pos_ = { 5,5 };
@@ -56,6 +61,10 @@ protected:
 	float xVector = 0;
 	float yVector = 0;
 	float interpValue = 0.f;
+	int min_range_{ 0 };
+	int max_range_{ 0 };
+	EnemyType myclass;
+
 private:
 
 	
