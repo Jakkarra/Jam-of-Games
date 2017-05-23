@@ -153,8 +153,16 @@ void CEntityPlayer::shoot(CEntityBullet* bullet)
 {
 	if (HAPI_Sprites.GetTime() > timeToShoot)
 	{
-		bullet->setValues(*this, 0 ,currentWeapon); //need to make the player rotate so i can try shooting at different angles. I need to calc bullet direction from player angle
+		bullet->setValues(*this,currentWeapon); //need to make the player rotate so i can try shooting at different angles. I need to calc bullet direction from player angle
 		timeToShoot = HAPI_Sprites.GetTime() + reloadTime;
+		if (currentWeapon = 1)
+		{
+			HAPI_Sprites.PlaySound("Data//Firebolt.mp3");
+		}
+		else
+		{
+			HAPI_Sprites.PlaySound("Data//Arrow_shot.mp3");
+		}
 	}
 
 }
