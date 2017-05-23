@@ -26,6 +26,7 @@ public:
 		eMelee, eRanged, eBrute, eBoss, eplayer	
 	};
 
+	enum sides { player, enemy, neutral, pickup };
 	enum menuStates
 	{
 		eMainMenu, ePlay, eGameOver, ePaused, eCreation, eWin, eControls, eCharacter
@@ -45,8 +46,15 @@ public:
 	Point getPlayerPos() { return player_->getPos(); }
 	int getPlayerHealth() { return player_->getHealth(); }
 	int getPlayerMaxHealth() { return player_->getMaxHealth(); }
-	void spawnenemy(EntityEnemy* enemy_, Point tl, Rectangle room_size, std::string sprite, EnemyType type);
-	void activatenemy(Point tl, Rectangle roomsize, EnemyType type);
+	void spawnenemy(Point tl, Rectangle room_size);
+	bool checkEnemiesDead() {
+		for (auto e : entityVector) {
+			if (e->getSide() == enemy)
+				if (e->isAlive() == true)
+					return false;
+		}
+		return true;
+	}
 	
 private:
 	menuStates currentState = eMainMenu;
@@ -57,14 +65,13 @@ private:
 	std::vector<CEntityBullet*> bulletVector;
 	std::vector<CEntity*> healthVector;
 	std::vector<Room> Rooms;
-
+	int number_of_rooms;
 	CEntityPlayer* player_ = new CEntityPlayer;
 
 	float currTime = 0;
 	float updateTime = 0;
 
-	Room* First_Room = new Room;
-	Room* Second_Room = new Room;
+	Room* First_Room;
 
 	int optionSelected = 0;
 	int currentHealth = 6;
@@ -88,6 +95,6 @@ private:
 	CEntityMenu *sp = new CEntityMenu("Data//XboxRTLogo.png");
 
 	std::default_random_engine rand_engine;
-	int number_of_rooms;
+	
 };
 

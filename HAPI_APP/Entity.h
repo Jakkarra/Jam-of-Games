@@ -29,6 +29,7 @@ public:
 	Point getPos() { return pos_; }
 	void movement() { pos_ += Point{ speed_,speed_ };}
 	bool isAlive() { return alive_; }
+	void setAlive(bool alive) { alive_ = alive; }
 	bool isInvunerable() { return invunerable_; }
 	int getAttack() { return attack_; }
 	int getHealth() { return health_; }

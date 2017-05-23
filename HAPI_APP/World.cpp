@@ -70,31 +70,28 @@ void World::Initialise()
 		//max of 500 bullets
 	}
 
-	EntityEnemy* enemy_;
+	
 
 	for (int i = 0; i < 20; i++)
 	{
-		int select = (rand() % 2);
-
-		EnemyType type_select;
-
-		switch (select)
+		EntityEnemy *enemy_;
+		int type = (rand() % 3);
+		switch (type)
 		{
-		case 0:
-			type_select = eMelee;
+		case eMelee:
+			enemy_ = new CEntityEnemyMelee("Data//fireBall.png");
 			break;
-		case 1:
-			type_select = eRanged;
+		case eRanged:
+			enemy_ = new CEntityRangedEnemy("Data//rocketUp.png");
 			break;
-		case 2:
-			type_select = eBrute;
+		case eBrute:
+			enemy_ = new CEntityBruteEnemy("Data//HPHeartEmpty.png");
 			break;
 		}
-
-		spawnenemy(enemy_, First_Room->Get_Room_Position(), First_Room->getsize(), "", type_select);
+		entityVector.push_back(enemy_);	
 	}
 
-	spawnenemy(enemy_, First_Room->Get_Room_Position(), First_Room->getsize(), "", eBoss);
+	//spawnenemy(enemy_, First_Room->Get_Room_Position(), First_Room->getsize(), "", eBoss);
 
 
 	//here we would add enemies to enemy vector to set a max number of enemies, all initally dead. then set however many we want to alive as you enter a room
@@ -129,12 +126,59 @@ void World::Playing()
 
 	if (currTime >= updateTime)
 	{
+		player_->setOutOfBounds(true);
+		int roomNumber = 0;
+
 		for (auto p : entityVector)
 			p->update(*this);
 
 		for (auto p : bulletVector) //seperate bullet vector so i can pass them through
 			p->update(*this);
 
+
+		for (auto &room : Rooms)
+		{
+			roomNumber++;
+
+			std::vector<std::vector<HAPISPACE::Line>> allPaths = room.getAllPaths();
+
+			if (room.Get_Collision_Rectangle().Contains(getPlayerPos()))
+			{
+				player_->setOutOfBounds(false);
+				if (!room.getHasPlayerEntered())
+				{
+					if (roomNumber + 2 == number_of_rooms)
+					{
+						//spawn enemyBoss
+					}
+					else
+					{
+						spawnenemy(room.Get_Room_Position(), room.getsize());
+						room.setHasPlayerEntered(true);
+					}
+				}
+
+				break;
+			}
+
+			if (player_->getOutOfBounds() && checkEnemiesDead())
+			{
+				for (auto path : allPaths)
+				{
+					for (auto p2 : path)
+					{
+						if (p2.p1.DistanceBetween(getPlayerPos()) <= 40)
+						{
+							player_->setOutOfBounds(false);
+							break;
+						}
+					}
+
+				}
+			}
+
+			
+		}
 
 
 		for (auto p : entityVector)
@@ -166,41 +210,13 @@ void World::Playing()
 		updateTime = HAPI_Sprites.GetTime() + 30.0f;
 	}
 
-	player_->setOutOfBounds(true);
-
-	for (auto room : Rooms)
+	
+	for (auto &room : Rooms)
 	{
 		room.Render_Floor(getPlayerPos());
 
-		std::vector<std::vector<HAPISPACE::Line>> allPaths = room.getAllPaths();
-		
-		for (auto path : allPaths)
-		{
-			for (auto p2 : path)
-			{
-				if (p2.p1.DistanceBetween(getPlayerPos()) <= 40)
-				{
-					player_->setOutOfBounds(false);
-					break;
-				}
-			}
-
-		}
-
-		if (room.Get_Collision_Rectangle().Contains(getPlayerPos()))
-		{
-			player_->setOutOfBounds(false);
-			if(!room.getHasPlayerEntered())
-
-			break;
-		}
-
-
-		if (room.Check_Path_Exists() == true)
-		{
+		if (room.Check_Path_Exists() == true && checkEnemiesDead())
 			room.Render_Path("Seamless_Texture.png", getPlayerPos());
-	
-		}
 	}
 
 	
@@ -659,56 +675,35 @@ int World::Generate_random_vector(int minimum_value, int maximum_value)
 	return random_scalar;
 }
 
-void World::spawnenemy(EntityEnemy* enemy_, Point tl, Rectangle room_size, std::string sprite, EnemyType type)
+void World::spawnenemy(Point tl, Rectangle room_size)
 {
-	int width = room_size.Width();
-	int height = room_size.Height();
+	int width = (6*room_size.Width())/7;
+	int height = (6*room_size.Height())/7;
 
-	int posX = rand() %  width+ tl.x;
-	int posY = rand() % height + tl.y;
+	int posX;
+	int posY;
 
-	switch (type)
+	int numberOfEnemies = rand() % 5 + 5;
+	int enemyCounter = 0;
+	
+	while (enemyCounter < numberOfEnemies)
 	{
-	case eMelee:
-		enemy_ = new CEntityEnemyMelee("Data//fireBall.png");
-		break;
-	case eRanged:
-		enemy_ = new CEntityRangedEnemy("Data//rocketUp.png");
-		break;
-	case eBrute:
-		enemy_ = new CEntityBruteEnemy("Data//HPHeartEmpty.png");
-		break;
-	case eBoss:
-		enemy_ = new CEntityEnemyBOSS("Data//HAPI Sprites Logo.png");
-		break;
-	}
-
-
-	Point pos = { posX,posY };
-
-	enemy_->setpos(pos);
-
-	entityVector.push_back(enemy_);
-}
-
-void World::activatenemy(Point tl, Rectangle roomsize, EnemyType type)
-{
-
-	int width = roomsize.Width();
-	int height = roomsize.Height();
-
-	int posX = rand() % width + tl.x;
-	int posY = rand() % height + tl.y;
-	Point pos = { posX, posY };
-	for (int i = 0; i < entityVector.size(); i++)
-	{
-		if (entityVector[i]->getclass() != eplayer)
+		for (auto& entity : entityVector)
 		{
-			if (entityVector[i]->getclass() == type)
+			int randomCheck = rand() % 2;
+			if (entity->getSide() == enemy  && enemyCounter < numberOfEnemies && randomCheck == 1)
 			{
-				entityVector[i]->setPosition(pos);
-				entityVector[i]->isAlive();
+				posX = rand() % width + tl.x + 50;
+				posY = rand() % height + tl.y + 50;
+				enemyCounter++;
+				entity->initialiseValues();
+				entity->setPosition(Point(posX, posY));
+				entity->setAlive(true);
 			}
 		}
 	}
+	
+
 }
+
+
