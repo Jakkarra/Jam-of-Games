@@ -28,7 +28,7 @@ public:
 
 	enum menuStates
 	{
-		eMainMenu, ePlay, eGameOver, ePaused, eCreation, eWin, eControls, eCharacter
+		eMainMenu, ePlay, eGameOver, ePaused, eLoading, eWin, eControls, eCharacter
 	};
 
 	void Run();
@@ -38,6 +38,7 @@ public:
 	void charCreation();
 	void endGame();
 	void Pause();
+	void Controls(int cameFrom);
 	void Create_Rooms(int Number_of_Rooms, int Texture_Size);
 	void Connect_Rooms();
 	int Generate_random_vector(int minimum_value, int maximum_values);
@@ -72,6 +73,9 @@ private:
 	Point Position_To_Spawn{ 250,250 };
 	Point Position_To_Spawn_second{ 2000, 450 };
 
+	bool isQuit = false;
+	int weaponValue = 0; //0 = Bow, 1 = Staff
+
 	//Character Creation Variables
 	unsigned int totalPoints = 8;
 	unsigned int healthPoints = 1;
@@ -83,6 +87,7 @@ private:
 	bool isSpeed = false;
 	bool isRate = false;
 	bool isDamage = false;
+	bool isWeapon = false;
 
 	//Pause Menu Variables
 	bool isControls = false;
@@ -95,8 +100,11 @@ private:
 	CEntityMenu *lt = new CEntityMenu("Data//XboxLTLogoLarge.png");
 	CEntityMenu *gbg = new CEntityMenu("Data//GameOverBG.jpg");
 	CEntityMenu *pbg = new CEntityMenu("Data//PauseBG.png");
+	CEntityMenu *cimg = new CEntityMenu("Data//Controls.png");
+
 	std::default_random_engine rand_engine;
 	int number_of_rooms;
+	int cameFrom = 0;// if 0: main, if 1 : Pause
 
 };
 

@@ -31,30 +31,30 @@ void World::Run()
 			mainMenu();
 		}
 
-		if (currentState == ePlay)
+		else if (currentState == ePlay)
 		{
 			Playing();
 		}
 
-		if (currentState == eGameOver)
+		else if (currentState == eGameOver)
 		{			
 			endGame();					
 		}
 
-		if (currentState == eCharacter)
+		else if (currentState == eCharacter)
 		{
 			charCreation();
 		}
 
-		if (currentState == ePaused)
+		else if (currentState == ePaused)
 		{
 			Pause();
 		}
-		int x = Generate_random_vector(-500, 500);
-		int v = Generate_random_vector(-500, 500);
-		int y = Generate_random_vector(-250, 250);
-		std::cout <<"First Random:" <<  x << std::endl;
-		std::cout <<"Second Random" << x*y << std::endl;
+
+		else if (currentState == eControls)
+		{
+			Controls(cameFrom);
+		}
 	}
 }
 
@@ -127,6 +127,7 @@ void World::Playing()
 	if (conData.analogueButtons[HK_ANALOGUE_LEFT_TRIGGER])
 	{
 		currentState = ePaused;
+		cameFrom = 1;
 	}
 
 	currTime = HAPI_Sprites.GetTime();
@@ -199,12 +200,13 @@ void World::mainMenu()
 	const HAPI_TControllerData &conData = HAPI_Sprites.GetControllerData(0);
 	const HAPI_TMouseData &mouse = HAPI_Sprites.GetMouseData();
 	static int trans1 = 255;
-	static int trans2 = 70;
+	static int trans2 = 120;
+	static int trans3 = 120;
 	static float timelimit = 0;
 	static bool canExit = false;
 	HAPI_Sprites.ChangeFont("Copperplate Gothic Light");
 
-	menuStates selectedState = eCharacter;
+	static menuStates selectedState = eCharacter;
 	
 	if (!conData.analogueButtons[HK_ANALOGUE_RIGHT_TRIGGER])
 	{
@@ -216,68 +218,70 @@ void World::mainMenu()
 
 	HAPI_Sprites.RenderText(0, 750, HAPI_TColour(255, 255, 255, trans1), "Play", 84);
 	HAPI_Sprites.RenderText(0, 870, HAPI_TColour(255, 255, 255, trans2), "Controls", 84);
+	HAPI_Sprites.RenderText(0, 990, HAPI_TColour(255, 255, 255, trans3), "Exit Game", 84);
 	bg->render(getPlayerPos());
 	sp->render(getPlayerPos());
-
-	if (mouse.leftButtonDown)
-	{
-		currentState = eGameOver;
-	}
 
 	if (canExit)
 	{
 		if (conData.analogueButtons[HK_ANALOGUE_RIGHT_TRIGGER]) //selection
 		{
-			currentState = selectedState;
+			if(isQuit == true)
+				HAPI_Sprites.Close();
+
+			if (selectedState == eControls)
+				cameFrom = 0;
+
 			canExit = false;
+			currentState = selectedState;
 		}
+
+		
 	}
+
 	if (conData.analogueButtons[HK_ANALOGUE_LEFT_THUMB_Y] < -deadzoneLeft && HAPI_Sprites.GetTime() > timelimit) //changing selection
 	{
-		timelimit = HAPI_Sprites.GetTime() + 200;
+		timelimit = HAPI_Sprites.GetTime() + 300;
 		optionSelected += 1;
-		if (optionSelected >= 2)
-			optionSelected = 0;
-
-		if (optionSelected == 0)
-		{
-			trans1 = 255;
-			trans2 = 70;
-			selectedState = eCharacter;
-
-		}
-		else
-		{
-			trans1 = 70;
-			trans2 = 255;
-			selectedState = eControls;
-
-		}
 	}
-	else if (conData.analogueButtons[HK_ANALOGUE_LEFT_THUMB_Y] > deadzoneLeft && HAPI_Sprites.GetTime() > timelimit) //changing selection
+	if (conData.analogueButtons[HK_ANALOGUE_LEFT_THUMB_Y] > deadzoneLeft && HAPI_Sprites.GetTime() > timelimit) //changing selection
 	{
+		timelimit = HAPI_Sprites.GetTime() + 300;
+		optionSelected -= 1;
+	}
 
-		timelimit = HAPI_Sprites.GetTime() + 200;
-		optionSelected += 1;
-		if (optionSelected >= 2)
-			optionSelected = 0;
+	if (optionSelected >= 3)
+		optionSelected = 0;
+
+	if (optionSelected < 0)
+		optionSelected = 2;
 
 		if (optionSelected == 0)
 		{
 			trans1 = 255;
-			trans2 = 70;
+			trans2 = 120;
+			trans3 = 120;
 			selectedState = eCharacter;
+			isQuit = false;
 
 		}
-		else
+		if (optionSelected == 1)
 		{
-			trans1 = 70;
+			trans1 = 120;
 			trans2 = 255;
+			trans3 = 120;
 			selectedState = eControls;
-
+			isQuit = false;
+		}
+		if (optionSelected == 2)
+		{
+			trans1 = 120;
+			trans2 = 120;
+			trans3 = 255;
+			isQuit = true;
 		}
 	}
-}
+
 void World::charCreation()
 {
 	HAPI_Sprites.ChangeFont("Copperplate Gothic Light");
@@ -289,17 +293,22 @@ void World::charCreation()
 	static int trans2 = 120;
 	static int trans3 = 120;
 	static int trans4 = 120;
+	static int trans5 = 120;
+
+	static std::string wep = "Bow";
 
 	HAPI_Sprites.RenderText(550, 200, HAPI_TColour(255, 255, 255, 255), 0, 0, "Choose Your Stats!", 60);
 	HAPI_Sprites.RenderText(600, 350, HAPI_TColour(255, 255, 255, trans1), 0, 0, "Health:", 34);
 	HAPI_Sprites.RenderText(600, 450, HAPI_TColour(255, 255, 255, trans2), 0, 0, "Speed:", 34);
 	HAPI_Sprites.RenderText(600, 550, HAPI_TColour(255, 255, 255, trans3), 0, 0, "Fire Rate:", 34);
 	HAPI_Sprites.RenderText(600, 650, HAPI_TColour(255, 255, 255, trans4), 0, 0, "Damage:", 34);
+	HAPI_Sprites.RenderText(600, 750, HAPI_TColour(255, 255, 255, trans5), 0, 0, "Weapon:", 34);
 
 	HAPI_Sprites.RenderText(1100, 350, HAPI_TColour(255, 255, 255, 255), 0, 0, std::to_string(healthPoints), 38);
 	HAPI_Sprites.RenderText(1100, 450, HAPI_TColour(255, 255, 255, 255), 0, 0, std::to_string(speedPoints), 38);
 	HAPI_Sprites.RenderText(1100, 550, HAPI_TColour(255, 255, 255, 255), 0, 0, std::to_string(ratePoints), 38);
 	HAPI_Sprites.RenderText(1100, 650, HAPI_TColour(255, 255, 255, 255), 0, 0, std::to_string(damagePoints), 38, 1);
+	HAPI_Sprites.RenderText(1100, 750, HAPI_TColour(255, 255, 255, 255), 0, 0, wep, 38, 1);
 
 	HAPI_Sprites.RenderText(1000, 270, HAPI_TColour(255, 255, 255, 255), 0, 0, "Points Remaining:", 34);
 	HAPI_Sprites.RenderText(1400, 272, HAPI_TColour(255, 255, 255, 255), 0, 0, std::to_string(totalPoints), 34);
@@ -328,11 +337,11 @@ void World::charCreation()
 
 
 
-		if (optionSelected >= 4)
+		if (optionSelected >= 5)
 			optionSelected = 0;
 
 		if (optionSelected < 0)
-			optionSelected = 3;
+			optionSelected = 4;
 
 		isHealth = false;
 		isSpeed = false;
@@ -345,6 +354,7 @@ void World::charCreation()
 			trans2 = 120;
 			trans3 = 120; //health
 			trans4 = 120;
+			trans5 = 120;
 			isHealth = true;
 		}
 		if (optionSelected == 1)
@@ -353,6 +363,7 @@ void World::charCreation()
 			trans2 = 255;
 			trans3 = 120; //speed
 			trans4 = 120;
+			trans5 = 120;
 			isSpeed = true;
 		}
 		if (optionSelected == 2)
@@ -361,6 +372,7 @@ void World::charCreation()
 			trans2 = 120; //firerate
 			trans3 = 255;
 			trans4 = 120;
+			trans5 = 120;
 			isRate = true;
 		}
 		if (optionSelected == 3)
@@ -369,7 +381,17 @@ void World::charCreation()
 			trans2 = 120; //damage
 			trans3 = 120;
 			trans4 = 255;
+			trans5 = 120;
 			isDamage = true;
+		}
+		if (optionSelected == 4)
+		{
+			trans1 = 120;
+			trans2 = 120; //Weapon
+			trans3 = 120;
+			trans4 = 120;
+			trans5 = 255;
+			isWeapon = true;
 		}
 		
 
@@ -412,6 +434,20 @@ void World::charCreation()
 			timelimit = HAPI_Sprites.GetTime() + 300;
 			damagePoints++;
 		}
+
+		if (conData.analogueButtons[HK_ANALOGUE_LEFT_THUMB_X] > deadzoneLeft && isWeapon == true && HAPI_Sprites.GetTime() > timelimit)
+		{
+			timelimit = HAPI_Sprites.GetTime() + 300;
+			if (wep == "Bow")
+			{
+				wep = "Staff";
+			}
+			else if (wep == "Staff")
+			{
+				wep = "Bow";
+			}
+			weaponValue++;
+		}
 	}
 
 	if (conData.analogueButtons[HK_ANALOGUE_LEFT_THUMB_X] < -deadzoneLeft && isHealth == true && HAPI_Sprites.GetTime() > timelimit)
@@ -453,19 +489,40 @@ void World::charCreation()
 		}
 		damagePoints--;
 	}
+
+	if (conData.analogueButtons[HK_ANALOGUE_LEFT_THUMB_X] < -deadzoneLeft && isWeapon == true && HAPI_Sprites.GetTime() > timelimit)
+	{
+		timelimit = HAPI_Sprites.GetTime() + 300;
+		if (weaponValue == 1)
+		{
+			weaponValue = 1;
+		}
+
+		if (wep == "Bow")
+		{
+			wep = "Staff";
+		}
+		else if (wep == "Staff")
+		{
+			wep = "Bow";
+		}
+		weaponValue--;
+	}
+
 #pragma endregion
 
 	totalPoints = 12 - (healthPoints + ratePoints + damagePoints + speedPoints);
 
 	if (conData.analogueButtons[HK_ANALOGUE_RIGHT_TRIGGER] && totalPoints == 0)
 	{
-		player_->initialiseValues(healthPoints, speedPoints, ratePoints, damagePoints, 0);
+		player_->initialiseValues(healthPoints, speedPoints, ratePoints, damagePoints, weaponValue);
 		healthPoints = ratePoints = damagePoints = speedPoints = 1;
 		currentState = ePlay;
 	}
 
 
 }
+
 void World::endGame()
 {
 
@@ -489,6 +546,7 @@ void World::endGame()
 
 
 }
+
 void World::Pause()
 {
 	const HAPI_TControllerData &conData = HAPI_Sprites.GetControllerData(0);
@@ -592,6 +650,22 @@ void World::Pause()
 		}
 	}
 
+}
+
+void World::Controls(int cameFrom)
+{
+	const HAPI_TControllerData &conData = HAPI_Sprites.GetControllerData(0);
+	cimg->render(getPlayerPos());
+
+	if (conData.analogueButtons[HK_ANALOGUE_LEFT_TRIGGER] && cameFrom == 0)
+	{
+		currentState = eMainMenu;
+	}
+
+	if (conData.analogueButtons[HK_ANALOGUE_LEFT_TRIGGER] && cameFrom == 1)
+	{
+		currentState = ePaused;
+	}
 }
 
 void World::Create_Rooms(int Number_of_Rooms, int Walls_Texture_Size)
