@@ -55,6 +55,10 @@ void World::Run()
 		{
 			Controls(cameFrom);
 		}
+		else if (currentState == eLoading)
+		{
+			Loading();
+		}
 	}
 }
 
@@ -557,7 +561,7 @@ void World::charCreation()
 	{
 		player_->initialiseValues(healthPoints, speedPoints, ratePoints, damagePoints, weaponValue);
 		healthPoints = ratePoints = damagePoints = speedPoints = 1;
-		currentState = ePlay;
+		currentState = eLoading;
 	}
 
 
@@ -680,6 +684,7 @@ void World::Pause()
 		if (conData.analogueButtons[HK_ANALOGUE_RIGHT_TRIGGER] && isControls == true)
 		{
 			currentState = eControls;
+			cameFrom = 1;
 			canExit = false;
 		}
 		if (conData.analogueButtons[HK_ANALOGUE_RIGHT_TRIGGER] && isExit == true)
@@ -711,7 +716,7 @@ void World::Create_Rooms(int Number_of_Rooms, int Walls_Texture_Size)
 {
 	Point First_Room_Position{ 960,  540 };
 
-	First_Room = new Room("Floor_1.png", First_Room_Position, "Corners_And_Walls_Room_1.png", Walls_Texture_Size);
+	Room* First_Room = new Room("Floor_1.png", First_Room_Position, "Corners_And_Walls_Room_1.png", Walls_Texture_Size);
 
 	First_Room->Create_Invidividual_Room();
 
@@ -846,6 +851,11 @@ void World::Connect_Rooms()
 		Rooms[i].Pathfind_Corridor(Rooms[i + 1]);
 		Rooms[i].Link_Rooms(Rooms[i + 1]);
 	}
+}
+
+void World::Loading()
+{
+	currentState = ePlay;
 }
 
 int World::Generate_random_vector(int minimum_value, int maximum_value)
