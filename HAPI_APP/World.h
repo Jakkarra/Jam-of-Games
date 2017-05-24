@@ -30,25 +30,31 @@ public:
 
 	enum menuStates
 	{
-		eMainMenu, ePlay, eGameOver, ePaused, eCreation, eWin, eControls, eCharacter
+		eMainMenu, ePlay, eGameOver, ePaused, eLoading, eWin, eControls, eCharacter
 	};
 
 	void Run();
+	void Reset();
 	void Initialise();
 	void Playing();
 	void mainMenu();
 	void charCreation();
 	void endGame();
 	void Pause();
+	void Controls(int cameFrom);
+	void Loading();
 	void Create_Rooms(int Number_of_Rooms, int Texture_Size);
 	void Connect_Rooms();
-	void Play_background_music();
+	void Play_background_music(int musicID);
 	int Generate_random_vector(int minimum_value, int maximum_values);
 	std::vector<CEntityBullet*> getBullets() { return bulletVector; }
 	Point getPlayerPos() { return player_->getPos(); }
 	int getPlayerHealth() { return player_->getHealth(); }
 	int getPlayerMaxHealth() { return player_->getMaxHealth(); }
 	void spawnenemy(Point tl, Rectangle room_size);
+	void spawnBoss(Point tl, Rectangle room_size);
+	void bossDeath();
+	void PowerUp(Point pos);
 	bool checkEnemiesDead() {
 		for (auto e : entityVector) {
 			if (e->getSide() == enemy)
@@ -79,6 +85,9 @@ private:
 	Point Position_To_Spawn{ 250,250 };
 	Point Position_To_Spawn_second{ 2000, 450 };
 
+	bool isQuit = false;
+	int weaponValue = 0; //0 = Bow, 1 = Staff
+
 	//Character Creation Variables
 	unsigned int totalPoints = 8;
 	unsigned int healthPoints = 1;
@@ -90,6 +99,7 @@ private:
 	bool isSpeed = false;
 	bool isRate = false;
 	bool isDamage = false;
+	bool isWeapon = false;
 
 	//Pause Menu Variables
 	bool isControls = false;
@@ -102,8 +112,11 @@ private:
 	CEntityMenu *lt = new CEntityMenu("Data//XboxLTLogoLarge.png");
 	CEntityMenu *gbg = new CEntityMenu("Data//GameOverBG.jpg");
 	CEntityMenu *pbg = new CEntityMenu("Data//PauseBG.png");
+	CEntityMenu *cimg = new CEntityMenu("Data//Controls.png");
+
 	std::default_random_engine rand_engine;
 	int number_of_rooms;
+	int cameFrom = 0;// if 0: main, if 1 : Pause
 
 };
 

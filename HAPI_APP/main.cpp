@@ -38,7 +38,7 @@ void HAPI_Sprites_Main()
 	unsigned int screenWidth{ 1920 };
 	unsigned int screenHeight{ 1080 };
 
-	HAPI_Sprites.Initialise(screenWidth, screenHeight, "DIY:Dungeon It Yourself", eFullscreen);
+	HAPI_Sprites.Initialise(screenWidth, screenHeight, "DIY:Dungeon It Yourself");// , eFullscreen);
 	World* world_ = new World;
 	world_->Run();
 }

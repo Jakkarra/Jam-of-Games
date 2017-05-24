@@ -6,23 +6,25 @@
 void CEntityBruteEnemy::initialiseValues()
 {
 	health_ = 6;
-	pos_ = { (rand() % 800) + 200,(rand() % 800) + 200 };
+	maxHealth_ = 6;
 	alive_ = false;
 	speed_ = 1;
 	side = enemy;
 	attack_ = 2;
 	myclass = eBrute;
-
+	side = enemy;
 	max_range_ = 60;
 	angle_ = 0;
+	frameTime = HAPI_Sprites.GetTime();
 }
 
 void CEntityBruteEnemy::update(World& world)
 {
 	playerpos_ = world.getPlayerPos();
-
+	oldPos = pos_;
 	if (health_ <= 0) {
-		alive_ = false;
+		alive_ = false;	
+		world.PowerUp(pos_);
 	}
 	if (alive_ == true) {
 		//working out the angle to the player
@@ -59,24 +61,27 @@ void CEntityBruteEnemy::update(World& world)
 			}
 		}
 
-		if (angle_ > -0.80 && angle_ <= 0.80)	//left
+		if (angle_ > -0.80 && angle_ <= 0.80)    //right                            //6.28 is 360 degrees in radians
 		{
-			//frameOffset 
-			//numerOfFramesForAnimation
-
+			frameOffset = 22;
 		}
-		else if (angle_ > -2.4 && angle_ <= -0.8)				//up					
+		else if (angle_ > -2.4 && angle_ <= -0.8)                //up                    
 		{
 
-		}
-		else if (angle_ > 0.8 && angle_ <= 2.4)	//down								
-		{
+			frameOffset = 11;
+
 
 		}
-		else 	//right								
+		else if (angle_ > 0.8 && angle_ <= 2.4)    //down                                
 		{
+			frameOffset = 32;
 
 		}
+		else     //left                            
+		{
+			frameOffset = 1;
+		}
+		numberOfFramesForAnimation = 3;
 	}
 }
 

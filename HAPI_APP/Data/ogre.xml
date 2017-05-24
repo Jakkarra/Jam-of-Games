@@ -1,4 +1,4 @@
-<TextureAtlas imagePath="sprites.png">
+<TextureAtlas imagePath="ogre.png">
 	<SubTexture name="ogre (1).png" x="349" y="153" width="134" height="112"/>
 	<SubTexture name="ogre (2).png" x="771" y="162" width="130" height="162"/>	
 	<SubTexture name="ogre (3).png" x="491" y="0" width="132" height="165"/>	

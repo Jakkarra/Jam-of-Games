@@ -4,7 +4,7 @@ class CEntityPickup :
 	public CEntity
 {
 public:
-	CEntityPickup(int health, int speed,int rof, int attack);
+	CEntityPickup();
 	~CEntityPickup();
 	void initialiseValues();
 	void update(World& world);

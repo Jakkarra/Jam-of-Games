@@ -14,7 +14,7 @@ public:
 	~CEntityBullet();
 	void initialiseValues();
 	void update(World& world);
-	void setValues(CEntity &other, int weapon);
+	void setValues(CEntity &other, int weapon, Point offset);
 	void resetValues();
 	void render(Point playerPos);
 	int getDamage() { return attack_; }
@@ -24,5 +24,6 @@ public:
 private:
 	Point startPosition{ 0,0 };
 	float lifeDuration = 0;
+	Point newPos;
 };
 

@@ -59,14 +59,16 @@ protected:
 	bool invunerable_ = false;
 	Point oldPos = { 0,0 };
 	float xVector = 0;
-	float yVector = 0;
+	float VectorY = 0;
+
 	float interpValue = 0.f;
 	int min_range_{ 0 };
 	int max_range_{ 0 };
 	EnemyType myclass;
 	unsigned int frameOffset = 0;
 	unsigned int numberOfFramesForAnimation = 0;
-	int frameTime = 100;
+	int frameTime = HAPI_Sprites.GetTime();
+	Point shootOffset{ 0, 0 };
 
 private:
 

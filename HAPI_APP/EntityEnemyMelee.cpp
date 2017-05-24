@@ -4,16 +4,17 @@
 
 void CEntityEnemyMelee::initialiseValues()
 {
-	health_ = 2;
-	pos_ = { (rand() % 800) + 200,(rand() % 800) + 200 };
+	health_ = 4;
+	maxHealth_ = 2;
 	alive_ = false;
 	speed_ = 2;
 	side = enemy;
 	attack_ = 1;
 	myclass = eMelee;
-
+	side = enemy;
 	max_range_ = 60;
 	angle_ = 0;
+	frameTime = HAPI_Sprites.GetTime();
 }
 
 void CEntityEnemyMelee::update(World& world)
@@ -57,6 +58,28 @@ void CEntityEnemyMelee::update(World& world)
 				pos_.y -= speed_;
 			}
 		}
+
+		if (angle_ > -0.80 && angle_ <= 0.80)    //right                            //6.28 is 360 degrees in radians
+		{
+			frameOffset = 22;
+		}
+		else if (angle_ > -2.4 && angle_ <= -0.8)                //up                    
+		{
+
+			frameOffset = 11;
+
+
+		}
+		else if (angle_ > 0.8 && angle_ <= 2.4)    //down                                
+		{
+			frameOffset = 32;
+
+		}
+		else     //left                            
+		{
+			frameOffset = 1;
+		}
+		numberOfFramesForAnimation = 3;
 	}
 }
 
@@ -65,8 +88,9 @@ void CEntityEnemyMelee::update(World& world)
 
 CEntityEnemyMelee::CEntityEnemyMelee(std::string textureLocation)
 {
-	sprite_ = new Sprite(HAPI_Sprites.MakeSurface(textureLocation));
-
+	
+	
+	sprite_ = new Sprite("Data\\ogre.xml", "Data\\");
 	initialiseValues();
 }
 

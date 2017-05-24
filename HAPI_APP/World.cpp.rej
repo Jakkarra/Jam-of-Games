@@ -1,0 +1,23 @@
+diff a/HAPI_APP/World.cpp b/HAPI_APP/World.cpp	(rejected hunks)
+@@ -775,6 +775,21 @@
+ 	}
+ }
+ 
++void World::Play_background_music()
++{
++	HAPI_TStreamedMediaOptions sound_options;
++
++	sound_options.loop = true;
++	sound_options.volume = 0.5f;
++
++	unsigned int musicID = 1;
++
++	if (!HAPI_Sprites.PlayStreamedMedia("Data\\Background_Music.wav", sound_options, musicID))
++	{
++
++	}
++}
++
+ int World::Generate_random_vector(int minimum_value, int maximum_value)
+ {
+ 	rand_engine.seed(HAPI_Sprites.GetTime());

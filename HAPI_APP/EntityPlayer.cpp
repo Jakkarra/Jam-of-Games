@@ -19,18 +19,18 @@ void CEntityPlayer::initialiseValues(int health, int speed, int rof, int damage,
 {
 	
 	pos_ = Point{ 960,540 };
-	health_ = health;
-	maxHealth_ = health;
-	speed_ = speed;
+	health_ = 2 + health;
+	maxHealth_ = 2 + health;
+	speed_ = 3 + speed;
 	rof_ = rof;
-	reloadTime = 500 / rof;
-	attack_ = damage;
+	reloadTime = 1000 / rof;
+	attack_ = 1 + damage;
 	side = player;
 	myclass = eplayer;
 	alive_ = true;
 	angle_ = 0;
 	
-	currentWeapon = weapon % 2;//for now, should be currentWeapon = weapon;
+	currentWeapon = (weapon*weapon) % 2;//for now, should be currentWeapon = weapon;
 
 	
 	if(currentWeapon == 0)
@@ -38,7 +38,7 @@ void CEntityPlayer::initialiseValues(int health, int speed, int rof, int damage,
 	else 
 		sprite_ = new Sprite("Data\\staffman.xml", "Data\\");
 	
-	
+	frameTime = HAPI_Sprites.GetTime();
 	
 }
 
@@ -61,7 +61,7 @@ void CEntityPlayer::initialiseValues() //this is temp!!
 void CEntityPlayer::update(World& world)
 {
 	const HAPI_TControllerData &conData = HAPI_Sprites.GetControllerData(0);
-	
+	hasMoved = false;
 	oldPos = pos_;
 
 	if (health_ <= 0)
@@ -80,171 +80,110 @@ void CEntityPlayer::update(World& world)
 	if (angle_ > 3.14)
 		angle_ -= 3.14;
 	
-	/*if (conData.analogueButtons[HK_ANALOGUE_LEFT_THUMB_Y] < -deadzone_left_)
+	if (conData.analogueButtons[HK_ANALOGUE_LEFT_THUMB_Y] < -deadzone_left_)//down
 	{
 		pos_.y += speed_;
 		frameOffset = 31;
-		numberOfFramesForAnimation = 3;
+		
+		world.PowerUp(pos_ + Point(50, 50));
+		hasMoved = true;
 	}
 
-	if (conData.analogueButtons[HK_ANALOGUE_LEFT_THUMB_Y] > deadzone_left_)
+	if (conData.analogueButtons[HK_ANALOGUE_LEFT_THUMB_Y] > deadzone_left_)//up
 	{
-		pos_.y -= speed_;
-		frameOffset = 25;
-		numberOfFramesForAnimation = 3;
+		pos_.y -= speed_;	
+		frameOffset = 10;
+
+		hasMoved = true;
 	}
 
-	if (conData.analogueButtons[HK_ANALOGUE_LEFT_THUMB_X] < -deadzone_left_)
+	if (conData.analogueButtons[HK_ANALOGUE_LEFT_THUMB_X] < -deadzone_left_)//left
 	{
 		pos_.x -= speed_;
-		frameOffset = 16;
-		numberOfFramesForAnimation = 3;
+		frameOffset = 1;
+	
+			
+		hasMoved = true;
 	}
 
-	if (conData.analogueButtons[HK_ANALOGUE_LEFT_THUMB_X] > deadzone_left_)
+	if (conData.analogueButtons[HK_ANALOGUE_LEFT_THUMB_X] > deadzone_left_)//right
 	{
 		pos_.x += speed_;
-		frameOffset = 5;
-		numberOfFramesForAnimation = 3;
-	}*/
+		frameOffset = 22;
+		hasMoved = true;
+	}
 	
-	if ((conData.analogueButtons[HK_ANALOGUE_LEFT_THUMB_X] > deadzone_left_) && (conData.analogueButtons[HK_ANALOGUE_LEFT_THUMB_Y] > deadzone_left_))//right up
+
+	if (hasMoved == false)
 	{
-		pos_.y -= (speed_ / 1.5);
-		pos_.x += (speed_ / 1.5);
 		frameOffset = 31;
-		numberOfFramesForAnimation = 3;
-	}
-	else if ((conData.analogueButtons[HK_ANALOGUE_LEFT_THUMB_X] > deadzone_left_) && (conData.analogueButtons[HK_ANALOGUE_LEFT_THUMB_Y] < -deadzone_left_))//right down
-	{
-		pos_.y += (speed_ / 1.5);
-		pos_.x += (speed_ / 1.5);
-		frameOffset = 25;
-		numberOfFramesForAnimation = 3;
-	}
-	else if ((conData.analogueButtons[HK_ANALOGUE_LEFT_THUMB_X] < -deadzone_left_) && (conData.analogueButtons[HK_ANALOGUE_LEFT_THUMB_Y] > deadzone_left_))//left up
-	{
-		pos_.y -= (speed_ / 1.5);
-		pos_.x -= (speed_ / 1.5);
-		frameOffset = 16;
-		numberOfFramesForAnimation = 3;
-	}
-	else if ((conData.analogueButtons[HK_ANALOGUE_LEFT_THUMB_X] < -deadzone_left_) && (conData.analogueButtons[HK_ANALOGUE_LEFT_THUMB_Y] < -deadzone_left_))//left down
-	{
-		pos_.y += (speed_ / 1.5);
-		pos_.x -= (speed_ / 1.5);
-		frameOffset = 5;
-		numberOfFramesForAnimation = 3;
-	}
-	else if (conData.analogueButtons[HK_ANALOGUE_LEFT_THUMB_Y] < -deadzone_left_)//down
-	{
-		pos_.y += speed_;
-		frameOffset = 1;
-		numberOfFramesForAnimation = 3;
-	}
-
-	
-	else if (conData.analogueButtons[HK_ANALOGUE_LEFT_THUMB_Y] > deadzone_left_)//up
-	{
-
-		pos_.y -= speed_;
-
-		frameOffset = 36;
-		numberOfFramesForAnimation = 3;
-	}
-	else if (conData.analogueButtons[HK_ANALOGUE_LEFT_THUMB_X] < -deadzone_left_)//left
-	{
-
-		pos_.x -= speed_;
-
-		frameOffset = 11;
-		numberOfFramesForAnimation = 3;
-	}
-	else if (conData.analogueButtons[HK_ANALOGUE_LEFT_THUMB_X] > deadzone_left_)//right
-	{
-		pos_.x += speed_;
-		frameOffset = 21;
-		numberOfFramesForAnimation = 3;
-	}
-	else
-	{
-		frameOffset = 1;
 		numberOfFramesForAnimation = 0;
 	}
+	else
+			numberOfFramesForAnimation = 3;
+	
+	
 
 
 	if (conData.analogueButtons[HK_ANALOGUE_RIGHT_TRIGGER])
 	{
-			shoot(world.getBullets().at(bulletNum));
-			bulletNum++;
-			if (bulletNum > 499)
-				bulletNum = 0;	
+
+
+		
 			if (angle_ > -0.80 && angle_ <= 0.80)    //right                            //6.28 is 360 degrees in radians
 			{
-				frameOffset = 30;
-				numberOfFramesForAnimation = 0;
+				if (currentWeapon == 0)
+				{
+					frameOffset = 21;
+					shootOffset = Point(30, 40);
+				}
+
 			}
 			else if (angle_ > -2.4 && angle_ <= -0.8)                //up                    
 			{
-				frameOffset = 40;
-				numberOfFramesForAnimation = 0;
+				if (currentWeapon == 0)
+				{
+					frameOffset = 15;
+					shootOffset = Point(10, 20);
+				}
 			}
 			else if (angle_ > 0.8 && angle_ <= 2.4)    //down                                
 			{
-				frameOffset = 10;
-				numberOfFramesForAnimation = 0;
+				if (currentWeapon == 0)
+				{
+					frameOffset = 35;
+					shootOffset = Point(5, 60);
+				}
 			}
 			else     //left                            
 			{
-				frameOffset = 15;
-				numberOfFramesForAnimation = 0;
+				if (currentWeapon == 0)
+				{
+					frameOffset = 41;
+					shootOffset = Point(0, 40);
+				}
 			}
+			numberOfFramesForAnimation = 0;
 
-
-
+			if (HAPI_Sprites.GetTime() > timeToShoot)
+			{
+				shoot(world.getBullets().at(bulletNum));
+				timeToShoot = HAPI_Sprites.GetTime() + reloadTime;
+				bulletNum++;
+				if (bulletNum > 499)
+					bulletNum = 0;
+			}
 	}
 
-
-	
 	if (HAPI_Sprites.GetTime() > invunerableTime)
 		invunerable_ = false;
 
-	
-
-	if (angle_ > -0.80 && angle_ <= 0.80 )	//left								//6.28 is 360 degrees in radians
-	{
-		
-		//frameOffset = frame number where animation starts
-		//numerOfFramesForAnimation = how many frames in animation
-
-	}
-	else if (angle_ > -2.4 && angle_ <= -0.8)				//up					
-	{
-		
-	}
-	else if (angle_ > 0.8 && angle_ <=  2.4)	//down								
-	{
-		
-	}
-	else 	//right								
-	{
-		
-	}
-	
-	interpValue = 0;
-
-	
 	
 }
 
 void CEntityPlayer::shoot(CEntityBullet* bullet)
 {
-	if (HAPI_Sprites.GetTime() > timeToShoot)
-	{
-		bullet->setValues(*this, currentWeapon); //need to make the player rotate so i can try shooting at different angles. I need to calc bullet direction from player angle
-		timeToShoot = HAPI_Sprites.GetTime() + reloadTime;	
-	}
-
+	bullet->setValues(*this, currentWeapon, shootOffset); //need to make the player rotate so i can try shooting at different angles. I need to calc bullet direction from player angle
 }
 
 void CEntityPlayer::hasCollided(CEntity &other)
@@ -252,8 +191,8 @@ void CEntityPlayer::hasCollided(CEntity &other)
 	if (other.getSide() == enemy && invunerable_ == false)
 	{
 		health_ -= other.getAttack();
-		invunerable_ = false;
-		invunerableTime = HAPI_Sprites.GetTime() + 200;
+		invunerable_ = true;
+		invunerableTime = HAPI_Sprites.GetTime() + 2000;
 		HAPI_Sprites.PlaySound("Data\\Grunt.wav");
 	}
 	else if(other.getSide() == pickup)
@@ -274,18 +213,29 @@ void CEntityPlayer::hasCollided(CEntity &other)
 
 void CEntityPlayer::render(Point playerPos)
 {
-
 	
-	if (outOfBounds == true)
-	{
-		pos_ = oldPos;
-		outOfBounds = false;
-	}
-
-
+	
 	if (alive_ == true)
 	{
-		sprite_->Render(SCREEN_SURFACE, pos_ - (playerPos - Point(960, 540)), _frameNum);
+		if (outOfBounds == true)
+		{
+			pos_ = oldPos;
+			outOfBounds = false;
+		}
+		if (invunerable_ == true)
+		{
+			sprite_->Render(SCREEN_SURFACE, pos_ - (playerPos - Point(960, 540)), [&](const Point p, HAPI_TColour& dest, const HAPI_TColour& source) {
+				if (source.alpha == 255)
+				{
+					dest.red = dest.red + source.red/3 - 20;//making the player more 'white' if invunerable, easier than alpha i believe
+					dest.green = dest.green + source.green / 3 - 20;
+					dest.blue = dest.blue + source.blue / 3 - 20;
+				}
+			}, _frameNum);
+
+		}
+		else
+			sprite_->Render(SCREEN_SURFACE, pos_ - (playerPos - Point(960, 540)), _frameNum);
 
 		if (HAPI_Sprites.GetTime() > frameTime)
 		{
@@ -296,8 +246,9 @@ void CEntityPlayer::render(Point playerPos)
 			else
 				_frameNum++;
 
-			frameTime += 100;
+			frameTime += 200 - (10 * speed_);
 		}
+		
 	}
 }
 

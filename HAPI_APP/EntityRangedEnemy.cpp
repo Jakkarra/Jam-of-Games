@@ -4,26 +4,30 @@
 
 void CEntityRangedEnemy::initialiseValues()
 {
-	health_ = 2;
-	pos_ = { (rand() % 800) + 200,(rand() % 800) + 200 };
-	alive_ = true;
+	health_ = 3;
+	maxHealth_ = 3;
+	alive_ = false;
 	speed_ = 2;
 	side = enemy;
 	attack_ = 1;
 	myclass = eRanged;
+	side = enemy;
 
 	max_range_ = 300;
 	min_range_ = 150;
 	angle_ = 0;
+	frameTime = HAPI_Sprites.GetTime();
 }
 
 void CEntityRangedEnemy::update(World& world)
 {
 	invunerable_ = false;
 	playerpos_ = world.getPlayerPos();
+	oldPos = pos_;
 
 	if (health_ <= 0) {
 		alive_ = false;
+		world.PowerUp(pos_);
 	}
 	if (alive_ == true) {
 		//working out the angle to the player
@@ -90,6 +94,28 @@ void CEntityRangedEnemy::update(World& world)
 
 		}
 
+		if (angle_ > -0.80 && angle_ <= 0.80)    //right                            //6.28 is 360 degrees in radians
+		{
+			frameOffset = 22;
+		}
+		else if (angle_ > -2.4 && angle_ <= -0.8)                //up                    
+		{
+			
+			frameOffset = 11;
+
+
+		}
+		else if (angle_ > 0.8 && angle_ <= 2.4)    //down                                
+		{
+			frameOffset = 32;
+
+		}
+		else     //left                            
+		{
+			frameOffset = 1;
+		}
+		numberOfFramesForAnimation = 3;
+
 		if (totaldistance < max_range_ * max_range_)
 		{
 			NPCshoot(world.getBullets().at(bulletNum));
@@ -101,14 +127,13 @@ void CEntityRangedEnemy::update(World& world)
 			}
 		}
 
-		oldPos = pos_;
 		interpValue = 0;
 	}
 }
 
 CEntityRangedEnemy::CEntityRangedEnemy(std::string textureLocation)
 {
-	sprite_ = new Sprite(HAPI_Sprites.MakeSurface(textureLocation));
+	sprite_ = new Sprite("Data\\goblin.xml", "Data\\");
 
 	initialiseValues();
 }

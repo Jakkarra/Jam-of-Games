@@ -28,8 +28,7 @@ void CEntityBullet::update(World& world)
 {//list hre where bullet starts on different positions
 	
 
-	//movement(speed); Function for moving
-	//movement();
+	
 	//need to delete the bullet after a certain amount of time OR we just make it die when it hits a wall, which will always happen
 
 	if (HAPI_Sprites.GetTime() > lifeDuration)
@@ -37,19 +36,18 @@ void CEntityBullet::update(World& world)
 		alive_ = false;
 	}
 
-	float x = cos(angle_);
-	float y = sin(angle_);
+	xVector = cosf(angle_);
+	VectorY = sinf(angle_);
 
-	//pos_.x += speed_*x;
-	//pos_.y += speed_*y;
-
+	newPos.x = oldPos.x + (xVector*speed_);
+	newPos.y = oldPos.y + (VectorY*speed_);
 	
 
 	oldPos = pos_;
 	interpValue = 0;
 }
 
-void CEntityBullet::setValues(CEntity &other, int weapon) //when gun is fired, give bullet stats
+void CEntityBullet::setValues(CEntity &other, int weapon, Point offset) //when gun is fired, give bullet stats
 {						
 	//need to get the angle and with that use it to make the bullet move in the wanted direction
 
@@ -60,15 +58,17 @@ void CEntityBullet::setValues(CEntity &other, int weapon) //when gun is fired, g
 	if (weapon == 1)
 	{
 		sprite_ = new Sprite(HAPI_Sprites.MakeSurface("Data\\Fireball2.png"));
+		HAPI_Sprites.PlaySound("Data\\Fireball.wav");
 	}
 	else 
 	{
 		sprite_ = new Sprite(HAPI_Sprites.MakeSurface("Data\\Arrow.png")); 
+		HAPI_Sprites.PlaySound("Data\\Arrow_Shot.wav");
 	}
 	
-	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
+	shootOffset = offset;
 	alive_ = true;
-	speed_ += other.getSpeed();
+	speed_ = 10 * other.getSpeed();
 	side = other.getSide();
 	pos_ = other.getPos();
 	oldPos = other.getPos();
@@ -89,25 +89,18 @@ void CEntityBullet::render(Point playerPos)
 {	//i want to interp all but not sure how to 
 	if (alive_ == true)
 	{
-
-
-		xVector = cos(angle_);
-		yVector = sin(angle_);
-		Point newPos;
-		newPos.x = oldPos.x + (xVector*speed_);
-		newPos.y = oldPos.y + (yVector*speed_);
-
+		if (interpValue > 1.f)
+			interpValue = 1.f;
+		else
+			interpValue += 0.1f;
 
 		pos_.x = oldPos.x + (newPos.x - oldPos.x)*interpValue;
 		pos_.y = oldPos.y + (newPos.y - oldPos.y)*interpValue;
 
 		//interpolation testing, not sure how to do it as i do not know the bullets end location cus it is always moving
-		if (interpValue > 1.f)
-			interpValue = 1.f;
-		else
-			interpValue += 0.03f;
+		
 
-		sprite_->RenderRotated(SCREEN_SURFACE, pos_ - (playerPos - Point(960, 540)), angle_);
+		sprite_->RenderRotated(SCREEN_SURFACE, pos_  + shootOffset - (playerPos - Point(960, 540)), angle_);
 	}
 }
 

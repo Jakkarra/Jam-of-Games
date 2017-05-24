@@ -36,6 +36,7 @@ private:
 	bool outOfBounds = false;
 	int currentWeapon;
 	Sprite* weaponSprite;
+	bool hasMoved = false;
 
 };
 
