@@ -117,6 +117,7 @@ private:
 	std::default_random_engine rand_engine;
 	int number_of_rooms;
 	int cameFrom = 0;// if 0: main, if 1 : Pause
+	bool restart = false;
 
 };
 

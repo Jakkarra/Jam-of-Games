@@ -198,7 +198,8 @@ void World::Playing()
 
 			
 		}
-
+		updateTime = HAPI_Sprites.GetTime() + 30.0f;
+	}
 
 		for (auto p : entityVector)
 			for (auto r : entityVector)
@@ -226,8 +227,7 @@ void World::Playing()
 		//if player collides with and hasnt entered before
 		//player cant leave room and spawn enemies
 
-		updateTime = HAPI_Sprites.GetTime() + 30.0f;
-	}
+	
 
 	
 	for (auto &room : Rooms)
@@ -898,8 +898,10 @@ void World::spawnenemy(Point tl, Rectangle room_size)
 
 	int posX;
 	int posY;
-
-	int numberOfEnemies = rand() % 5 + 5;
+	int numberOfEnemies;
+	if(room_size.Width() == 768)
+		numberOfEnemies = rand() % 5;
+	numberOfEnemies = rand() % 5 + 5;
 	int enemyCounter = 0;
 	
 	while (enemyCounter < numberOfEnemies)
@@ -943,7 +945,11 @@ void World::spawnBoss(Point tl, Rectangle room_size)
 
 void World::bossDeath()
 {
-	Reset();
+	if (restart == false)
+	{
+		restart = true;
+		Reset();
+	}
 }
 
 void World::PowerUp(Point pos)
@@ -955,10 +961,13 @@ void World::PowerUp(Point pos)
 	{
 		if (entity->getSide() == pickup)
 		{
-			entity->initialiseValues();
-			entity->setPosition(pos);
-			entity->setAlive(true);
-			break;
+			if (entity->isAlive() == false)
+			{
+				entity->initialiseValues();
+				entity->setPosition(pos);
+				entity->setAlive(true);
+				break;
+			}
 		}
 	}
 
